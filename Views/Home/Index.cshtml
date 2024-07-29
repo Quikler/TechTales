@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<link rel="stylesheet" href="~/css/home.css" />
+
+<div class="text-center">
+    <img src="~/images/logo.svg" alt="logo" />
+    <h1 class="display-4">TechTales - Find your favourite blog!</h1>
+    <div class="input-block">
+        <input placeholder="Title, Category, Tag, Content..." type="text" />
+        <button>Search</button>
+    </div>
+    <div class="space-between blogs-sidepanel-container">
+        <div>
+            <ol>
+                <li class="space-between blog-container">
+                    <div class="blog-title-content">
+                        <p>Blog - '[Title]'</p>
+                        <p>
+                            Lorem ipsum dolor sit amet, amet ametconsectetur adipisicing elit. Vero similique accusantium in. Consequatur in corrupti facere aspernatur neque ullam, sed ipsa, delectus earum vero consequuntur esse, explicabo quasi ex quisq...
+                            <a href="">[Read more]</a>
+                        </p>
+                    </div>
+                    <div class="blog-time-user">
+                        <p>01/08/2005</p>
+                        <a href="">
+                            <img src="~/images/vergil.png" />
+                            Vergil
+                        </a>
+                    </div>
+                </li>
+                <li class="space-between blog-container">
+                    <div class="blog-title-content">
+                        <p>Blog - '[Title]'</p>
+                        <p>
+                            Lorem ipsum dolor sit ametamet, ametconsectetur adipisicing elit. Vero similique accusantium in. Consequatur in corrupti facere aspernatur neque ullam, sed ipsa, delectus earum vero consequuntur esse, explicabo quasi ex quisq...
+                            <a href="">[Read more]</a>
+                        </p>
+                    </div>
+                    <div class="blog-time-user">
+                        <p>01/08/2005</p>
+                        <a href="">
+                            <img src="~/images/vergil.png" />
+                            Vergil
+                        </a>
+                    </div>
+                </li>
+            </ol>
+            <ul class="blog-pagination">
+                <li><a href="#">«</a></li>
+                <li><a href="#">1</a></li>
+                <li><a class="active-pagination" href="#" style="border:none !important;">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">6</a></li>
+                <li><a href="#">7</a></li>
+                <li><a href="#">»</a></li>
+            </ul>
+        </div>
+        <div class="sidepanel">
+            <ul>
+                <li>
+                    <a href="">Popular blogs</a>
+                </li>
+                <li>
+                    <a href="">Categories</a>
+                </li>
+                <li>
+                    <a href="">Tags</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

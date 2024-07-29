@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TechTales - @ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/reset.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/resetbootstrap.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/htmlhelper.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/TechTales.styles.css" asp-append-version="true" />
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="nav-container">
+                <ul>
+                    <div class="space-between align-items-center">
+                        <li class="nav-element nav-logo">
+                            <a asp-action="Index" asp-controller="Home" asp-area="">
+                                <img src="~/images/logo.svg" width="48" height="48" />
+                            </a>
+                        </li>
+                        <li class="nav-element">
+                            <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-element">
+                            <a asp-area="" asp-controller="All Blogs" asp-action="Privacy">All Blogs</a>
+                        </li>
+                        <li class="nav-element">
+                            <a asp-area="" asp-controller="About" asp-action="Privacy">About</a>
+                        </li>
+                        <li class="nav-element">
+                            <a asp-area="" asp-controller="Contacts" asp-action="Privacy">Contacts</a>
+                        </li>
+                    </div>
+                    <li class="nav-element">
+                        <input type="text" class="search-input" placeholder="Search" />
+                    </li>
+                    <div class="space-between align-items-center">
+                        <li class="nav-element">
+                            <a asp-area="" asp-controller="Authorization" asp-action="Login">Log in</a>
+                        </li>
+                        <li class="nav-element">
+                            <a asp-area="" asp-controller="Authorization" asp-action="Signup">Sign up</a>
+                        </li>
+                    </div>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container main-container">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer">
+        <div class="container">
+            &copy; 2024 - TechTales - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

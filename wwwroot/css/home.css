@@ -1,0 +1,125 @@
+.input-block, .input-block input, .input-block button {
+    border-radius: 32px;
+}
+
+.input-block {
+    background: url("/images/magnifier_glass.svg") no-repeat left;
+    padding-left: 42px;
+    background-size: 24px;
+    background-position: 16px center;
+    /* This bit sets up the horizontal layout */
+    display:flex;
+    flex-direction:row;
+    
+    /* This bit draws the box around it */
+    border:2px solid grey;
+}
+  
+.input-block input {
+    /* Tell the input to use all the available space */
+    flex-grow:2;
+    /* And hide the input's outline, so the form looks like the outline */
+    border:none;
+    padding: 8px 16px;
+}
+  
+  /* remove the input focus blue box, it will be in the wrong place. */
+.input-block input:focus {
+    outline: none;
+}
+  
+  /* Add the focus effect to the form so it contains the button */
+.input-block:focus-within { 
+    border: 2px solid blue 
+}
+  
+.input-block button {
+    width: 150px;
+    color:white;
+    background-color: black;
+}
+
+h1 {
+    padding: 16px 0;
+}
+
+.blogs-sidepanel-container {
+    margin: 32px 0;
+}
+
+.blog-container {
+    background-color: var(--pc);
+    padding: 16px 32px;
+    align-items: stretch;
+    margin-bottom: 24px;
+}
+
+.blog-container:last-child{
+    margin-bottom: 0;
+}
+
+.blog-title-content {
+    text-align: justify;
+    padding: 0 32px 0 0;
+}
+
+.blog-title-content p:first-child {
+    font-weight: 700;
+}
+
+.blog-time-user {
+    height: 100%;
+    display: flex;
+    align-content: space-between;
+    flex-direction: column;
+}
+
+.blog-time-user img {
+    width: 108px;
+    height: 108px;
+}
+
+.sidepanel {
+    background-color: var(--pc);
+    margin-left: 24px;
+    min-width: 250px;
+}
+            
+
+.sidepanel ul {
+    padding: 16px 32px;
+    text-align: left;
+}
+
+.sidepanel ul > li {
+    margin-bottom: 24px;
+}
+
+.blog-pagination a.active-pagination {
+    background-color: #4CAF50;
+    color: white;
+}
+  
+.blog-pagination a:hover:not(.active-pagination) {
+    background-color: var(--pc);
+}
+
+.blog-pagination {
+    display: inline-block;
+    padding: 0;
+    margin-top: 24px;
+}
+
+.blog-pagination li {
+    display: inline;
+}
+
+.blog-pagination a {
+    border-radius: 10px;
+    color: black;
+    padding: 8px 16px;
+}
+
+.active-pagination {
+    background-color: var(--pc);
+}

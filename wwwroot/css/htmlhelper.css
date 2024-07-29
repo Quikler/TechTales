@@ -1,0 +1,28 @@
+.underline-input {
+    padding: 0 20px 14px 20px;
+    background-color: transparent;
+    border-bottom: 1px solid #333;
+    width: 100%;
+}
+
+.underline-password-input-container {
+    /* This bit sets up the horizontal layout */
+    display:flex;
+    flex-direction:row;
+    
+    border-bottom: 1px solid black;
+}
+  
+.underline-password-input-container input {
+    /* Tell the input to use all the available space */
+    flex-grow:2;
+    background-color: transparent;
+    /* And hide the input's outline, so the form looks like the outline */
+    border:none;
+    padding: 8px 16px;
+}
+  
+  /* remove the input focus blue box, it will be in the wrong place. */
+.underline-password-input-container input:focus {
+    outline: none;
+}
