@@ -1,0 +1,54 @@
+h1 {
+    margin-bottom: 32px;
+}
+
+#user-profile-image {
+    height: 400px;
+    margin-bottom: 16px;
+}
+
+.black-button {
+    color: white;
+    background-color: black;
+    border-radius: 32px;
+    padding: 16px 0;
+    margin: 16px 0 32px 0;
+    width: 70%;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.user-image-h1-container {
+    min-width: 600px;
+}
+
+.user-image-container {
+    text-align: center;
+}
+
+.inputs-container {
+    width: 60%;
+    margin-top: 12px;
+}
+
+.inputs-container * {
+    margin-bottom: 24px;
+}
+
+.inputs-container input, .inputs-container textarea {
+    display: block;
+    padding: 8px 16px;
+    border: 1px solid lightgray;
+    resize: none;
+    max-width: 100%;
+    min-width: 300px;
+    width: 100%;
+}
+
+.inputs-container textarea {
+    min-height: 400px;
+}
+
+.inputs-container button {
+    float: right;
+}

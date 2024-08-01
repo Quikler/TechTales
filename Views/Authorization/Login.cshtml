@@ -11,13 +11,6 @@
             <h1>Welcome</h1>
             <img src="~/images/logo.svg" alt="logo" />
         </div>
-        @* <div class="inputs-container">
-            <input type="email" name="email" placeholder="Email" id="input-email" required />
-            <div class="password-input-block">
-                <input placeholder="Password" type="password" id="input-password" name="password" required />
-                <img alt="eye&#x2205;" width="48px" id="eye-password" src="~/images/eye_slash.svg" />
-            </div>
-        </div> *@
         <div class="inputs-container">
             @Html.UnderlineInput("email", "email", "Email", required: true)
             @Html.UnderlinePasswordInput("password", "Password", "input-password", true, "eye-password")
@@ -25,7 +18,7 @@
         <p class="forgot-password">
             <a href="#">Forgot password?</a>
         </p>
-        <button>Log in</button>
+        @Html.RoundedButton("Log in", padding: "16px 0", width: "100%", margin: "16px 0 32px 0")
         <p>
             Don't have an account? <span><a href="Signup">Sign up</a></span>
         </p>

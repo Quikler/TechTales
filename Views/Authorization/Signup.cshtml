@@ -16,7 +16,7 @@
             @Html.UnderlinePasswordInput("password", "Password", "input-password", true, "eye-password")
             @Html.UnderlinePasswordInput("repeat password", "Repeat password", "input-repeat-password", true, "eye-repeat-password")
         </div>
-        <button>Sign up</button>
+        @Html.RoundedButton("Sign up", padding: "16px 0", width: "100%", margin: "16px 0 32px 0")
         <p>
             Already have an account? <span><a href="Login">Log in</a></span>
         </p>

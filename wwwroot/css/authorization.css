@@ -4,7 +4,7 @@ h1 {
     font-size: 36px;
 }
 
-.authorization-form-container form button {
+/* .authorization-form-container form button {
     color:white;
     background-color: black;
     border-radius: 32px;
@@ -12,7 +12,7 @@ h1 {
     margin: 16px 0 32px 0;
     width: 100%;
     text-transform: uppercase;
-}
+} */
 
 .authorization-form-container form {
     padding: 32px 0;

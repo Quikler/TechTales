@@ -6,7 +6,7 @@
 
 <div class="text-center">
     <img src="~/images/logo.svg" alt="logo" />
-    <h1 class="display-4">TechTales - Find your favourite blog!</h1>
+    <h1>TechTales - Find your favourite blog!</h1>
     <div class="input-block">
         <input placeholder="Title, Category, Tag, Content..." type="text" />
         <button>Search</button>
@@ -16,7 +16,7 @@
             <ol>
                 <li class="space-between blog-container">
                     <div class="blog-title-content">
-                        <p>Blog - '[Title]'</p>
+                        <h3>Blog - '[Title]'</h3>
                         <p>
                             Lorem ipsum dolor sit amet, amet ametconsectetur adipisicing elit. Vero similique accusantium in. Consequatur in corrupti facere aspernatur neque ullam, sed ipsa, delectus earum vero consequuntur esse, explicabo quasi ex quisq...
                             <a href="">[Read more]</a>
@@ -24,15 +24,15 @@
                     </div>
                     <div class="blog-time-user">
                         <p>01/08/2005</p>
-                        <a href="">
-                            <img src="~/images/vergil.png" />
+                        <a asp-action="Details" asp-controller="Profile">
+                            <img class="rounded-image" src="~/images/vergil.png" />
                             Vergil
                         </a>
                     </div>
                 </li>
                 <li class="space-between blog-container">
                     <div class="blog-title-content">
-                        <p>Blog - '[Title]'</p>
+                        <h3>Blog - '[Title]'</h3>
                         <p>
                             Lorem ipsum dolor sit ametamet, ametconsectetur adipisicing elit. Vero similique accusantium in. Consequatur in corrupti facere aspernatur neque ullam, sed ipsa, delectus earum vero consequuntur esse, explicabo quasi ex quisq...
                             <a href="">[Read more]</a>
@@ -40,8 +40,8 @@
                     </div>
                     <div class="blog-time-user">
                         <p>01/08/2005</p>
-                        <a href="">
-                            <img src="~/images/vergil.png" />
+                        <a asp-action="Details" asp-controller="Profile">
+                            <img class="rounded-image" src="~/images/vergil.png" />
                             Vergil
                         </a>
                     </div>

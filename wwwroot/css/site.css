@@ -2,6 +2,7 @@
 
 html, body {
   height: 100%;
+  font-size: 24px;
 }
 
 body {
@@ -9,7 +10,6 @@ body {
   display: flex;
   flex-direction: column;
   margin: 0;
-  font-size: 24px;
 }
 
 footer {
@@ -24,6 +24,11 @@ input:-webkit-autofill:active{
     -webkit-box-shadow: 0 0 0 30px #d9d9d9 inset !important;
 }
 
+h3 {
+  font-size: 28px;
+  font-weight: 700;
+}
+
 .space-between {
   display: flex;
   justify-content: space-between;
@@ -36,6 +41,10 @@ input:-webkit-autofill:active{
 
 .align-items-center {
   align-items: center;
+}
+
+.rounded-image {
+  border-radius: 50%;
 }
 
 .main-container {

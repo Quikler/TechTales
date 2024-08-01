@@ -1,0 +1,107 @@
+@using TechTales.Helpers;
+@{
+    //ViewData["Title"] = "Profile";
+    ViewData["Title"] = ViewData["Username"];
+}
+
+<link rel="stylesheet" href="~/css/profile/profile.css">
+
+<div class="space-between">
+    <div class="user-info-container">
+        <div>
+            <div class="text-center">
+                <img id="user-profile-image" class="rounded-image" src="~/images/vergil.png" />
+                <div class="user-name-container">
+                    <h1>Vergil</h1>
+                    <a asp-action="Edit" asp-controller="Profile">
+                        <img id="gear-img" src="~/images/gear.svg" />
+                    </a>
+                </div>
+                <p>Japan</p>
+            </div>
+            <div class="about-me-container text-justify">
+                <h4>About me:</h4>
+                <p>
+                    I am the storm that is approaching.<br />
+                    Provoking black clouds in isolation.<br />
+                    I am reclaimer of my name.<br />
+                    Born in flames I have been blast.<br />
+                    My family crest is a demon of death.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <h4 id="h4-avalable-blogs" class="text-left">Available blogs:</h4>
+        <ol class="blogs-container">
+            <li>
+                <div class="space-between blog-title-time">
+                    <h3>Blog - '[Title]'</h3>
+                    <p>01/08/2005</p>
+                </div>
+                <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Qui sed sit quisquam esse dolores facere amet! 
+                    Molestiae modi, id rem eius iure ad enim quibusdam maiores, nobis dignissimos, optio a?
+                    ...<span><a asp-controller="Blog" asp-action="Blog">[Read more]</a></span>
+                </p>
+                @Html.EditBlogButtons(editHref: "/Blog/Edit")
+            </li>
+            <li>
+                <div class="space-between blog-title-time">
+                    <h3>Blog - '[Title]'</h3>
+                    <p>01/08/2005</p>
+                </div>
+                <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Qui sed sit quisquam esse dolores facere amet! 
+                    Molestiae modi, id rem eius iure ad enim quibusdam maiores, nobis dignissimos, optio a?
+                    ...<span><a asp-controller="Blog" asp-action="Blog">[Read more]</a></span>
+                </p>
+                @Html.EditBlogButtons()
+            </li>
+            <li>
+                <div class="space-between blog-title-time">
+                    <h3>Blog - '[Title]'</h3>
+                    <p>01/08/2005</p>
+                </div>
+                <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Qui sed sit quisquam esse dolores facere amet! 
+                    Molestiae modi, id rem eius iure ad enim quibusdam maiores, nobis dignissimos, optio a?
+                    ...<span><a asp-controller="Blog" asp-action="Blog">[Read more]</a></span>
+                </p>
+                @Html.EditBlogButtons()
+            </li>
+            <li>
+                <div class="space-between blog-title-time">
+                    <h3>Blog - '[Title]'</h3>
+                    <p>01/08/2005</p>
+                </div>
+                <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Qui sed sit quisquam esse dolores facere amet! 
+                    Molestiae modi, id rem eius iure ad enim quibusdam maiores, nobis dignissimos, optio a?
+                    ...<span><a asp-controller="Blog" asp-action="Blog">[Read more]</a></span>
+                </p>
+                @Html.EditBlogButtons()
+            </li>
+            <li>
+                <div class="space-between blog-title-time">
+                    <h3>Blog - '[Title]'</h3>
+                    <p>01/08/2005</p>
+                </div>
+                <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Qui sed sit quisquam esse dolores facere amet! 
+                    Molestiae modi, id rem eius iure ad enim quibusdam maiores, nobis dignissimos, optio a?
+                    ...<span><a asp-controller="Blog" asp-action="Blog">[Read more]</a></span>
+                </p>
+                @Html.EditBlogButtons()
+            </li>
+        </ol>
+    </div>
+</div>
+
+<script src="~/js/profile.js" asp-append-version="true"></script>

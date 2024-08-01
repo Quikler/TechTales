@@ -26,3 +26,21 @@
 .underline-password-input-container input:focus {
     outline: none;
 }
+
+/* Edit buttons */
+.edit-blog-section {
+    width: 100%;
+    display: inline-flex;
+    justify-content: end;
+}
+
+.edit-blog-section button {
+    width: 72px;
+    height: 72px;
+    background-color: transparent;
+    transition: .3s ease-out;
+}
+
+.edit-blog-section button:hover {
+    background-color: #d9d9d9;
+}

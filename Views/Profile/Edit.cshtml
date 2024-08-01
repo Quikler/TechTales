@@ -1,0 +1,24 @@
+@using TechTales.Helpers;
+@{
+    ViewData["Title"] = ViewData["Username"];
+}
+
+<link rel="stylesheet" href="~/css/profile/edit.css">
+
+<div class="space-between">
+    <div class="user-image-h1-container">
+        <div class="user-image-container text-center">
+            <h1>Edit your profile</h1>
+            <img id="user-profile-image" class="rounded-image" src="~/images/vergil.png" />
+            <button class="black-button">Change picture</button>
+        </div>
+    </div>
+    <div class="inputs-container">
+        <input type="text" placeholder="Username">
+        <input type="text" placeholder="Country">
+        <textarea name="about" placeholder="About me" id=""></textarea>
+        <button class="black-button">Submit</button>
+    </div>
+</div>
+
+<script src="~/js/profile.js" asp-append-version="true"></script>
