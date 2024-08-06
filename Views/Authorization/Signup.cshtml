@@ -1,3 +1,4 @@
+@model TechTales.Models.SignupViewModel;
 @using TechTales.Helpers;
 @{
     ViewData["Title"] = "Login";
@@ -5,18 +6,42 @@
 
 <link rel="stylesheet" href="~/css/authorization.css" />
 
-<div class="space-between text-center authorization-form-container">
-    <form>
+<div class="d-flex justify-content-between text-center authorization-form-container">
+    <form asp-controller="Authorization" asp-action="Signup" method="post" autocomplete="off">
         <div class="text-center logo-container">
             <h1>Welcome</h1>
             <img src="~/images/logo.svg" alt="logo" />
         </div>
-        <div class="inputs-container">
-            @Html.UnderlineInput("email", "email", "Email", required: true)
-            @Html.UnderlinePasswordInput("password", "Password", "input-password", true, "eye-password")
-            @Html.UnderlinePasswordInput("repeat password", "Repeat password", "input-repeat-password", true, "eye-repeat-password")
+        <div asp-validation-summary="All" class="fw-bold text-danger inputs-container">
+
+            @Html.UnderlineInput(
+                type: "text", 
+                placeholder: "Username", 
+                required: true, 
+                aspFor: "UserName")
+
+            @Html.UnderlineInput(
+                type: "email", 
+                placeholder: "Email", 
+                required: true, 
+                aspFor: "Email")
+
+            @Html.UnderlinePasswordInput(
+                placeholder: "Password", 
+                id: "input-password", 
+                required: true, 
+                eyeId: "eye-password", 
+                aspFor: "Password")
+
+            @Html.UnderlinePasswordInput(
+                placeholder: "Repeat password", 
+                id: "input-repeat-password", 
+                required: true, 
+                eyeId: "eye-repeat-password", 
+                aspFor: "RepeatPassword")
+            
         </div>
-        @Html.RoundedButton("Sign up", padding: "16px 0", width: "100%", margin: "16px 0 32px 0")
+        @Html.RoundedButton("Sign up", type: "submit", padding: "16px 0", width: "100%", margin: "16px 0 32px 0")
         <p>
             Already have an account? <span><a href="Login">Log in</a></span>
         </p>

@@ -87,3 +87,37 @@
     padding: 16px 24px;
     border: 2px solid lightgray;
 }
+
+.create-blog-container input[type="text"], .create-blog-container textarea {
+    display: block;
+    padding: 8px 16px;
+    border: 1px solid lightgray;
+    resize: none;
+    max-width: 100%;
+    min-width: 300px;
+    width: 100%;
+}
+
+.create-blog-container textarea {
+    min-height: 400px;
+}
+
+.create-blog-container input[type="radio"] {
+    border: 0px;
+    width: 24px;
+    height: 24px;
+    accent-color: black;
+    vertical-align: middle;
+}
+
+.create-blog-container input:not([type="radio"]), .create-blog-container textarea {
+    margin-bottom: 24px;
+}
+
+.create-blog-container h1 {
+    margin-bottom: 32px;
+}
+
+.visibility-radio-container div {
+    padding: 8px 0;
+}

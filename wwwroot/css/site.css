@@ -21,7 +21,7 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
 input:-webkit-autofill:active{
-    -webkit-box-shadow: 0 0 0 30px #d9d9d9 inset !important;
+    -webkit-box-shadow: 0 0 0 30px var(--pc) inset !important;
 }
 
 h3 {
@@ -29,18 +29,9 @@ h3 {
   font-weight: 700;
 }
 
-.space-between {
-  display: flex;
-  justify-content: space-between;
-}
-
 .space-around {
   display: flex;
   justify-content: space-around;
-}
-
-.align-items-center {
-  align-items: center;
 }
 
 .rounded-image {
@@ -48,15 +39,7 @@ h3 {
 }
 
 .main-container {
-  padding: 32px 0;
   flex: 1 1 auto;
-}
-
-.nav-container {
-  padding: 5px 15px;
-  background-color: var(--pc);
-  display: flex;
-  align-items: center;
 }
 
 .nav-container ul {
@@ -84,8 +67,27 @@ h3 {
   text-decoration: none;
 }
 
-.nav-container ul > li {
-  width: 60%;
+.nav-container {
+  border-radius: 64px;
+  padding: 10px 15px;
+  background-color: var(--pc);
+}
+
+.nav-element {
+  margin-right: 20px;
+}
+
+.nav-element a:hover {
+  color: blue;
+}
+
+.nav-element a {
+  color: black;
+  text-decoration: none;
+}
+
+.nav-logo {
+  padding: 0 4px 0 0;
 }
 
 .search-input { 
@@ -103,3 +105,47 @@ h3 {
   outline: 0;
   border-color: blue;
 }
+
+
+
+/* Dropdown Button */
+.dropbtn {
+  color: white;
+  font-size: 16px;
+  border: none;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: block;
+  opacity: 0;
+  transition: 0.3s ease;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {opacity: 1;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+  transition: 0.1s ease-in;
+  box-shadow: 0px 0px 15px blue;
+} 

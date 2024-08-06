@@ -3,10 +3,11 @@
 }
 
 .input-block {
-    background: url("/images/magnifier_glass.svg") no-repeat left;
+    background: url("/images/magnifier_glass.svg") no-repeat left white;
     padding-left: 42px;
     background-size: 24px;
     background-position: 16px center;
+    
     /* This bit sets up the horizontal layout */
     display:flex;
     flex-direction:row;

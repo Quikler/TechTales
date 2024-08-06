@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity;
+@using TechTales.Data.Models;
+@inject UserManager<UserEntity> UserManager;
+@inject SignInManager<UserEntity> SignInManager;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -11,54 +16,67 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TechTales.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body style="background: lightgray" class="container">
 
-    <header>
+    <header class="py-4">
         <nav>
             <div class="nav-container">
-                <ul>
-                    <div class="space-between align-items-center">
-                        <li class="nav-element nav-logo">
-                            <a asp-action="Index" asp-controller="Home" asp-area="">
-                                <img src="~/images/logo.svg" width="48" height="48" />
-                            </a>
-                        </li>
-                        <li class="nav-element">
-                            <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-element">
-                            <a asp-area="" asp-controller="All Blogs" asp-action="Privacy">All Blogs</a>
-                        </li>
-                        <li class="nav-element">
-                            <a asp-area="" asp-controller="About" asp-action="Privacy">About</a>
-                        </li>
-                        <li class="nav-element">
-                            <a asp-area="" asp-controller="Contacts" asp-action="Privacy">Contacts</a>
-                        </li>
-                    </div>
+                <ul class="d-flex align-items-center">
+                    <li class="nav-element nav-logo">
+                        <a asp-action="Index" asp-controller="Home" asp-area="">
+                            <img src="~/images/logo.svg" width="64" height="64" />
+                        </a>
+                    </li>
                     <li class="nav-element">
+                        <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-element">
+                        <a asp-area="" asp-controller="All Blogs" asp-action="Privacy">All Blogs</a>
+                    </li>
+                    <li class="nav-element">
+                        <a asp-area="" asp-controller="About" asp-action="Privacy">About</a>
+                    </li>
+                    <li class="nav-element">
+                        <a asp-area="" asp-controller="Contacts" asp-action="Privacy">Contacts</a>
+                    </li>
+                    <li class="nav-element flex-grow-1">
                         <input type="text" class="search-input" placeholder="Search" />
                     </li>
-                    <div class="space-between align-items-center">
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        var user = await UserManager.GetUserAsync(User);
+                        <li class="nav-element dropdown">
+                            <a asp-action="Detail" asp-controller="Profile">
+                                <img src="~/images/vergil.png" class="rounded-image dropbtn" width="64" height="64" />
+                            </a>
+                            <div class="dropdown-content">
+                                <a class="dropdown-item" asp-action="Detail" asp-controller="Profile">Profile</a>
+                                <a class="dropdown-item" href="/Settings">Settings</a>
+                                <a class="dropdown-item" asp-action="Logout" asp-controller="Authorization">Logout</a>
+                            </div>
+                        </li>
+                    }
+                    else
+                    {
                         <li class="nav-element">
-                            <a asp-area="" asp-controller="Authorization" asp-action="Login">Log in</a>
+                            <a asp-controller="Authorization" asp-action="Login">Log in</a>
                         </li>
                         <li class="nav-element">
-                            <a asp-area="" asp-controller="Authorization" asp-action="Signup">Sign up</a>
+                            <a asp-controller="Authorization" asp-action="Signup">Sign up</a>
                         </li>
-                    </div>
+                    }
                 </ul>
             </div>
         </nav>
     </header>
 
-    <div class="container main-container">
+    <div class="main-container">
         <main role="main">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer">
+    <footer class="border-top footer mt-4">
         <div class="container">
             &copy; 2024 - TechTales - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>

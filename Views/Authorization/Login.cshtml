@@ -1,3 +1,4 @@
+@model LoginViewModel;
 @using TechTales.Helpers;
 @{
     ViewData["Title"] = "Login";
@@ -5,20 +6,32 @@
 
 <link rel="stylesheet" href="~/css/authorization.css" />
 
-<div class="space-between text-center authorization-form-container">
-    <form>
+<div class="d-flex justify-content-between text-center authorization-form-container">
+    <form asp-controller="Authorization" asp-action="Login" method="post" autocomplete="off">
         <div class="text-center logo-container">
             <h1>Welcome</h1>
             <img src="~/images/logo.svg" alt="logo" />
         </div>
-        <div class="inputs-container">
-            @Html.UnderlineInput("email", "email", "Email", required: true)
-            @Html.UnderlinePasswordInput("password", "Password", "input-password", true, "eye-password")
+        <div asp-validation-summary="All" class="fw-bold text-danger inputs-container">
+
+            @Html.UnderlineInput(
+                type: "text", 
+                placeholder: "Username or Email", 
+                required: true, 
+                aspFor: "UserNameOrEmail")
+
+            @Html.UnderlinePasswordInput(
+                placeholder: "Password", 
+                id: "input-password", 
+                required: true, 
+                eyeId: "eye-password", 
+                aspFor: "Password")
+            
         </div>
         <p class="forgot-password">
             <a href="#">Forgot password?</a>
         </p>
-        @Html.RoundedButton("Log in", padding: "16px 0", width: "100%", margin: "16px 0 32px 0")
+        @Html.RoundedButton("Log in", type: "submit", padding: "16px 0", width: "100%", margin: "16px 0 32px 0")
         <p>
             Don't have an account? <span><a href="Signup">Sign up</a></span>
         </p>

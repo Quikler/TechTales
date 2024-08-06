@@ -45,12 +45,12 @@
         </div>
     </div>
     <div class="author-img-container">
-        <a asp-action="Details" asp-controller="Profile">
+        <a asp-action="Detail" asp-controller="Profile">
             <img class="user-img rounded-image" src="~/images/dante.png" />
         </a>
         <div>
             <p>
-                <a asp-action="Details" asp-controller="Profile">
+                <a asp-action="Detail" asp-controller="Profile">
                     Dante
                 </a>
             </p>
@@ -64,16 +64,16 @@
         <ol class="comments-list">
             <li>
                 <div>
-                    <div class="space-between">
+                    <div class="justify-content-between">
                         <div>
-                            <a asp-action="Details" asp-controller="Profile">
+                            <a asp-action="Detail" asp-controller="Profile">
                                 <div class="commentator-avatar">
                                     <img class="user-img rounded-image" src="~/images/vergil.png" />
                                     <span>Vergil</span>
                                 </div>
                             </a>
                         </div>
-                        @Html.EditBlogButtons()
+                        @Html.EditBlogButtons(editFill: "green", deleteFill: "red")
                     </div>
                     <p class="comment-content">
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis commodi illum deleniti, et sequi placeat aliquam mollitia provident distinctio facere molestiae, similique quaerat libero nisi inventore. Cum possimus sequi ducimus.
@@ -82,9 +82,9 @@
             </li>
             <li>
                 <div>
-                    <div class="space-between">
+                    <div class="justify-content-between">
                         <div>
-                            <a asp-action="Details" asp-controller="Profile">
+                            <a asp-action="Detail" asp-controller="Profile">
                                 <div class="commentator-avatar">
                                     <img class="user-img rounded-image" src="~/images/dante.png" />
                                     <span>Dante</span>
@@ -99,16 +99,16 @@
             </li>
             <li>
                 <div>
-                    <div class="space-between">
+                    <div class="justify-content-between">
                         <div>
-                            <a asp-action="Details" asp-controller="Profile">
+                            <a asp-action="Detail" asp-controller="Profile">
                                 <div class="commentator-avatar">
                                     <img class="user-img rounded-image" src="~/images/vergil.png" />
                                     <span>Vergil</span>
                                 </div>
                             </a>
                         </div>
-                        @Html.EditBlogButtons()
+                        @Html.EditBlogButtons(editFill: "green", deleteFill: "red")
                     </div>
                     <p class="comment-content">
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis commodi illum deleniti, et sequi placeat aliquam mollitia provident distinctio facere molestiae, similique quaerat libero nisi inventore. Cum possimus sequi ducimus.
@@ -117,8 +117,8 @@
             </li>
         </ol>
         <div class="addcomment-container">
-            <div class="space-between">
-                <a asp-action="Details" asp-controller="Profile">
+            <div class="justify-content-between">
+                <a asp-action="Detail" asp-controller="Profile">
                     <div class="commentator-avatar">
                         <img class="user-img rounded-image" src="~/images/vergil.png" />
                     </div>

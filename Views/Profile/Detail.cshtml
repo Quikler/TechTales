@@ -1,42 +1,56 @@
+@model ProfileViewModel;
 @using TechTales.Helpers;
 @{
-    //ViewData["Title"] = "Profile";
-    ViewData["Title"] = ViewData["Username"];
+    ViewData["Title"] = Model.Username;
 }
 
-<link rel="stylesheet" href="~/css/profile/profile.css">
+<link rel="stylesheet" href="~/css/profile/detail.css">
 
-<div class="space-between">
+<div class="d-flex justify-content-between">
     <div class="user-info-container">
         <div>
             <div class="text-center">
                 <img id="user-profile-image" class="rounded-image" src="~/images/vergil.png" />
                 <div class="user-name-container">
-                    <h1>Vergil</h1>
+                    <h1>@Model.Username</h1>
                     <a asp-action="Edit" asp-controller="Profile">
                         <img id="gear-img" src="~/images/gear.svg" />
                     </a>
                 </div>
-                <p>Japan</p>
+                <p>@Model.Country</p>
             </div>
             <div class="about-me-container text-justify">
                 <h4>About me:</h4>
-                <p>
-                    I am the storm that is approaching.<br />
-                    Provoking black clouds in isolation.<br />
-                    I am reclaimer of my name.<br />
-                    Born in flames I have been blast.<br />
-                    My family crest is a demon of death.
-                </p>
+                @if (Model.AboutMe is null)
+                {
+                    <p class="fst-italic text-muted text-center">[No data presented]</p>
+                }
+                else
+                {
+                    <p>@Model.AboutMe</p>
+                }
+                
+                @* I am the storm that is approaching.<br />
+                Provoking black clouds in isolation.<br />
+                I am reclaimer of my name.<br />
+                Born in flames I have been blast.<br />
+                My family crest is a demon of death. *@
             </div>
         </div>
     </div>
 
     <div>
-        <h4 id="h4-avalable-blogs" class="text-left">Available blogs:</h4>
+        <div class="mb-3 d-flex justify-content-between align-items-center">
+            <h4 class="text-left m-0">Available blogs:</h4>
+            <button id="createblog-btn" class="fs-3">
+                <a asp-action="Create" asp-controller="Blog">
+                    <img src="~/images/add.svg" />
+                </a>
+            </button>
+        </div>
         <ol class="blogs-container">
             <li>
-                <div class="space-between blog-title-time">
+                <div class="d-flex justify-content-between blog-title-time">
                     <h3>Blog - '[Title]'</h3>
                     <p>01/08/2005</p>
                 </div>
@@ -49,7 +63,20 @@
                 @Html.EditBlogButtons(editHref: "/Blog/Edit")
             </li>
             <li>
-                <div class="space-between blog-title-time">
+                <div class="d-flex justify-content-between blog-title-time">
+                    <h3>Blog - '[Title]'</h3>
+                    <p>01/08/2005</p>
+                </div>
+                <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Qui sed sit quisquam esse dolores facere amet! 
+                    Molestiae modi, id rem eius iure ad enim quibusdam maiores, nobis dignissimos, optio a?
+                    ...<span><a asp-controller="Blog" asp-action="Blog">[Read more]</a></span>
+                </p>
+                @Html.EditBlogButtons(editHref: "/Blog/Edit")
+            </li>
+            <li>
+                <div class="d-flex justify-content-between blog-title-time">
                     <h3>Blog - '[Title]'</h3>
                     <p>01/08/2005</p>
                 </div>
@@ -62,7 +89,7 @@
                 @Html.EditBlogButtons()
             </li>
             <li>
-                <div class="space-between blog-title-time">
+                <div class="d-flex justify-content-between blog-title-time">
                     <h3>Blog - '[Title]'</h3>
                     <p>01/08/2005</p>
                 </div>
@@ -75,20 +102,7 @@
                 @Html.EditBlogButtons()
             </li>
             <li>
-                <div class="space-between blog-title-time">
-                    <h3>Blog - '[Title]'</h3>
-                    <p>01/08/2005</p>
-                </div>
-                <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Qui sed sit quisquam esse dolores facere amet! 
-                    Molestiae modi, id rem eius iure ad enim quibusdam maiores, nobis dignissimos, optio a?
-                    ...<span><a asp-controller="Blog" asp-action="Blog">[Read more]</a></span>
-                </p>
-                @Html.EditBlogButtons()
-            </li>
-            <li>
-                <div class="space-between blog-title-time">
+                <div class="d-flex justify-content-between blog-title-time">
                     <h3>Blog - '[Title]'</h3>
                     <p>01/08/2005</p>
                 </div>

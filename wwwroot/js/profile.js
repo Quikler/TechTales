@@ -4,8 +4,7 @@ window.addEventListener('load', function() {
    
     const userInfoContainerChild = document.querySelector('.user-info-container > div');
 
-    //const availableBlogsH2 = document.querySelector('.profile-container > div > h2');
-    const availableBlogsH2 = document.getElementById('h4-avalable-blogs');
+    const availableBlogsH2 = document.querySelector('.mb-3.d-flex.justify-content-between.align-items-center');
 
     const maxHeight = `${userInfoContainerChild.offsetHeight - availableBlogsH2.offsetHeight - getComputedStyle(availableBlogsH2).marginBottom.replace('px', '')}px`;
     console.log(`Available blogs max-height: ${maxHeight}`);

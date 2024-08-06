@@ -1,22 +1,19 @@
 @using TechTales.Helpers;
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Create";
 }
 
 <link rel="stylesheet" href="~/css/blog.css">
 
 <div class="create-blog-container">
-    <h1>Edit blog '[Blog Titile]'</h1>
+    <h1>Create a new blog</h1>
     <input type="text" placeholder="Title">
     <textarea name="" id="" placeholder="Content"></textarea>
     <div class="d-flex justify-content-between">
         <div class="visibility-radio-container">
-            <div class="d-flex align-items-center justify-content-between">
-                <div class="d-inline-flex align-items-center">
-                    <input type="radio" name="visibility" value="Public" checked />
-                    <label class="ps-2 fw-bold" for="Public">Public</label>
-                </div>
-                <span class="text-muted ps-1"> - Current blog state</span>
+            <div class="d-flex align-items-center">
+                <input type="radio" name="visibility" value="Public" checked />
+                <label class="ps-2 fw-bold" for="Public">Public</label>
             </div>
             <div class="d-flex align-items-center">
                 <input type="radio" name="visibility" value="Private" />
@@ -25,7 +22,7 @@
         </div>
         <div>
             <input type="text" placeholder="Tags">
-            <input class="m-0" type="text" placeholder="Categories">
+            <input type="text" placeholder="Categories">
         </div>
     </div>
     @Html.RoundedButton("Create blog")

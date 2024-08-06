@@ -46,3 +46,12 @@ h1 {
 .blogs-container {
     overflow: scroll;
 }
+
+#createblog-btn {
+    background-color: transparent;
+}
+
+#createblog-btn > a > img {
+    width: 48px;
+    height: 48px;
+}

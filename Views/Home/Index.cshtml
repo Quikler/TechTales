@@ -1,4 +1,5 @@
-﻿@{
+﻿@model HomeViewModel;
+@{
     ViewData["Title"] = "Home";
 }
 
@@ -11,10 +12,10 @@
         <input placeholder="Title, Category, Tag, Content..." type="text" />
         <button>Search</button>
     </div>
-    <div class="space-between blogs-sidepanel-container">
+    <div class="d-flex justify-content-between blogs-sidepanel-container">
         <div>
             <ol>
-                <li class="space-between blog-container">
+                <li class="d-flex justify-content-between blog-container">
                     <div class="blog-title-content">
                         <h3>Blog - '[Title]'</h3>
                         <p>
@@ -24,13 +25,13 @@
                     </div>
                     <div class="blog-time-user">
                         <p>01/08/2005</p>
-                        <a asp-action="Details" asp-controller="Profile">
+                        <a asp-action="Detail" asp-controller="Profile">
                             <img class="rounded-image" src="~/images/vergil.png" />
                             Vergil
                         </a>
                     </div>
                 </li>
-                <li class="space-between blog-container">
+                <li class="d-flex justify-content-between blog-container">
                     <div class="blog-title-content">
                         <h3>Blog - '[Title]'</h3>
                         <p>
@@ -40,7 +41,7 @@
                     </div>
                     <div class="blog-time-user">
                         <p>01/08/2005</p>
-                        <a asp-action="Details" asp-controller="Profile">
+                        <a asp-action="Detail" asp-controller="Profile">
                             <img class="rounded-image" src="~/images/vergil.png" />
                             Vergil
                         </a>
