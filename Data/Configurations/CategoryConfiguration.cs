@@ -1,12 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TechTales.Data.Models;
 
-namespace TechTales.Data.Configurations;
+namespace TechTales.Data.Models;
 
-public class TagConfiguration : IEntityTypeConfiguration<TagEntity>
+public class CategoryConfiguration : IEntityTypeConfiguration<CategoryEntity>
 {
-    public void Configure(EntityTypeBuilder<TagEntity> builder)
+    public void Configure(EntityTypeBuilder<CategoryEntity> builder)
     {
         builder.HasKey(t => t.Id);
 
@@ -17,6 +16,6 @@ public class TagConfiguration : IEntityTypeConfiguration<TagEntity>
 
         builder
             .HasMany(t => t.Blogs)
-            .WithMany(b => b.Tags);
+            .WithMany(b => b.Catogories);
     }
 }

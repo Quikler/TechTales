@@ -19,20 +19,17 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var model = new HomeViewModel();
-
         if (User.Identity is null)
         {
-            return View(model);
+            return View();
         }
 
         if (User.Identity.IsAuthenticated)
         {
             var user = await _userManager.GetUserAsync(User);
-            model.Username = user?.UserName;
         }
 
-        return View(model);
+        return View();
     }
 
     public IActionResult Privacy()

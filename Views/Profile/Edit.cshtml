@@ -1,3 +1,4 @@
+@model ProfileViewModel;
 @using TechTales.Helpers;
 @{
     ViewData["Title"] = ViewData["Username"];
@@ -9,14 +10,18 @@
     <div class="user-image-h1-container">
         <div class="user-image-container text-center">
             <h1>Edit your profile</h1>
-            <img id="user-profile-image" class="rounded-image" src="~/images/vergil.png" />
+            
+            <img src="@(Model.Avatar is null || Model.Avatar.Length == 0 ?
+                "/images/default_user_icon.svg" : Model.Avatar)"
+                class="rounded-image box-shadow shadow-lg mb-2" height="400" id="user-profile-image" />
+            
             @Html.RoundedButton("Change picture")
         </div>
     </div>
     <div class="inputs-container">
-        <input type="text" placeholder="Username">
-        <input type="text" placeholder="Country">
-        <textarea name="about" placeholder="About me" id=""></textarea>
+        <input type="text" placeholder="Username" value="@Model.UserName">
+        <input type="text" placeholder="Country" value="@Model.Country">
+        <textarea name="about" placeholder="About me">@Model.AboutMe</textarea>
         @Html.RoundedButton("Submit")
     </div>
 </div>

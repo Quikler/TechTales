@@ -27,8 +27,10 @@ public class ProfileController : Controller
 
         var model = new ProfileViewModel
         {
-            Username = user.UserName,
+            UserName = user.UserName,
             Country = user.Country,
+            AboutMe = user.AboutMe,
+            Avatar = user.Avatar,
         };
         return View(model);
     }
@@ -43,8 +45,10 @@ public class ProfileController : Controller
 
         var model = new ProfileViewModel
         {
-            Username = user.UserName,
+            UserName = user.UserName,
             Country = user.Country,
+            AboutMe = user.AboutMe,
+            Avatar = user.Avatar,
         };
         return View(model);
     }

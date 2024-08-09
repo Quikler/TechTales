@@ -1,7 +1,7 @@
 @model ProfileViewModel;
 @using TechTales.Helpers;
 @{
-    ViewData["Title"] = Model.Username;
+    ViewData["Title"] = Model.UserName;
 }
 
 <link rel="stylesheet" href="~/css/profile/detail.css">
@@ -10,9 +10,13 @@
     <div class="user-info-container">
         <div>
             <div class="text-center">
-                <img id="user-profile-image" class="rounded-image" src="~/images/vergil.png" />
+
+                <img src="@(Model.Avatar is null || Model.Avatar.Length == 0 ?
+                    "/images/default_user_icon.svg" : Model.Avatar)"
+                    class="rounded-image box-shadow shadow-lg mb-2" height="400" id="user-profile-image" />
+
                 <div class="user-name-container">
-                    <h1>@Model.Username</h1>
+                    <h1>@Model.UserName</h1>
                     <a asp-action="Edit" asp-controller="Profile">
                         <img id="gear-img" src="~/images/gear.svg" />
                     </a>

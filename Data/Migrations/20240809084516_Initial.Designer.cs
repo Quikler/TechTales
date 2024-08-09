@@ -12,8 +12,8 @@ using TechTales.Data;
 namespace TechTales.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240805094131_AddUser")]
-    partial class AddUser
+    [Migration("20240809084516_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,10 +25,41 @@ namespace TechTales.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("BlogEntityCategoryEntity", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
+                    b.Property<Guid>("BlogsId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("CatogoriesId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("BlogsId", "CatogoriesId");
+
+                    b.HasIndex("CatogoriesId");
+
+                    b.ToTable("BlogEntityCategoryEntity");
+                });
+
+            modelBuilder.Entity("BlogEntityTagEntity", b =>
+                {
+                    b.Property<Guid>("BlogsId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("TagsId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("BlogsId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("BlogEntityTagEntity");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -51,7 +82,7 @@ namespace TechTales.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,9 +96,8 @@ namespace TechTales.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -76,7 +106,7 @@ namespace TechTales.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,9 +120,8 @@ namespace TechTales.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -101,7 +130,7 @@ namespace TechTales.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("varchar(255)");
@@ -112,9 +141,8 @@ namespace TechTales.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -123,13 +151,13 @@ namespace TechTales.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("varchar(255)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -138,10 +166,10 @@ namespace TechTales.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("varchar(255)");
@@ -163,32 +191,62 @@ namespace TechTales.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("varchar(70)");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
 
                     b.ToTable("Blogs");
                 });
 
-            modelBuilder.Entity("TechTales.Data.Models.BlogTagEntity", b =>
+            modelBuilder.Entity("TechTales.Data.Models.CategoryEntity", b =>
                 {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("TechTales.Data.Models.CommentEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("char(36)");
+
                     b.Property<Guid>("BlogId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("TagId")
-                        .HasColumnType("char(36)");
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-                    b.HasKey("BlogId", "TagId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("TagId");
+                    b.HasIndex("AuthorId");
 
-                    b.ToTable("BlogTags");
+                    b.HasIndex("BlogId");
+
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("TechTales.Data.Models.TagEntity", b =>
@@ -199,7 +257,7 @@ namespace TechTales.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(40)");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -208,23 +266,30 @@ namespace TechTales.Migrations
 
             modelBuilder.Entity("TechTales.Data.Models.UserEntity", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("AboutMe")
+                        .HasColumnType("longtext");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<byte[]>("Avatar")
+                        .HasColumnType("longblob");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("varchar(60)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
@@ -236,7 +301,6 @@ namespace TechTales.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("NormalizedEmail")
@@ -260,13 +324,13 @@ namespace TechTales.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Surname")
-                        .IsRequired()
                         .HasColumnType("varchar(50)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("varchar(50)");
 
@@ -282,16 +346,46 @@ namespace TechTales.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("BlogEntityCategoryEntity", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("TechTales.Data.Models.BlogEntity", null)
+                        .WithMany()
+                        .HasForeignKey("BlogsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechTales.Data.Models.CategoryEntity", null)
+                        .WithMany()
+                        .HasForeignKey("CatogoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BlogEntityTagEntity", b =>
+                {
+                    b.HasOne("TechTales.Data.Models.BlogEntity", null)
+                        .WithMany()
+                        .HasForeignKey("BlogsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechTales.Data.Models.TagEntity", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.HasOne("TechTales.Data.Models.UserEntity", null)
                         .WithMany()
@@ -300,7 +394,7 @@ namespace TechTales.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.HasOne("TechTales.Data.Models.UserEntity", null)
                         .WithMany()
@@ -309,9 +403,9 @@ namespace TechTales.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -324,42 +418,53 @@ namespace TechTales.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.HasOne("TechTales.Data.Models.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("TechTales.Data.Models.BlogTagEntity", b =>
-                {
-                    b.HasOne("TechTales.Data.Models.BlogEntity", "Blog")
-                        .WithMany("BlogTags")
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TechTales.Data.Models.TagEntity", "Tag")
-                        .WithMany("BlogTags")
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Blog");
-
-                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("TechTales.Data.Models.BlogEntity", b =>
                 {
-                    b.Navigation("BlogTags");
+                    b.HasOne("TechTales.Data.Models.UserEntity", "Author")
+                        .WithMany("Blogs")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("TechTales.Data.Models.TagEntity", b =>
+            modelBuilder.Entity("TechTales.Data.Models.CommentEntity", b =>
                 {
-                    b.Navigation("BlogTags");
+                    b.HasOne("TechTales.Data.Models.UserEntity", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechTales.Data.Models.BlogEntity", "Blog")
+                        .WithMany("Comments")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Blog");
+                });
+
+            modelBuilder.Entity("TechTales.Data.Models.BlogEntity", b =>
+                {
+                    b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("TechTales.Data.Models.UserEntity", b =>
+                {
+                    b.Navigation("Blogs");
                 });
 #pragma warning restore 612, 618
         }

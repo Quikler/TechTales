@@ -12,17 +12,30 @@ public class BlogConfiguration : IEntityTypeConfiguration<BlogEntity>
 
         builder
             .Property(b => b.Title)
-            .HasColumnType("varchar(70)")
+            .HasColumnType("varchar(50)")
             .IsRequired();
 
         builder
             .Property(b => b.Content)
             .HasColumnType("longtext")
             .IsRequired();
+            
+        builder
+            .HasOne(b => b.Author)
+            .WithMany(u => u.Blogs)
+            .HasForeignKey(b => b.AuthorId);
 
         builder
-            .HasMany(b => b.BlogTags)
-            .WithOne(bt => bt.Blog)
-            .HasForeignKey(bt => bt.BlogId);
+            .HasMany(b => b.Comments)
+            .WithOne(c => c.Blog)
+            .HasForeignKey(c => c.BlogId);
+
+        builder
+            .HasMany(b => b.Tags)
+            .WithMany(t => t.Blogs);
+
+        builder
+            .HasMany(b => b.Catogories)
+            .WithMany(c => c.Blogs);
     }
 }

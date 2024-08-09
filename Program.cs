@@ -20,7 +20,7 @@ builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
 builder.Services
-    .AddIdentity<UserEntity, IdentityRole>(options =>
+    .AddIdentity<UserEntity, IdentityRole<Guid>>(options =>
     {
         options.Password.RequireDigit = false;
         options.Password.RequiredLength = 8;

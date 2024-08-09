@@ -123,8 +123,8 @@ h3 {
 
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
-  display: block;
   opacity: 0;
+  visibility: hidden;
   transition: 0.3s ease;
   position: absolute;
   background-color: #f1f1f1;
@@ -142,10 +142,13 @@ h3 {
 }
 
 /* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {opacity: 1;}
+.dropdown:hover .dropdown-content {
+  opacity: 1;
+  visibility: visible;
+}
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
   transition: 0.1s ease-in;
-  box-shadow: 0px 0px 15px blue;
-} 
+  box-shadow: 0px 0px 32px lightgray;
+}
