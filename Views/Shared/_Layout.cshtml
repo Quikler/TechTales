@@ -47,7 +47,7 @@
                     {
                         UserEntity user = (await UserManager.GetUserAsync(User))!;
                         <li class="nav-element dropdown">
-                            <a asp-action="Detail" asp-controller="Profile">
+                            <a asp-action="Detail" asp-controller="Profile" asp-route-id="@user.Id">
                                 <img src="@ExtensionMethods.BlobToImageSrc(user.Avatar)"
                                      class="rounded-image dropbtn size-64-fit-cover" />
                             </a>

@@ -66,8 +66,6 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-//app.MapIdentityApi<UserEntity>();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

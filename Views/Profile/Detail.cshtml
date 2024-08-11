@@ -16,9 +16,12 @@
 
                 <div class="d-flex justify-content-center align-items-center">
                     <h1 class="pe-2">@Model.UserName</h1>
-                    <a asp-action="Edit" asp-controller="Profile">
-                        <img id="gear-img" src="~/images/gear.svg" />
-                    </a>
+                    @if (Model.IsSameUser)
+                    {
+                        <a asp-action="Edit" asp-controller="Profile">
+                            <img id="gear-img" src="~/images/gear.svg" />
+                        </a>
+                    }
                 </div>
                 <p>@Model.Country</p>
             </div>

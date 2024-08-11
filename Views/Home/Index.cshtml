@@ -29,6 +29,7 @@
                         <div class="blog-time-user">
                             <p>@blog.CreationDate.ToString("dd/MM/yyyy")</p>
                             <a asp-action="Detail" asp-controller="Profile"
+                               asp-route-id="@blog.Author.Id"
                                class="d-flex flex-column align-items-center">
                                 <img class="rounded-image size-64-fit-cover"
                                 src="@ExtensionMethods.BlobToImageSrc(blog.Author.Avatar)" />

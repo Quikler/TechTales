@@ -25,20 +25,27 @@ public class ProfileController : Controller
         _context = context;
     }
 
-    public async Task<IActionResult> Detail()
+    [HttpGet]
+    public async Task<IActionResult> Detail(Guid id)
     {
-        var user = await _userManager.GetUserAsync(User);
-        if (user is null)
+        var profileUser = await _context.Users
+            .AsNoTracking()
+            .Include(u => u.Blogs)
+            .FirstOrDefaultAsync(u => u.Id == id);
+        
+        var currentUser = await _userManager.GetUserAsync(User);
+        if (profileUser is null)
         {
             return NotFound();
         }
 
         var model = new ProfileViewModel
         {
-            UserName = user.UserName,
-            Country = user.Country,
-            AboutMe = user.AboutMe,
-            Avatar = user.Avatar,
+            UserName = profileUser.UserName,
+            Country = profileUser.Country,
+            AboutMe = profileUser.AboutMe,
+            Avatar = profileUser.Avatar,
+            IsSameUser = currentUser is not null && profileUser.Id == currentUser.Id
         };
         return View(model);
     }
