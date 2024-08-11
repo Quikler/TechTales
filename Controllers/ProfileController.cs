@@ -45,6 +45,7 @@ public class ProfileController : Controller
             Country = profileUser.Country,
             AboutMe = profileUser.AboutMe,
             Avatar = profileUser.Avatar,
+            Blogs = profileUser.Blogs,
             IsSameUser = currentUser is not null && profileUser.Id == currentUser.Id
         };
         return View(model);

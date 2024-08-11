@@ -73,7 +73,7 @@ public class BlogController : Controller
         await _context.Blogs.AddAsync(blogEntity);
         await _context.SaveChangesAsync();
 
-        return RedirectToAction("Detail", "Profile");
+        return RedirectToAction("Detail", "Profile", new { user.Id });
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
