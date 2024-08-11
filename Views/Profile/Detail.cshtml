@@ -11,12 +11,11 @@
         <div>
             <div class="text-center">
 
-                <img src="@(Model.Avatar is null || Model.Avatar.Length == 0 ?
-                    "/images/default_user_icon.svg" : Model.Avatar)"
-                    class="rounded-image box-shadow shadow-lg mb-2" height="400" id="user-profile-image" />
+                <img src="@ExtensionMethods.BlobToImageSrc(Model.Avatar)"
+                    class="size-400-fit-cover rounded-image box-shadow shadow-lg mb-2" />
 
-                <div class="user-name-container">
-                    <h1>@Model.UserName</h1>
+                <div class="d-flex justify-content-center align-items-center">
+                    <h1 class="pe-2">@Model.UserName</h1>
                     <a asp-action="Edit" asp-controller="Profile">
                         <img id="gear-img" src="~/images/gear.svg" />
                     </a>

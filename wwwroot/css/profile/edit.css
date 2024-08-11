@@ -3,8 +3,9 @@ h1 {
 }
 
 #user-profile-image {
+    width: 400px;
     height: 400px;
-    margin-bottom: 16px;
+    object-fit: cover;
 }
 
 .user-image-h1-container {
@@ -20,7 +21,7 @@ h1 {
     margin-top: 12px;
 }
 
-.inputs-container * {
+.inputs-container > * {
     margin-bottom: 24px;
 }
 
@@ -41,3 +42,4 @@ h1 {
 .inputs-container button {
     float: right;
 }
+

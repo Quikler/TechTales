@@ -1,29 +1,43 @@
-@model ProfileViewModel;
+@model EditProfileViewModel;
 @using TechTales.Helpers;
 @{
-    ViewData["Title"] = ViewData["Username"];
+    ViewData["Title"] = Model.UserName;
 }
 
 <link rel="stylesheet" href="~/css/profile/edit.css">
 
-<div class="d-flex justify-content-between">
+<form asp-controller="Profile" asp-action="Edit"
+      method="post" enctype="multipart/form-data"
+      autocomplete="off" class="d-flex justify-content-between">
     <div class="user-image-h1-container">
         <div class="user-image-container text-center">
             <h1>Edit your profile</h1>
-            
-            <img src="@(Model.Avatar is null || Model.Avatar.Length == 0 ?
-                "/images/default_user_icon.svg" : Model.Avatar)"
-                class="rounded-image box-shadow shadow-lg mb-2" height="400" id="user-profile-image" />
-            
-            @Html.RoundedButton("Change picture")
+
+            <img src="@ExtensionMethods.BlobToImageSrc(Model.Avatar)" id="user-profile-image"
+                 class="size-400-fit-cover rounded-image box-shadow shadow-lg mb-3" />
+
+            @Html.RoundedButton("Change picture", 
+                js: "onclick=\"document.getElementById('changePicture').click()\"")
+
+            <input asp-for="Avatar" type='file' id="changePicture"
+                   style="display:none" accept="image/*">
         </div>
     </div>
-    <div class="inputs-container">
-        <input type="text" placeholder="Username" value="@Model.UserName">
-        <input type="text" placeholder="Country" value="@Model.Country">
-        <textarea name="about" placeholder="About me">@Model.AboutMe</textarea>
-        @Html.RoundedButton("Submit")
+    <div asp-validation-summary="All" class="inputs-container fw-bold text-danger">
+        <div class="input-group">
+            <input asp-for="@Model.UserName" class="form-control" type="text" placeholder="Username" aria-label="Username">
+        </div>
+        <div class="input-group">
+            <input asp-for="@Model.Country" class="form-control" type="text" placeholder="Country" aria-label="Country">
+        </div>
+        <div class="input-group">
+            <textarea asp-for="@Model.AboutMe" placeholder="About me" class="form-control" aria-label="About me"></textarea>
+        </div>
+        @* <input asp-for="@Model.UserName" type="text" placeholder="Username">
+        <input asp-for="@Model.Country" type="text" placeholder="Country">
+        <textarea asp-for="@Model.AboutMe" placeholder="About me"></textarea> *@
+        @Html.RoundedButton("Submit", type: "submit")
     </div>
-</div>
+</form>
 
 <script src="~/js/profile.js" asp-append-version="true"></script>

@@ -106,7 +106,17 @@ h3 {
   border-color: blue;
 }
 
+.size-400-fit-cover {
+  width: 400px;
+  height: 400px;
+  object-fit: cover;
+}
 
+.size-64-fit-cover {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+}
 
 /* Dropdown Button */
 .dropbtn {

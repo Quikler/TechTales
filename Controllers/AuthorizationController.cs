@@ -85,13 +85,13 @@ public class AuthorizationController : Controller
 
         // todo remember me
         var signInResult = await _signInManager.PasswordSignInAsync(
-            user, model.Password, true, false); // 3-d arg is remember me?
+            user, model.Password, true, true); // 3-d arg is remember me?
         
         if (signInResult.Succeeded)
         {
             return RedirectToAction("Index", "Home");
         }
-
+        
         if (signInResult.IsLockedOut)
         {
             ModelState.AddModelError(string.Empty, "You have been locked.");
@@ -105,6 +105,8 @@ public class AuthorizationController : Controller
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
+        //HttpContext.Session.Clear(); // Clear session
+        Response.Cookies.Delete(".AspNetCore.Identity.Application"); // Clear cookies
         return RedirectToAction("Index", "Home");
     }
 

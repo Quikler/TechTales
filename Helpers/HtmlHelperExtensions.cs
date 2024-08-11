@@ -46,11 +46,12 @@ public static class HtmlHelperExtensions
 
     public static HtmlString RoundedButton(this IHtmlHelper htmlHelper, string text, 
         string background = "black", string margin = "0", string padding = "16px 64px",
-        string width = "initial", string type = "button")
+        string width = "initial", string type = "button", string js = "")
     {
         return new HtmlString(
             $"""
             <button type="{type}" 
+                {js}
                 style="
                 text-align: center;
                 color:white;

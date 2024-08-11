@@ -19,7 +19,11 @@ public class BlogConfiguration : IEntityTypeConfiguration<BlogEntity>
             .Property(b => b.Content)
             .HasColumnType("longtext")
             .IsRequired();
-            
+
+        builder
+            .Property(b => b.Visibility)
+            .IsRequired();
+
         builder
             .HasOne(b => b.Author)
             .WithMany(u => u.Blogs)

@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity;
 @using TechTales.Data.Models;
+@using TechTales.Helpers
 @inject UserManager<UserEntity> UserManager;
 @inject SignInManager<UserEntity> SignInManager;
 
@@ -24,7 +25,7 @@
                 <ul class="d-flex align-items-center">
                     <li class="nav-element nav-logo">
                         <a asp-action="Index" asp-controller="Home" asp-area="">
-                            <img src="~/images/logo.svg" width="64" height="64" />
+                            <img src="~/images/logo.svg" class="rounded-image size-64-fit-cover" />
                         </a>
                     </li>
                     <li class="nav-element">
@@ -47,9 +48,8 @@
                         UserEntity user = (await UserManager.GetUserAsync(User))!;
                         <li class="nav-element dropdown">
                             <a asp-action="Detail" asp-controller="Profile">
-                                <img src="@(user.Avatar is null || user.Avatar.Length == 0 ?
-                                    "/images/default_user_icon.svg" : user.Avatar)"
-                                    class="rounded-image dropbtn" height="64" />
+                                <img src="@ExtensionMethods.BlobToImageSrc(user.Avatar)"
+                                     class="rounded-image dropbtn size-64-fit-cover" />
                             </a>
                             <div class="dropdown-content">
                                 <a class="dropdown-item" asp-action="Detail" asp-controller="Profile">Profile</a>

@@ -1,4 +1,6 @@
-﻿@{
+﻿@using TechTales.Helpers;
+@model HomeViewModel;
+@{
     ViewData["Title"] = "Home";
 }
 
@@ -12,9 +14,31 @@
         <button>Search</button>
     </div>
     <div class="d-flex justify-content-between blogs-sidepanel-container">
-        <div>
-            <ol>
-                @* <li class="d-flex justify-content-between blog-container">
+        <div class="flex-grow-1">
+            <ol id="blogs-list">
+                @foreach (var blog in Model.Blogs)
+                {
+                    <li class="d-flex justify-content-between blog-container">
+                        <div class="blog-title-content">
+                            <h3>@blog.Title</h3>
+                            <p>
+                                @blog.Content.EllipsisString(230)
+                                <a asp-action="Blog" asp-controller="Blog">[Read more]</a>
+                            </p>
+                        </div>
+                        <div class="blog-time-user">
+                            <p>@blog.CreationDate.ToString("dd/MM/yyyy")</p>
+                            <a asp-action="Detail" asp-controller="Profile"
+                               class="d-flex flex-column align-items-center">
+                                <img class="rounded-image size-64-fit-cover"
+                                src="@ExtensionMethods.BlobToImageSrc(blog.Author.Avatar)" />
+                                @blog.Author.UserName
+                            </a>
+                        </div>
+                    </li>
+                }
+
+            @* <li class="d-flex justify-content-between blog-container">
                     <div class="blog-title-content">
                         <h3>Blog - '[Title]'</h3>
                         <p>
@@ -48,15 +72,35 @@
                 </li> *@
             </ol>
             <ul class="blog-pagination">
-                <li><a href="#">«</a></li>
-                <li><a href="#">1</a></li>
-                <li><a class="active-pagination" href="#" style="border:none !important;">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#">6</a></li>
-                <li><a href="#">7</a></li>
-                <li><a href="#">»</a></li>
+
+                <li><a asp-action="Index"
+                        style="@(Model.CurrentPage <= 1 ? "pointer-events: none;color: #6c757d;" : "")"
+                        asp-route-page="@(Model.CurrentPage - 1)"
+                        asp-fragment="blogs-list">«</a></li>
+                
+                @for (int i = 0; i < Model.TotalPages; i++)
+                {
+                    int inc = i + 1;
+                    if (Model.CurrentPage == inc)
+                    {
+                        <li><a class="active-pagination"
+                               asp-action="Index"
+                               asp-fragment="blogs-list"
+                               asp-route-page="@inc">@inc</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-action="Index"
+                               asp-route-page="@inc"
+                               asp-fragment="blogs-list">@inc</a></li>
+                    }
+                }
+
+                <li><a asp-action="Index"
+                        style="@(Model.CurrentPage >= Model.TotalPages ? "pointer-events: none;color: #6c757d;" : "")"
+                        asp-route-page="@(Model.CurrentPage + 1)"
+                        asp-fragment="blogs-list">»</a></li>
+                
             </ul>
         </div>
         <div class="sidepanel">
