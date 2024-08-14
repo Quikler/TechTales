@@ -1,7 +1,7 @@
 @model ProfileViewModel;
 @using TechTales.Helpers;
 @{
-    ViewData["Title"] = Model.UserName;
+    ViewData["Title"] = Model.User.UserName;
 }
 
 <link rel="stylesheet" href="~/css/profile/detail.css">
@@ -11,11 +11,11 @@
         <div>
             <div class="text-center">
 
-                <img src="@ExtensionMethods.BlobToImageSrc(Model.Avatar)"
+                <img src="@Model.User.Avatar"
                     class="size-400-fit-cover rounded-image box-shadow shadow-lg mb-2" />
 
                 <div class="d-flex justify-content-center align-items-center">
-                    <h1 class="pe-2">@Model.UserName</h1>
+                    <h1 class="pe-2">@Model.User.UserName</h1>
                     @if (Model.IsSameUser)
                     {
                         <a asp-action="Edit" asp-controller="Profile">
@@ -23,24 +23,18 @@
                         </a>
                     }
                 </div>
-                <p>@Model.Country</p>
+                <p>@Model.User.Country</p>
             </div>
             <div class="about-me-container text-justify">
                 <h4>About me:</h4>
-                @if (Model.AboutMe is null)
+                @if (Model.User.AboutMe is null)
                 {
                     <p class="fst-italic text-muted text-center">[No data presented]</p>
                 }
                 else
                 {
-                    <p>@Model.AboutMe</p>
+                    <p>@Model.User.AboutMe</p>
                 }
-                
-                @* I am the storm that is approaching.<br />
-                Provoking black clouds in isolation.<br />
-                I am reclaimer of my name.<br />
-                Born in flames I have been blast.<br />
-                My family crest is a demon of death. *@
             </div>
         </div>
     </div>
@@ -65,13 +59,16 @@
                         <h3>@blog.Title</h3>
                         <p>@blog.CreationDate.ToString("dd/MM/yyyy HH:mm:ss")</p>
                     </div>
-                    <p>
-                        @blog.Content.EllipsisString(190)
-                        <span><a asp-controller="Blog" asp-action="Blog">[Read more]</a></span>
+                    <p class="text-break" style="white-space: pre-line"><!--
+                        -->@blog.Content.EllipsisString(190) <!--
+                        --><span><a asp-controller="Blog" asp-action="Read" asp-route-id="@blog.Id">[Read more]</a></span>
                     </p>
                     @if (Model.IsSameUser)
                     {
-                        @Html.EditBlogButtons(editHref: "/Blog/Edit")
+                        @Html.EditBlogButtons(
+                            editHref: $"/Blog/Edit/{blog.Id}", 
+                            deleteHref: $"/Blog/Delete/{blog.Id}"
+                        )
                     }
                 </li>
             }

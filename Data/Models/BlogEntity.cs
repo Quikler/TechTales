@@ -9,8 +9,9 @@ public class BlogEntity
     public UserEntity Author { get; set; } = null!;
     public bool Visibility { get; set; }
     public DateTime CreationDate { get; set; } = DateTime.UtcNow;
+    public DateTime UpdateDate { get; set; } = DateTime.UtcNow;
     public int Views { get; set; }
     public List<CommentEntity> Comments { get; set; } = [];
     public List<TagEntity> Tags { get; set; } = [];
-    public List<CategoryEntity> Catogories { get; set; } = [];
+    public List<CategoryEntity> Categories { get; set; } = [];
 }

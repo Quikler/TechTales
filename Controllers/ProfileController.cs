@@ -7,6 +7,7 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
 using TechTales.Data;
 using TechTales.Data.Models;
+using TechTales.Helpers;
 using TechTales.Models;
 
 namespace TechTales.Controllers;
@@ -26,8 +27,13 @@ public class ProfileController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Detail(Guid id)
+    public async Task<IActionResult> Detail(Guid? id)
     {
+        if (id is null || id == Guid.Empty)
+        {
+            return RedirectToAction("Login", "Authorization");
+        }
+
         var profileUser = await _context.Users
             .AsNoTracking()
             .Include(u => u.Blogs)
@@ -41,11 +47,20 @@ public class ProfileController : Controller
 
         var model = new ProfileViewModel
         {
-            UserName = profileUser.UserName,
-            Country = profileUser.Country,
-            AboutMe = profileUser.AboutMe,
-            Avatar = profileUser.Avatar,
-            Blogs = profileUser.Blogs,
+            User = new UserViewModel
+            {
+                UserName = profileUser.UserName!,
+                Country = profileUser.Country,
+                AboutMe = profileUser.AboutMe,
+                Avatar = ExtensionMethods.BlobToImageSrc(profileUser.Avatar)
+            },
+            Blogs = profileUser.Blogs.Select(b => new BlogViewModel
+            {
+                Id = b.Id,
+                Title = b.Title,
+                Content = b.Content,
+                CreationDate = b.CreationDate,
+            }).ToList(),
             IsSameUser = currentUser is not null && profileUser.Id == currentUser.Id
         };
         return View(model);
@@ -132,47 +147,5 @@ public class ProfileController : Controller
         ModelState.AddModelError(string.Empty, "An error occurred while updating the profile.");
 
         return View(model);
-    }
-
-    // [HttpPost]
-    // public async Task<IActionResult> Edit(EditProfileViewModel model, IFormFile? avatar)
-    // {
-    //     if (!ModelState.IsValid)
-    //     {
-    //         return View(model);
-    //     }
-
-    //     if (avatar is not null && avatar.Length > 0)
-    //     {
-    //         using var memoryStream = new MemoryStream();
-    //         await avatar.CopyToAsync(memoryStream);
-    //         model.Avatar = memoryStream.ToArray();
-    //     }
-
-    //     var user = await _userManager.GetUserAsync(User);
-
-    //     if (user is not null)
-    //     {
-    //         user.UserName = model.UserName;
-    //         user.Country = model.Country;
-    //         user.AboutMe = model.AboutMe;
-    //         user.Avatar = model.Avatar is null ? user.Avatar : model.Avatar;
-            
-    //         var result = await _userManager.UpdateAsync(user);
-    //         if (result.Succeeded)
-    //         {
-    //             return RedirectToAction("Detail", "Profile");
-    //         }
-    //     }
-
-    //     ModelState.AddModelError("", "An error occurred while updating the profile.");
-
-    //     return View(model);
-    // }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

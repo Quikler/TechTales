@@ -29,7 +29,7 @@
 
 /* Edit buttons */
 .edit-blog-section {
-    width: 100%;
+    /* width: 100%; */
     display: inline-flex;
     justify-content: end;
 }

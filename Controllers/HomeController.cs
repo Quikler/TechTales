@@ -27,9 +27,6 @@ public class HomeController : Controller
         int pageSize = 3; // Number of blogs on one page
         var totalBlogs = await _context.Blogs.CountAsync();
         var totalPages = (int)Math.Ceiling((double)totalBlogs / pageSize);
-
-        // if (page <= 0) page = 1;
-        // else if (page >= totalPages) page = totalPages;
         
         var blogs = await _context.Blogs
             .AsNoTracking()

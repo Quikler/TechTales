@@ -27,6 +27,10 @@ public class AuthorizationController : Controller
     [HttpGet]
     public IActionResult Signup()
     {
+        if (_signInManager.IsSignedIn(User))
+        {
+            return Forbid();
+        }
         return View();
     }
 
@@ -63,6 +67,10 @@ public class AuthorizationController : Controller
     [HttpGet]
     public IActionResult Login()
     {
+        if (_signInManager.IsSignedIn(User))
+        {
+            return Forbid();
+        }
         return View();
     }
 

@@ -7,12 +7,14 @@ public class SignupViewModel
     [Required]
     [DataType(DataType.Text)]
     [Display(Name = "UserName")]
+    [MaxLength(50, ErrorMessage = "Username must be less than 50 symbols")]
     public string UserName { get; set; } = string.Empty;
 
     [Required]
     [EmailAddress]
     [Display(Name = "Email")]
     [DataType(DataType.EmailAddress)]
+    [MaxLength(50, ErrorMessage = "Email must be less than 50 symbols")]
     public string Email { get; set; } = string.Empty;
 
     [Required]

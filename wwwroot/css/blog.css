@@ -1,3 +1,23 @@
+hr {
+    border: none;
+    border-top: 3px double #333;
+    color: #333;
+    overflow: visible;
+    text-align: center;
+    height: 5px;
+}
+  
+hr::after {
+    background-color: white;
+    content: '§';
+    color: black;
+    padding: 0 4px;
+    border-radius: 50%;
+    position: relative;
+    top: -20px;
+}
+  
+
 .blog-container {
     background-color: var(--pc);
     padding: 16px 32px;
@@ -24,28 +44,6 @@
 
 .sidepanel ul > li {
     margin-bottom: 24px;
-}
-
-.author-img-container {
-    margin: 24px 0;
-    display: flex;
-    align-items: center;
-    background-color: var(--pc);
-    padding: 16px 32px;
-}
-
-.author-img-container > a {
-    margin-right: 10px;
-}
-
-.author-img-container div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; 
-}
-
-.author-img-container div p {
-    margin-bottom: 0;
 }
 
 .user-img {

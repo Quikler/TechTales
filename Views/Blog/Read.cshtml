@@ -1,0 +1,117 @@
+@model ReadBlogViewModel;
+@using TechTales.Helpers;
+@{
+    ViewData["Title"] = "Blog";
+}
+
+<link rel="stylesheet" href="~/css/blog.css">
+
+<div>
+    <div class="d-flex justify-content-between blog-sidepanel-container">
+        <div class="blog-container flex-grow-1">
+            <h1 class="text-center">@Model.Title</h1>
+            <hr>
+            <p class="text-justify" style="white-space: pre-line;">@Model.Content</p>
+            @if (Model.Categories is not null && Model.Categories.Length != 0)
+            {
+                <p><span class="fw-bold">Categories: </span>@Model.Categories</p>
+            }
+
+            @if (Model.Tags is not null && Model.Tags.Length != 0)
+            {
+                <p><span class="fw-bold">Tags: </span>@Model.Tags</p>
+            }
+        </div>
+        <div class="sidepanel">
+            <ul>
+                <li>
+                    <a href="">Popular blogs</a>
+                </li>
+                <li>
+                    <a href="">Categories</a>
+                </li>
+                <li>
+                    <a href="">Tags</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="py-3 px-3 my-3 d-flex flex-grow-1" style="background-color: var(--pc);">
+        <a asp-action="Detail" asp-controller="Profile" asp-route-id="@Model.Author.Id">
+            <img class="user-img rounded-image" src="@Model.Author.Avatar" />
+        </a>
+        <div class="d-flex justify-content-center flex-column">
+            <p class="m-0">
+                <a asp-action="Detail" 
+                    asp-controller="Profile" 
+                    asp-route-id="@Model.Author.Id">
+                    @Model.Author.UserName</a></p>
+            <p class="m-0">@Model.CreationDate.ToString("dd/MM/yyyy HH:mm:ss")</p>
+        </div>
+    </div>
+    <div class="comments-container">
+        <p class="fs-3">Comments</p>
+        <ol class="comments-list">
+            @foreach (var comment in Model.Comments)
+            {
+                <li style="background-color: var(--d9);">
+                    <div class="d-flex justify-content-between">
+                        <div class="mb-3 d-flex flex-grow-1">
+                            <a asp-action="Detail" asp-controller="Profile" asp-route-id="@comment.Author.Id">
+                                <img class="user-img rounded-image" src="@comment.Author.Avatar" />
+                            </a>
+                            <div class="d-flex justify-content-center flex-column">
+                                <p class="m-0">
+                                    <a asp-action="Detail"
+                                        asp-controller="Profile"
+                                        asp-route-id="@comment.Author.Id">@comment.Author.UserName</a>
+                                </p>
+                                <p class="m-0">@comment.CreationDate.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                            </div>
+                        </div>
+                        @if (comment.IsSameUser)
+                        {
+                            @Html.EditBlogButtons(
+                                editFill: "green", 
+                                deleteFill: "red"
+                            )
+                        }
+                    </div>
+                    <p class="comment-content text-break" style="white-space: pre-line">@comment.Content</p>
+                </li>
+            }
+        </ol>
+        <form class="addcomment-container" method="post" asp-action="Add" asp-controller="Comment">
+            @if (Model.Reader is null)
+            {
+                <p class="text-center m-0 fst-italic text-muted">
+                    [To be able to comment
+                    <a asp-action="Signup" asp-controller="Authorization">Create</a>
+                    an account or
+                    <a asp-action="Login" asp-controller="Authorization">Log into</a>
+                    exsisting one]
+                </p>
+            }
+            else
+            {
+                <input type="hidden" name="BlogId" value="@Model.Id" />
+                <input type="hidden" name="AuthorId" value="@Model.Author.Id" />
+                
+                <div class="d-flex justify-content-between">
+                    <div class="commentator-avatar">
+                        <a asp-action="Detail" asp-controller="Profile" asp-route-id="@Model.Reader.Id">
+                            <img class="user-img rounded-image" src="@Model.Reader.Avatar" />
+                        </a>
+                    </div>
+                    <textarea name="Content" class="addcomment" type="text" placeholder="Add a comment..." required></textarea>
+                </div>
+                @Html.RoundedButton(
+                    "Leave a comment", 
+                    margin: "16px 0 0 auto",
+                    @class: "d-block",
+                    type: "submit"
+                )
+            }
+        </form>
+    </div>
+</div>

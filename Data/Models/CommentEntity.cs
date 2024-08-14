@@ -10,4 +10,6 @@ public class CommentEntity
     public BlogEntity Blog { get; set; } = null!;
     public Guid AuthorId { get; set; }
     public UserEntity Author { get; set; } = null!;
+    public DateTime CreationDate { get; set; } = DateTime.Now;
+    public DateTime UpdateDate { get; set; } = DateTime.Now;
 }

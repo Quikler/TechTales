@@ -21,9 +21,9 @@
                     <li class="d-flex justify-content-between blog-container">
                         <div class="blog-title-content">
                             <h3>@blog.Title</h3>
-                            <p>
-                                @blog.Content.EllipsisString(230)
-                                <a asp-action="Blog" asp-controller="Blog">[Read more]</a>
+                            <p class="text-break" style="white-space: pre-line"><!--
+                                -->@blog.Content.EllipsisString(230) <!--
+                                --><a asp-action="Read" asp-controller="Blog" asp-route-id="@blog.Id">[Read more]</a>
                             </p>
                         </div>
                         <div class="blog-time-user">

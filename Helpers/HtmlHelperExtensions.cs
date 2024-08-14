@@ -10,10 +10,13 @@ public static class HtmlHelperExtensions
         string aspFor = "")
     {
         string requiredStr = required ? "required" : string.Empty;
+        var value = htmlHelper.ViewData.ModelExplorer.GetExplorerForProperty(aspFor)?.Model?.ToString() ?? string.Empty;
+        
         return new HtmlString(
             $"""
             <input class="underline-input" 
                 name="{aspFor}"
+                value="{value}"
                 type="{type}"
                 placeholder="{placeholder}"
                 id="{id}"
@@ -27,13 +30,18 @@ public static class HtmlHelperExtensions
         string aspFor = "")
     {
         string requiredStr = required ? "required" : string.Empty;
+        var value = htmlHelper.ViewData.ModelExplorer.GetExplorerForProperty(aspFor)?.Model?.ToString() ?? string.Empty;
+
         return new HtmlString(
             $"""
             <div class="underline-password-input-container">
                 <input placeholder="{placeholder}"
                     type="password"
                     name="{aspFor}"
+                    value="{value}"
                     id="{id}"
+                    autocomplete="new-password"
+                    autofill="off"
                     {requiredStr} />
                 <img alt="eye&#x2205;" 
                     width="48px"
@@ -46,12 +54,13 @@ public static class HtmlHelperExtensions
 
     public static HtmlString RoundedButton(this IHtmlHelper htmlHelper, string text, 
         string background = "black", string margin = "0", string padding = "16px 64px",
-        string width = "initial", string type = "button", string js = "")
+        string width = "initial", string type = "button", string js = "", string @class = "")
     {
         return new HtmlString(
             $"""
             <button type="{type}" 
                 {js}
+                class="{@class}"
                 style="
                 text-align: center;
                 color:white;
@@ -69,7 +78,8 @@ public static class HtmlHelperExtensions
     }
 
     public static HtmlString EditBlogButtons(this IHtmlHelper htmlHelper, string editHref = "#",
-        string deleteHref = "#", string editFill = "black", string deleteFill = "black", int width = 72, int height = 72)
+        string deleteHref = "#", string editFill = "black", string deleteFill = "black",
+        int width = 72, int height = 72, string editType = "button", string deleteType = "button")
     {
         var edit = SvgContainerHelper.GetEdit(width, height, editFill);
         var delete = SvgContainerHelper.GetDelete(width, height, deleteFill);
@@ -80,10 +90,10 @@ public static class HtmlHelperExtensions
         return new HtmlString(
             $"""
             <div class="edit-blog-section">
-                <button style="width: {width}px; height: {height}px;">
+                <button type="{editType}" style="width: {width}px; height: {height}px;">
                     {editLink}
                 </button>
-                <button style="width: {width}px; height: {height}px;">
+                <button type="{deleteType}" style="width: {width}px; height: {height}px;">
                     {deleteLink}
                 </button>
             </div>

@@ -2,7 +2,6 @@
 @using TechTales.Data.Models;
 @using TechTales.Helpers
 @inject UserManager<UserEntity> UserManager;
-@inject SignInManager<UserEntity> SignInManager;
 
 <!DOCTYPE html>
 <html lang="en">
@@ -43,29 +42,31 @@
                     <li class="nav-element flex-grow-1">
                         <input type="text" class="search-input" placeholder="Search" />
                     </li>
-                    @if (SignInManager.IsSignedIn(User))
-                    {
-                        UserEntity user = (await UserManager.GetUserAsync(User))!;
-                        <li class="nav-element dropdown">
-                            <a asp-action="Detail" asp-controller="Profile" asp-route-id="@user.Id">
-                                <img src="@ExtensionMethods.BlobToImageSrc(user.Avatar)"
-                                     class="rounded-image dropbtn size-64-fit-cover" />
-                            </a>
-                            <div class="dropdown-content">
-                                <a class="dropdown-item" asp-action="Detail" asp-controller="Profile">Profile</a>
-                                <a class="dropdown-item" href="/Settings">Settings</a>
-                                <a class="dropdown-item" asp-action="Logout" asp-controller="Authorization">Logout</a>
-                            </div>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="nav-element">
-                            <a asp-controller="Authorization" asp-action="Login">Log in</a>
-                        </li>
-                        <li class="nav-element">
-                            <a asp-controller="Authorization" asp-action="Signup">Sign up</a>
-                        </li>
+                    @{
+                        var user = await UserManager.GetUserAsync(User);
+                        if (user is null)
+                        {
+                            <li class="nav-element">
+                                <a asp-controller="Authorization" asp-action="Login">Log in</a>
+                            </li>
+                            <li class="nav-element">
+                                <a asp-controller="Authorization" asp-action="Signup">Sign up</a>
+                            </li>
+                        }
+                        else 
+                        {
+                            <li class="nav-element dropdown">
+                                <a asp-action="Detail" asp-controller="Profile" asp-route-id="@user.Id">
+                                    <img src="@ExtensionMethods.BlobToImageSrc(user.Avatar)"
+                                        class="rounded-image dropbtn size-64-fit-cover" />
+                                </a>
+                                <div class="dropdown-content">
+                                    <a class="dropdown-item" asp-action="Detail" asp-controller="Profile" asp-route-id="@user.Id">Profile</a>
+                                    <a class="dropdown-item" href="/Settings">Settings</a>
+                                    <a class="dropdown-item" asp-action="Logout" asp-controller="Authorization">Logout</a>
+                                </div>
+                            </li>
+                        }
                     }
                 </ul>
             </div>

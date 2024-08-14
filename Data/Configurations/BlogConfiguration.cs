@@ -39,7 +39,7 @@ public class BlogConfiguration : IEntityTypeConfiguration<BlogEntity>
             .WithMany(t => t.Blogs);
 
         builder
-            .HasMany(b => b.Catogories)
+            .HasMany(b => b.Categories)
             .WithMany(c => c.Blogs);
     }
 }
