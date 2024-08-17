@@ -79,7 +79,8 @@ public static class HtmlHelperExtensions
 
     public static HtmlString EditBlogButtons(this IHtmlHelper htmlHelper, string editHref = "#",
         string deleteHref = "#", string editFill = "black", string deleteFill = "black",
-        int width = 72, int height = 72, string editType = "button", string deleteType = "button")
+        int width = 72, int height = 72, string editType = "button", string deleteType = "button",
+        string editClass = "", string deleteClass = "")
     {
         var edit = SvgContainerHelper.GetEdit(width, height, editFill);
         var delete = SvgContainerHelper.GetDelete(width, height, deleteFill);
@@ -90,10 +91,10 @@ public static class HtmlHelperExtensions
         return new HtmlString(
             $"""
             <div class="edit-blog-section">
-                <button type="{editType}" style="width: {width}px; height: {height}px;">
+                <button type="{editType}" class="{editClass}" style="width: {width}px; height: {height}px;">
                     {editLink}
                 </button>
-                <button type="{deleteType}" style="width: {width}px; height: {height}px;">
+                <button type="{deleteType}" class="{deleteClass}" style="width: {width}px; height: {height}px;">
                     {deleteLink}
                 </button>
             </div>

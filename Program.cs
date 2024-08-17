@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TechTales.Data;
 using TechTales.Data.Models;
+using TechTales.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.IsEssential = true;
 });
 
+builder.Services.AddSignalR(options => options.MaximumReceiveMessageSize = 102400000);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -65,6 +68,13 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<CommentHub>("/commentHub");
+});
+
+//app.MapHub<CommentHub>("/commentHub");
 
 app.MapControllerRoute(
     name: "default",

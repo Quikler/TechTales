@@ -38,20 +38,12 @@ public class BlogController : Controller
         }
 
         var currentUser = await _userManager.GetUserAsync(User);
-        var reader = currentUser is null ?
-            // new UserViewModel
-            // {
-            //     UserName = "Guest",
-            //     Avatar = ExtensionMethods.BlobToImageSrc(null),
-            // }
-            null
-            :
-            new UserViewModel
-            {
-                Id = currentUser.Id,
-                UserName = currentUser.UserName!,
-                Avatar = ExtensionMethods.BlobToImageSrc(currentUser.Avatar),
-            };
+        var reader = currentUser is null ? null : new UserViewModel
+        {
+            Id = currentUser.Id,
+            UserName = currentUser.UserName!,
+            Avatar = ExtensionMethods.BlobToImageSrc(currentUser.Avatar),
+        };
 
         ReadBlogViewModel model = new ReadBlogViewModel
         {
@@ -60,6 +52,7 @@ public class BlogController : Controller
             Content = blog.Content,
             Comments = blog.Comments.Select(c => new CommentViewModel
             {
+                Id = c.Id,
                 Content = c.Content,
                 Author = new UserViewModel
                 {

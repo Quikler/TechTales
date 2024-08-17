@@ -4,7 +4,7 @@
     ViewData["Title"] = "Blog";
 }
 
-<link rel="stylesheet" href="~/css/blog.css">
+<link rel="stylesheet" href="~/css/blog/blog.css">
 
 <div>
     <div class="d-flex justify-content-between blog-sidepanel-container">
@@ -49,19 +49,19 @@
             <p class="m-0">@Model.CreationDate.ToString("dd/MM/yyyy HH:mm:ss")</p>
         </div>
     </div>
-    <div class="comments-container">
+    <div class="comments-container" id="comments-section">
         <p class="fs-3">Comments</p>
         <ol class="comments-list">
             @foreach (var comment in Model.Comments)
             {
-                <li style="background-color: var(--d9);">
+                <li style="background-color: var(--d9); transition: 0.3s ease;">
                     <div class="d-flex justify-content-between">
                         <div class="mb-3 d-flex flex-grow-1">
                             <a asp-action="Detail" asp-controller="Profile" asp-route-id="@comment.Author.Id">
                                 <img class="user-img rounded-image" src="@comment.Author.Avatar" />
                             </a>
                             <div class="d-flex justify-content-center flex-column">
-                                <p class="m-0">
+                                <p id="@comment.Author.Id" class="comment-author-id m-0">
                                     <a asp-action="Detail"
                                         asp-controller="Profile"
                                         asp-route-id="@comment.Author.Id">@comment.Author.UserName</a>
@@ -72,24 +72,36 @@
                         @if (comment.IsSameUser)
                         {
                             @Html.EditBlogButtons(
+                                editClass: "edit-comment-btn",
                                 editFill: "green", 
+                                deleteClass: "delete-comment-btn",
                                 deleteFill: "red"
                             )
                         }
                     </div>
-                    <p class="comment-content text-break" style="white-space: pre-line">@comment.Content</p>
+                    <p id="@comment.Id" class="comment-content text-break" style="white-space: pre-line">@comment.Content</p>
+                    <div class="cancel-submit-comment-container text-end" hidden>
+                        @Html.RoundedButton(
+                            "Cancel", 
+                            margin: "16px 8px 0 auto", 
+                            @class: "cancel-comment-button"
+                        )
+
+                        @Html.RoundedButton(
+                            "Submit", 
+                            margin: "16px 0 0 auto", 
+                            @class: "submit-comment-button"
+                        )
+                    </div>
                 </li>
             }
         </ol>
-        <form class="addcomment-container" method="post" asp-action="Add" asp-controller="Comment">
+        <div class="addcomment-container"">
             @if (Model.Reader is null)
             {
-                <p class="text-center m-0 fst-italic text-muted">
-                    [To be able to comment
-                    <a asp-action="Signup" asp-controller="Authorization">Create</a>
-                    an account or
-                    <a asp-action="Login" asp-controller="Authorization">Log into</a>
-                    exsisting one]
+                <p class="text-center m-0 fst-italic text-muted">[To be able to comment
+                    <a href="/Authorization/Signup">Create</a> an account or
+                    <a href="/Authorization/Login">Log into</a> an existing one]
                 </p>
             }
             else
@@ -103,15 +115,18 @@
                             <img class="user-img rounded-image" src="@Model.Reader.Avatar" />
                         </a>
                     </div>
-                    <textarea name="Content" class="addcomment" type="text" placeholder="Add a comment..." required></textarea>
+                    <textarea minlength="1" required name="Content" class="addcomment" type="text" placeholder="Add a comment..."></textarea>
                 </div>
                 @Html.RoundedButton(
                     "Leave a comment", 
-                    margin: "16px 0 0 auto",
-                    @class: "d-block",
-                    type: "submit"
+                    margin: "16px 0 0 auto", 
+                    @class: "add-comment-btn d-block"
                 )
             }
-        </form>
+        </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.0/signalr.min.js"></script>
+<script src="~/js/blog/signalr.init.js"></script>
+<script src="~/js/blog/blog.js"></script>

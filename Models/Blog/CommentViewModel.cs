@@ -4,6 +4,7 @@ namespace TechTales.Models;
 
 public class CommentViewModel
 {
+    public Guid Id { get; set; }
     public string Content { get; set; } = null!;
     public UserViewModel Author { get; set; } = null!;
     public bool IsSameUser { get; set; }

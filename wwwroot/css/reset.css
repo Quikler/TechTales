@@ -83,3 +83,7 @@
     font-size: inherit;
     font-weight: 400;
   }
+
+svg {
+  pointer-events: none;
+}
