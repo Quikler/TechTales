@@ -9,6 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TechTales - @ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/variables.css">
     <link rel="stylesheet" href="~/css/reset.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/resetbootstrap.css" asp-append-version="true" />
@@ -16,41 +17,35 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TechTales.styles.css" asp-append-version="true" />
 </head>
-<body style="background: lightgray" class="container">
-
+<body class="container">
     <header class="py-4">
         <nav>
-            <div class="nav-container">
+            <div class="nav-container outline-border">
                 <ul class="d-flex align-items-center">
-                    <li class="nav-element nav-logo">
-                        <a asp-action="Index" asp-controller="Home" asp-area="">
-                            <img src="~/images/logo.svg" class="rounded-image size-64-fit-cover" />
-                        </a>
+                    <li class="nav-element">
+                        <a class="text-blueviolet" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-element">
-                        <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="text-blueviolet" asp-area="" asp-controller="All Blogs" asp-action="Privacy">All Blogs</a>
                     </li>
                     <li class="nav-element">
-                        <a asp-area="" asp-controller="All Blogs" asp-action="Privacy">All Blogs</a>
+                        <a class="text-blueviolet" asp-area="" asp-controller="About" asp-action="Privacy">About</a>
                     </li>
                     <li class="nav-element">
-                        <a asp-area="" asp-controller="About" asp-action="Privacy">About</a>
-                    </li>
-                    <li class="nav-element">
-                        <a asp-area="" asp-controller="Contacts" asp-action="Privacy">Contacts</a>
+                        <a class="text-blueviolet" asp-area="" asp-controller="Contacts" asp-action="Privacy">Contacts</a>
                     </li>
                     <li class="nav-element flex-grow-1">
-                        <input type="text" class="search-input" placeholder="Search" />
+                        <input type="text" class="search-input outline-border" placeholder="Search" />
                     </li>
                     @{
                         var user = await UserManager.GetUserAsync(User);
                         if (user is null)
                         {
                             <li class="nav-element">
-                                <a asp-controller="Authorization" asp-action="Login">Log in</a>
+                                <a class="text-blueviolet" asp-controller="Authorization" asp-action="Login">Log in</a>
                             </li>
                             <li class="nav-element">
-                                <a asp-controller="Authorization" asp-action="Signup">Sign up</a>
+                                <a class="text-blueviolet" asp-controller="Authorization" asp-action="Signup">Sign up</a>
                             </li>
                         }
                         else 
@@ -58,12 +53,12 @@
                             <li class="nav-element dropdown">
                                 <a asp-action="Detail" asp-controller="Profile" asp-route-id="@user.Id">
                                     <img src="@ExtensionMethods.BlobToImageSrc(user.Avatar)"
-                                        class="rounded-image dropbtn size-64-fit-cover" />
+                                        class="rounded-image outline-box-shadow dropbtn size-64-fit-cover" />
                                 </a>
-                                <div class="dropdown-content">
-                                    <a class="dropdown-item" asp-action="Detail" asp-controller="Profile" asp-route-id="@user.Id">Profile</a>
-                                    <a class="dropdown-item" href="/Settings">Settings</a>
-                                    <a class="dropdown-item" asp-action="Logout" asp-controller="Authorization">Logout</a>
+                                <div class="dropdown-content outline-border">
+                                    <a class="dropdown-item text-blueviolet" asp-action="Detail" asp-controller="Profile" asp-route-id="@user.Id">Profile</a>
+                                    <a class="dropdown-item text-blueviolet" href="/Settings">Settings</a>
+                                    <a class="dropdown-item text-blueviolet" asp-action="Logout" asp-controller="Authorization">Logout</a>
                                 </div>
                             </li>
                         }
@@ -79,8 +74,8 @@
         </main>
     </div>
 
-    <footer class="border-top footer mt-4">
-        <div class="container">
+    <footer class="footer mt-4">
+        <div class="container footer-container">
             &copy; 2024 - TechTales - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>

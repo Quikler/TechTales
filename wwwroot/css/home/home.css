@@ -1,9 +1,10 @@
 .input-block, .input-block input, .input-block button {
     border-radius: 32px;
+    background-color: transparent;
 }
 
 .input-block {
-    background: url("/images/magnifier_glass.svg") no-repeat left white;
+    background: url("/images/magnifier_glass.svg") no-repeat left;
     padding-left: 42px;
     background-size: 24px;
     background-position: 16px center;
@@ -11,11 +12,8 @@
     /* This bit sets up the horizontal layout */
     display:flex;
     flex-direction:row;
-    
-    /* This bit draws the box around it */
-    border:2px solid grey;
 }
-  
+
 .input-block input {
     /* Tell the input to use all the available space */
     flex-grow:2;
@@ -29,15 +27,18 @@
     outline: none;
 }
   
+.input-block:hover {
+    box-shadow: 0 0 16px blueviolet;
+}
+
   /* Add the focus effect to the form so it contains the button */
 .input-block:focus-within { 
-    border: 2px solid blue 
+    box-shadow: 0 0 32px blueviolet;
 }
   
 .input-block button {
     width: 150px;
-    color:white;
-    background-color: black;
+    color:var(--text-color);
 }
 
 h1 {
@@ -49,7 +50,6 @@ h1 {
 }
 
 .blog-container {
-    background-color: var(--pc);
     padding: 16px 32px;
     align-items: stretch;
     margin-bottom: 24px;
@@ -77,7 +77,6 @@ h1 {
 }
 
 .sidepanel {
-    background-color: var(--pc);
     margin-left: 24px;
     min-width: 250px;
 }      
@@ -95,9 +94,10 @@ h1 {
     background-color: #4CAF50;
     color: white;
 }
-  
+
 .blog-pagination a:hover:not(.active-pagination) {
     background-color: var(--pc);
+    color: black;
 }
 
 .blog-pagination {
@@ -112,10 +112,5 @@ h1 {
 
 .blog-pagination a {
     border-radius: 10px;
-    color: black;
     padding: 8px 16px;
-}
-
-.active-pagination {
-    background-color: var(--pc);
 }

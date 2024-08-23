@@ -108,9 +108,9 @@ public class CommentController : Controller
             return Forbid("Invalid user.");
         }
 
-        comment.Content = content;
+        comment.Content = content.Replace("<br>", "\n");
         await _context.SaveChangesAsync();
         
-        return Ok($"Comment '{id}' has been edited.");
+        return Ok(comment.Content);
     }
 }

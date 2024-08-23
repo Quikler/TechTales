@@ -4,38 +4,45 @@
     ViewData["Title"] = "Edit";
 }
 
-<link rel="stylesheet" href="~/css/blog/blog.css">
+<link rel="stylesheet" href="~/css/blog/edit.css">
 
-<div class="create-blog-container">
-    <h1>Edit blog '@Model.Title'</h1>
+<div>
+    <h1 class="mb-3">Edit blog '@Model.Title'</h1>
     <form asp-controller="Blog" asp-action="Edit" asp-route-id="@Model.Id" method="post" autocomplete="off">
-        <input asp-for="@Model.Title" type="text" placeholder="Title">
-        <textarea asp-for="@Model.Content" placeholder="Content"></textarea>
+        @* <input asp-for="@Model.Title" type="text" placeholder="Title"> *@
+        <div class="mb-3">
+            <input asp-for="@Model.Title" class="form-control" type="text" placeholder="Title" aria-label="Title" required>
+        </div>
+        @* <textarea asp-for="@Model.Content" placeholder="Content"></textarea> *@
+        <div class="mb-3">
+            <textarea asp-for="@Model.Content" class="content-text-area form-control" placeholder="Content" aria-label="Content" required></textarea>
+        </div>
+        <div asp-validation-summary="All" class="mb-3 fw-bold text-danger"></div>
         <div class="d-flex justify-content-between">
             <div class="visibility-radio-container">
                 @if (Model.Visibility)
                 {
                     <div class="d-flex align-items-center">
-                        <div class="d-inline-flex align-items-center">
-                            <input asp-for="@Model.Visibility" type="radio" name="visibility" value="true" checked />
+                        <div class="py-1 d-inline-flex align-items-center">
+                            <input class="checkbox" asp-for="@Model.Visibility" type="radio" name="visibility" value="true" checked />
                             <label class="ps-2 fw-bold" for="Public">Public</label>
                         </div>
                         <span class="text-muted ps-1"> - Current blog state</span>
                     </div>
-                    <div class="d-flex align-items-center">
-                        <input asp-for="@Model.Visibility" type="radio" name="visibility" value="false" />
+                    <div class="py-1 d-flex align-items-center">
+                        <input class="checkbox" asp-for="@Model.Visibility" type="radio" name="visibility" value="false" />
                         <label class="ps-2 fw-bold" for="Private">Private</label>
                     </div>
                 }
                 else
                 {
-                    <div class="d-flex align-items-center">
-                        <input asp-for="@Model.Visibility" type="radio" name="visibility" value="true" />
+                    <div class="py-1 d-flex align-items-center">
+                        <input class="checkbox" asp-for="@Model.Visibility" type="radio" name="visibility" value="true" />
                         <label class="ps-2 fw-bold" for="Public">Public</label>
                     </div>
-                    <div class="d-flex align-items-center">
+                    <div class="py-1 d-flex align-items-center">
                         <div class="d-inline-flex align-items-center">
-                            <input asp-for="@Model.Visibility" type="radio" name="visibility" value="false" checked />
+                            <input class="checkbox" asp-for="@Model.Visibility" type="radio" name="visibility" value="false" checked />
                             <label class="ps-2 fw-bold" for="Private">Private</label>
                         </div>
                         <span class="text-muted ps-1"> - Current blog state</span>
@@ -43,10 +50,17 @@
                 }
             </div>
             <div>
-                <input asp-for="@Model.Tags" type="text" placeholder="Tags (#tag1 #tag2 etc...)">
-                <input asp-for="@Model.Categories" type="text" placeholder="Categories (Category1, Category2 etc...)">
+                <div class="mb-3">
+                    <input asp-for="@Model.Tags" class="form-control" type="text" placeholder="#tag1 #tag2 etc..." aria-label="Tags">
+                </div>
+                <div class="mb-3">
+                    <input asp-for="@Model.Categories" class="form-control" type="text" placeholder="Category1, Category2 etc..." aria-label="Categories">
+                </div>
+                @* <input asp-for="@Model.Tags" type="text" placeholder="Tags (#tag1 #tag2 etc...)">
+                <input asp-for="@Model.Categories" type="text" placeholder="Categories (Category1, Category2 etc...)"> *@
             </div>
         </div>
-        @Html.RoundedButton("Submit", type: "submit")
+        <button type="submit" class="outline-box-shadow btn btn-dark ms-auto d-flex">Submit</button>
+        @* @Html.RoundedButton("Submit", type: "submit") *@
     </form>
 </div>

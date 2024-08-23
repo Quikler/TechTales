@@ -85,19 +85,36 @@ public static class HtmlHelperExtensions
         var edit = SvgContainerHelper.GetEdit(width, height, editFill);
         var delete = SvgContainerHelper.GetDelete(width, height, deleteFill);
         
-        var editLink = editHref == "#" ? edit : $"<a href=\"{editHref}\">{edit}</a>";
-        var deleteLink = deleteHref == "#" ? delete : $"<a href=\"{deleteHref}\">{delete}</a>";
+        // var editLink = editHref == "#" ? edit : $"<a class=\"d-flex\" href=\"{editHref}\">{edit}</a>";
+        // var deleteLink = deleteHref == "#" ? delete : $"<a class=\"d-flex\" href=\"{deleteHref}\">{delete}</a>";
+
+        // var editLink = editHref == "#" ? edit : $"<a class=\"{editClass} p-0 border-0 btn btn-outline-light\" href=\"{editHref}\">{edit}</a>";
+        // var deleteLink = deleteHref == "#" ? delete : $"<a class=\"{deleteClass} p-0 border-0 btn btn-outline-light\" href=\"{deleteHref}\">{delete}</a>";
+
+        // return new HtmlString(
+        //     $"""
+        //     <button type="{editType}" class="{editClass}" style="width: {width}px; height: {height}px;">
+        //         {editLink}
+        //     </button>
+        //     <button type="{deleteType}" class="{deleteClass}" style="width: {width}px; height: {height}px;">
+        //         {deleteLink}
+        //     </button>
+        //     """
+        // );
+
+        editHref = editHref == "#" ? "javascript:void(0);" : editHref;
+        deleteHref = deleteHref == "#" ? "javascript:void(0);" : deleteHref;
 
         return new HtmlString(
             $"""
-            <div class="edit-blog-section">
-                <button type="{editType}" class="{editClass}" style="width: {width}px; height: {height}px;">
-                    {editLink}
-                </button>
-                <button type="{deleteType}" class="{deleteClass}" style="width: {width}px; height: {height}px;">
-                    {deleteLink}
-                </button>
-            </div>
+            <a class="{editClass} p-0 border-0 btn" 
+                href="{editHref}">
+                {edit}
+            </a>
+            <a class="{deleteClass} p-0 border-0 btn"
+                href="{deleteHref}">
+                {delete}
+            </a>
             """
         );
     }

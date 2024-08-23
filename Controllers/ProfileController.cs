@@ -93,7 +93,7 @@ public class ProfileController : Controller
             return NotFound();
         }
 
-        // Assign user actual avatar to model if some errors will occur
+// Assign user actual avatar to model if some errors will occur
         model.Avatar = user.Avatar;
         if (!ModelState.IsValid)
         {
@@ -114,9 +114,9 @@ public class ProfileController : Controller
 
             memoryStream.Seek(0, SeekOrigin.Begin);
 
-            // Uploading an image using ImageSharp
+// Uploading an image using ImageSharp
             using var image = Image.Load(memoryStream);
-            // Reduce the image proportionally to a size that allows cropping up to 400x400.
+// Reduce the image proportionally to a size that allows cropping up to 400x400.
             var resizeOptions = new ResizeOptions
             {
                 Size = new Size(400, 400),
@@ -124,7 +124,7 @@ public class ProfileController : Controller
             };
             image.Mutate(x => x.Resize(resizeOptions));
 
-            // Crop the image to 400x400 pixels
+// Crop the image to 400x400 pixels
             image.Mutate(x => x.Crop(new Rectangle(0, 0, 400, 400)));
 
             memoryStream.SetLength(0);
@@ -141,11 +141,10 @@ public class ProfileController : Controller
         var result = await _userManager.UpdateAsync(user);
         if (result.Succeeded)
         {
-            return RedirectToAction("Detail", "Profile");
+            return RedirectToAction("Detail", "Profile", new { Id = user.Id });
         }
 
         ModelState.AddModelError(string.Empty, "An error occurred while updating the profile.");
-
         return View(model);
     }
 }

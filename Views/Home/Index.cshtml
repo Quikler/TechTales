@@ -9,21 +9,21 @@
 <div class="text-center">
     <img src="~/images/logo.svg" alt="logo" />
     <h1>TechTales - Find your favourite blog!</h1>
-    <div class="input-block">
+    <div class="input-block outline-border">
         <input placeholder="Title, Category, Tag, Content..." type="text" />
-        <button>Search</button>
+        <button class="btn btn-dark btn-outline-dark outline-border">Search</button>
     </div>
     <div class="d-flex justify-content-between blogs-sidepanel-container">
         <div class="flex-grow-1">
             <ol id="blogs-list">
                 @foreach (var blog in Model.Blogs)
                 {
-                    <li class="d-flex justify-content-between blog-container">
+                    <li class="d-flex justify-content-between blog-container outline-border">
                         <div class="blog-title-content">
-                            <h3>@blog.Title</h3>
-                            <p class="text-break" style="white-space: pre-line"><!--
+                            <h3 class="fw-bold">@blog.Title</h3>
+                            <p class="text-break ws-pl"><!--
                                 -->@blog.Content.EllipsisString(230) <!--
-                                --><a asp-action="Read" asp-controller="Blog" asp-route-id="@blog.Id">[Read more]</a>
+                                --><a class="text-blueviolet" asp-action="Read" asp-controller="Blog" asp-route-id="@blog.Id">[Read more]</a>
                             </p>
                         </div>
                         <div class="blog-time-user">
@@ -31,51 +31,18 @@
                             <a asp-action="Detail" asp-controller="Profile"
                                asp-route-id="@blog.Author.Id"
                                class="d-flex flex-column align-items-center">
-                                <img class="rounded-image size-64-fit-cover"
+                                <img class="rounded-image size-64-fit-cover outline-box-shadow"
                                 src="@ExtensionMethods.BlobToImageSrc(blog.Author.Avatar)" />
-                                @blog.Author.UserName
+                                <p class="text-blueviolet">@blog.Author.UserName</p>
                             </a>
                         </div>
                     </li>
                 }
-
-            @* <li class="d-flex justify-content-between blog-container">
-                    <div class="blog-title-content">
-                        <h3>Blog - '[Title]'</h3>
-                        <p>
-                            Lorem ipsum dolor sit amet, amet ametconsectetur adipisicing elit. Vero similique accusantium in. Consequatur in corrupti facere aspernatur neque ullam, sed ipsa, delectus earum vero consequuntur esse, explicabo quasi ex quisq...
-                            <a href="">[Read more]</a>
-                        </p>
-                    </div>
-                    <div class="blog-time-user">
-                        <p>01/08/2005</p>
-                        <a asp-action="Detail" asp-controller="Profile">
-                            <img class="rounded-image" src="~/images/vergil.png" />
-                            Vergil
-                        </a>
-                    </div>
-                </li>
-                <li class="d-flex justify-content-between blog-container">
-                    <div class="blog-title-content">
-                        <h3>Blog - '[Title]'</h3>
-                        <p>
-                            Lorem ipsum dolor sit ametamet, ametconsectetur adipisicing elit. Vero similique accusantium in. Consequatur in corrupti facere aspernatur neque ullam, sed ipsa, delectus earum vero consequuntur esse, explicabo quasi ex quisq...
-                            <a href="">[Read more]</a>
-                        </p>
-                    </div>
-                    <div class="blog-time-user">
-                        <p>01/08/2005</p>
-                        <a asp-action="Detail" asp-controller="Profile">
-                            <img class="rounded-image" src="~/images/vergil.png" />
-                            Vergil
-                        </a>
-                    </div>
-                </li> *@
             </ol>
             <ul class="blog-pagination">
 
                 <li><a asp-action="Index"
-                        style="@(Model.CurrentPage <= 1 ? "pointer-events: none;color: #6c757d;" : "")"
+                        style="@(Model.CurrentPage <= 1 ? "pointer-events: none;color: #6c757d;" : "color: blueviolet;")"
                         asp-route-page="@(Model.CurrentPage - 1)"
                         asp-fragment="blogs-list">«</a></li>
                 
@@ -98,22 +65,22 @@
                 }
 
                 <li><a asp-action="Index"
-                        style="@(Model.CurrentPage >= Model.TotalPages ? "pointer-events: none;color: #6c757d;" : "")"
+                        style="@(Model.CurrentPage >= Model.TotalPages ? "pointer-events: none;color: #6c757d;" : "color: blueviolet;")"
                         asp-route-page="@(Model.CurrentPage + 1)"
                         asp-fragment="blogs-list">»</a></li>
                 
             </ul>
         </div>
-        <div class="sidepanel">
+        <div class="sidepanel outline-border">
             <ul>
                 <li>
-                    <a href="">Popular blogs</a>
+                    <a class="text-blueviolet" href="">Popular blogs</a>
                 </li>
                 <li>
-                    <a href="">Categories</a>
+                    <a class="text-blueviolet" href="">Categories</a>
                 </li>
                 <li>
-                    <a href="">Tags</a>
+                    <a class="text-blueviolet" href="">Tags</a>
                 </li>
             </ul>
         </div>

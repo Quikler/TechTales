@@ -27,18 +27,6 @@
     outline: none;
 }
 
-/* Edit buttons */
-.edit-blog-section {
-    /* width: 100%; */
-    display: inline-flex;
-    justify-content: end;
-}
-
-.edit-blog-section button {
-    background-color: transparent;
-    transition: .3s ease-out;
-}
-
-.edit-blog-section button:hover {
-    background-color: #d9d9d9;
+.edit-comment-btn:hover svg, .delete-comment-btn:hover svg {
+    fill: blueviolet;
 }

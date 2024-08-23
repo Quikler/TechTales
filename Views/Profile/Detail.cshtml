@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="~/css/profile/detail.css">
 
 <div class="d-flex justify-content-between">
-    <div class="user-info-container">
+    <div class="user-info-container w-75">
         <div>
             <div class="text-center">
 
@@ -19,56 +19,61 @@
                     @if (Model.IsSameUser)
                     {
                         <a asp-action="Edit" asp-controller="Profile">
-                            <img id="gear-img" src="~/images/gear.svg" />
+                            <img class="size-64-fit-cover" src="~/images/gear.svg" />
                         </a>
                     }
                 </div>
-                <p>@Model.User.Country</p>
+                <p class="h5">@Model.User.Country</p>
             </div>
             <div class="about-me-container text-justify">
-                <h4>About me:</h4>
+                <h3 class="mb-3">About me:</h3>
                 @if (Model.User.AboutMe is null)
                 {
-                    <p class="fst-italic text-muted text-center">[No data presented]</p>
+                    <p class="mb-0 me-3 ws-pl px-4 py-2 fst-italic text-muted outline-border text-center">[No data presented]</p>
                 }
                 else
                 {
-                    <p>@Model.User.AboutMe</p>
+                    <p class="mb-0 me-3 ws-pl px-4 py-2 outline-border">@Model.User.AboutMe</p>
                 }
             </div>
         </div>
     </div>
 
     <div>
-        <div class="mb-3 d-flex justify-content-between align-items-center">
-            <h4 class="text-left m-0">Available blogs:</h4>
+        <div class="available-blogs-container mb-3 d-flex justify-content-between align-items-center">
+            <h3 class="available-blogs text-left m-0">Available blogs:</h3>
             @if (Model.IsSameUser)
             {
-                <button id="createblog-btn" class="fs-3">
-                    <a asp-action="Create" asp-controller="Blog">
-                        <img src="~/images/add.svg" />
-                    </a>
-                </button>
+                <a role="button" asp-action="Create" asp-controller="Blog">
+                    <svg class="svg-icon bg-transparent" style="width: 48px; height: 48px;vertical-align: middle;fill: var(--text-color);overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 96C282.256 96 96 282.256 96 512s186.256 416 416 416 416-186.256 416-416S741.744 96 512 96zM512 896C299.92 896 128 724.08 128 512S299.92 128 512 128s384 171.92 384 384S724.08 896 512 896z"  /><path d="M776 496 528 496 528 248c0-4.416-3.584-8-8-8l-16 0c-4.416 0-8 3.584-8 8L496 496 248 496c-4.416 0-8 3.584-8 8l0 16c0 4.416 3.584 8 8 8L496 528l0 248c0 4.4 3.584 8 8 8l16 0c4.416 0 8-3.6 8-8L528 528l248 0c4.4 0 8-3.584 8-8l0-16C784 499.584 780.4 496 776 496z"  /></svg>
+                </a>
             }
         </div>
-        <ol class="blogs-container">
+        <ol class="blogs-container overflow-auto">
             @foreach (var blog in Model.Blogs)
             {
-                <li>
+                var marginBottom2 = blog == Model.Blogs.Last() ? "mb-2" : "mb-3";
+                <li class="px-4 py-3 mx-2 mt-2 @marginBottom2 outline-border">
                     <div class="d-flex justify-content-between blog-title-time">
                         <h3>@blog.Title</h3>
                         <p>@blog.CreationDate.ToString("dd/MM/yyyy HH:mm:ss")</p>
                     </div>
-                    <p class="text-break" style="white-space: pre-line"><!--
+                    <p class="text-break ws-pl"><!--
                         -->@blog.Content.EllipsisString(190) <!--
-                        --><span><a asp-controller="Blog" asp-action="Read" asp-route-id="@blog.Id">[Read more]</a></span>
+                        --><span><a class="text-blueviolet" asp-controller="Blog" asp-action="Read" asp-route-id="@blog.Id">[Read more]</a></span>
                     </p>
                     @if (Model.IsSameUser)
                     {
-                        @Html.EditBlogButtons(
-                            editHref: $"/Blog/Edit/{blog.Id}", 
-                            deleteHref: $"/Blog/Delete/{blog.Id}"
-                        )
+                        <div class="d-flex justify-content-end align-items-center">
+                            @Html.EditBlogButtons(
+                                editClass: "edit-comment-btn bg-transparent btn-outline-light me-2",
+                                editFill: "#e6edf3", 
+                                editHref: $"/Blog/Edit/{blog.Id}", 
+                                deleteClass: "delete-comment-btn bg-transparent btn-outline-light",
+                                deleteFill: "#e6edf3",
+                                deleteHref: $"/Blog/Delete/{blog.Id}"
+                            )
+                        </div>
                     }
                 </li>
             }
@@ -89,4 +94,4 @@
     </div>
 </div>
 
-<script src="~/js/profile.js" asp-append-version="true"></script>
+<script src="~/js/profile/detail.js" asp-append-version="true"></script>

@@ -4,5 +4,11 @@ ol, ul {
 }
 
 a {
+    color: white;
     text-decoration: none;
+}
+
+.form-control:focus {
+    border-color: blueviolet;
+    box-shadow: 0 1px 15px rgb(167, 86, 243), 0 0 8px rgb(167, 86, 243);
 }
