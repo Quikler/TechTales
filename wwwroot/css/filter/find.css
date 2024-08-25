@@ -28,12 +28,12 @@
 }
   
 .input-block:hover {
-    box-shadow: 0 0 12px blueviolet;
+    box-shadow: 0 0 16px blueviolet;
 }
 
   /* Add the focus effect to the form so it contains the button */
 .input-block:focus-within { 
-    box-shadow: 0 0 18px blueviolet;
+    box-shadow: 0 0 32px blueviolet;
 }
 
 .blog-title-content {

@@ -11,12 +11,12 @@
       autocomplete="off" class="d-flex justify-content-between">
     <div class="user-image-h1-container w-75 d-flex justify-content-center">
         <div class="user-image-container text-center">
-            <h1 class="mb-4">Edit your profile</h1>
+            <h1 class="text-darkblue mb-4">Edit your profile</h1>
 
             <img src="@ExtensionMethods.BlobToImageSrc(Model.Avatar)" id="user-profile-image"
                  class="size-400-fit-cover d-block rounded-image box-shadow shadow-lg mb-3" />
 
-            <button type="button" class="change-picture-btn outline-box-shadow btn btn-dark ms-auto">Change picture</button>
+            <button type="button" class="change-picture-btn outline-box-shadow btn outline-border ms-auto">Change picture</button>
 
             <input asp-for="Avatar" type='file' id="changePicture"
                    style="display:none" accept="image/*">
@@ -34,10 +34,9 @@
             <textarea asp-for="@Model.AboutMe" placeholder="About me" class="form-control" aria-label="About me"></textarea>
         </div>
         
-        <button type="submit" class="outline-box-shadow btn btn-dark ms-auto d-flex">Submit</button>
+        <button type="submit" class="outline-box-shadow btn outline-border ms-auto d-flex">Submit</button>
 
     </div>
 </form>
 
-<script src="~/js/profile/detail.js" asp-append-version="true"></script>
 <script src="~/js/profile/edit.js" asp-append-version="true"></script>

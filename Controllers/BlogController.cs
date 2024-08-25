@@ -21,10 +21,10 @@ public class BlogController : Controller
         _userManager = userManager;
     }
 
+    [HttpGet]
     public async Task<IActionResult> Read(Guid id)
     {
         var blog = await _context.Blogs
-            .AsNoTracking()
             .Include(b => b.Author)
             .Include(b => b.Comments)
             .ThenInclude(c => c.Author)
@@ -37,19 +37,34 @@ public class BlogController : Controller
             return NotFound();
         }
 
-        var currentUser = await _userManager.GetUserAsync(User);
-        var reader = currentUser is null ? null : new UserViewModel
+        var user = await _userManager.GetUserAsync(User);
+        var reader = user is null ? null : new UserViewModel
         {
-            Id = currentUser.Id,
-            UserName = currentUser.UserName!,
-            Avatar = ExtensionMethods.BlobToImageSrc(currentUser.Avatar),
+            Id = user.Id,
+            UserName = user.UserName!,
+            Avatar = ExtensionMethods.BlobToImageSrc(user.Avatar),
         };
+
+        string? userId = user is null
+            ? Request.Cookies["VisitorId"] ?? GetVisitorId()
+            : user.Id.ToString();
+
+        if (userId is not null && !HasUserViewedBlog(userId, blog.Id))
+        {
+            blog.Views += 1;
+            //_context.Blogs.Update(blog);
+
+            // Добавляем запись о просмотре блога в базу данных
+            await AddViewRecordAsync(userId, blog.Id);
+            await _context.SaveChangesAsync();
+        }
 
         ReadBlogViewModel model = new ReadBlogViewModel
         {
             Id = id,
             Title = blog.Title,
             Content = blog.Content,
+            Views = blog.Views,
             Comments = blog.Comments.Select(c => new CommentViewModel
             {
                 Id = c.Id,
@@ -61,7 +76,7 @@ public class BlogController : Controller
                     Avatar = ExtensionMethods.BlobToImageSrc(c.Author.Avatar),
                 },
                 CreationDate = c.CreationDate,
-                IsSameUser = currentUser is not null && currentUser.Id == c.AuthorId,
+                IsSameUser = user is not null && user.Id == c.AuthorId,
             }).ToList(),
             Author = new UserViewModel
             {
@@ -98,7 +113,7 @@ public class BlogController : Controller
             return Forbid();
         }
 
-        var model = new BlogViewModel
+        var model = new EditBlogViewModel
         {
             Id = blog.Id,
             Title = blog.Title,
@@ -112,8 +127,13 @@ public class BlogController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(BlogViewModel model)
+    public async Task<IActionResult> Edit(EditBlogViewModel model)
     {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
 // Get blog by id
         var blog = await _context.Blogs
             .Include(b => b.Tags)
@@ -132,7 +152,7 @@ public class BlogController : Controller
         }
 
 // Create tags to add to db
-        var tags = await GetEntitiesAsync(
+        var tags = await EntityParser.ParseAsync(
             model.Tags,
             new char[] { ' ', '#', ',' },
             async s => await _context.Tags.FirstOrDefaultAsync(t => t.Name == s),
@@ -140,7 +160,7 @@ public class BlogController : Controller
         );
         
 // Create categories to add to db
-        var categories = await GetEntitiesAsync(
+        var categories = await EntityParser.ParseAsync(
             model.Categories,
             new char[] { ' ', ',' },
             async s => await _context.Categories.FirstOrDefaultAsync(c => c.Name == s),
@@ -201,21 +221,21 @@ public class BlogController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(BlogViewModel model)
+    public async Task<IActionResult> Create(CreateBlogViewModel model)
     {
         var user = await _userManager.GetUserAsync(User);
         if (user is null)
         {
             return NotFound();
         }
-
+        
         if (!ModelState.IsValid)
         {
             return View(model);
         }
 
 // Create tags to add to db
-        var tags = await GetEntitiesAsync(
+        var tags = await EntityParser.ParseAsync(
             model.Tags,
             new char[] { '#', ' ', ',' },
             async tagName => await _context.Tags.FirstOrDefaultAsync(t => t.Name == tagName),
@@ -223,7 +243,7 @@ public class BlogController : Controller
         );
         
 // Create categories to add to db
-        var categories = await GetEntitiesAsync(
+        var categories = await EntityParser.ParseAsync(
             model.Categories, 
             new char[] { ',', ' ' }, 
             async categoryName => await _context.Categories.FirstOrDefaultAsync(c => c.Name == categoryName), 
@@ -239,34 +259,54 @@ public class BlogController : Controller
             Categories = categories ?? [],
             Author = user,
         };
-
+        
         await _context.Blogs.AddAsync(blogEntity);
         await _context.SaveChangesAsync();
 
-        return RedirectToAction("Detail", "Profile", new { user.Id });
+        return User.IsInRole("Admin") ? View() : RedirectToAction("Detail", "Profile", new { user.Id });
     }
 
-    private async Task<List<TEntity>> GetEntitiesAsync<TEntity>(
-        string? input, 
-        char[] separator, 
-        Func<string, Task<TEntity?>> entityRetriever, 
-        Func<string, TEntity> entityCreator
-    ) where TEntity : class
+    private string? GetVisitorId()
     {
-        var entityNames = input?
-            .Split(separator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-        var entities = new List<TEntity>();
-
-        if (entityNames is not null)
+        // Проверяем, если кука существует
+        if (Request.Cookies.ContainsKey("VisitorId"))
         {
-            foreach (var name in entityNames)
-            {
-                var entity = await entityRetriever(name) ?? entityCreator(name);
-                entities.Add(entity);
-            }
+            // Возвращаем существующий идентификатор
+            return Request.Cookies["VisitorId"];
         }
 
-        return entities;
+        // Если куки нет, создаем новый идентификатор
+        var visitorId = Guid.NewGuid().ToString();
+
+        CookieOptions options = new CookieOptions
+        {
+            Expires = DateTime.Now.AddYears(1),
+            HttpOnly = true,
+            IsEssential = true,
+        };
+
+        // Устанавливаем новую куку
+        Response.Cookies.Append("VisitorId", visitorId, options);
+
+        // Возвращаем идентификатор, который только что был создан
+        return visitorId;
+    }
+
+    private bool HasUserViewedBlog(string userId, Guid blogId)
+    {
+        return _context.ViewBlogs.Any(v => v.UserId == userId && v.BlogId == blogId);
+    }
+
+    // Метод для добавления записи о просмотре блога
+    private async Task AddViewRecordAsync(string userId, Guid blogId)
+    {
+        var view = new ViewBlogEntity
+        {
+            UserId = userId,
+            BlogId = blogId,
+        };
+
+        _context.ViewBlogs.Add(view);
+        await _context.SaveChangesAsync();
     }
 }

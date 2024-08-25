@@ -23,29 +23,29 @@
             <div class="nav-container outline-border">
                 <ul class="d-flex align-items-center">
                     <li class="nav-element">
-                        <a class="text-blueviolet" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="blueviolet-hover" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-element">
-                        <a class="text-blueviolet" asp-area="" asp-controller="All Blogs" asp-action="Privacy">All Blogs</a>
+                        <a class="blueviolet-hover" asp-area="" asp-controller="Filter" asp-action="Find" asp-route-pageSize="10">All Blogs</a>
                     </li>
                     <li class="nav-element">
-                        <a class="text-blueviolet" asp-area="" asp-controller="About" asp-action="Privacy">About</a>
+                        <a class="blueviolet-hover" asp-area="" asp-controller="About" asp-action="Privacy">About</a>
                     </li>
                     <li class="nav-element">
-                        <a class="text-blueviolet" asp-area="" asp-controller="Contacts" asp-action="Privacy">Contacts</a>
+                        <a class="blueviolet-hover" asp-area="" asp-controller="Contacts" asp-action="Privacy">Contacts</a>
                     </li>
                     <li class="nav-element flex-grow-1">
-                        <input type="text" class="search-input outline-border" placeholder="Search" />
+                        <input type="text" class="search-input" placeholder="Search" required />
                     </li>
                     @{
                         var user = await UserManager.GetUserAsync(User);
                         if (user is null)
                         {
                             <li class="nav-element">
-                                <a class="text-blueviolet" asp-controller="Authorization" asp-action="Login">Log in</a>
+                                <a class="blueviolet-hover" style="line-height: 64px;" asp-controller="Authorization" asp-action="Login">Log in</a>
                             </li>
                             <li class="nav-element">
-                                <a class="text-blueviolet" asp-controller="Authorization" asp-action="Signup">Sign up</a>
+                                <a class="blueviolet-hover" asp-controller="Authorization" asp-action="Signup">Sign up</a>
                             </li>
                         }
                         else 
@@ -75,8 +75,8 @@
     </div>
 
     <footer class="footer mt-4">
-        <div class="container footer-container">
-            &copy; 2024 - TechTales - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="container footer-container text-white">
+            &copy; 2024 - TechTales
         </div>
     </footer>
     

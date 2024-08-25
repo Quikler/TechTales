@@ -13,6 +13,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<TagEntity> Tags { get; set; }
     public DbSet<CommentEntity> Comments { get; set; }
     public DbSet<CategoryEntity> Categories { get; set; }
+    public DbSet<ViewBlogEntity> ViewBlogs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,6 +23,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
         modelBuilder.ApplyConfiguration(new TagConfiguration());
         modelBuilder.ApplyConfiguration(new CategoryConfiguration());
         
+        modelBuilder.Entity<ViewBlogEntity>().HasKey(vb => vb.Id);
+
         base.OnModelCreating(modelBuilder);
     }
 }

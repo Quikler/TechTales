@@ -9,9 +9,9 @@
 <div>
     <div class="d-flex justify-content-between blog-sidepanel-container">
         <div class="blog-container px-4 py-3 outline-border flex-grow-1">
-            <h1 class="mt-2 mb-4 text-center">@Model.Title</h1>
+            <h1 class="text-darkblue text-break ws-pl mt-2 mb-4 text-center">@Model.Title</h1>
             <hr>
-            <p class="text-break ws-pl">@Model.Content</p>
+            <p class="text-darkblue text-break ws-pl">@Model.Content</p>
             @if (Model.Categories is not null && Model.Categories.Length != 0)
             {
                 <p><span class="fw-bold">Categories: </span>@Model.Categories</p>
@@ -46,11 +46,11 @@
                     asp-controller="Profile" 
                     asp-route-id="@Model.Author.Id">
                     @Model.Author.UserName</a></p>
-            <p class="m-0">@Model.CreationDate.ToString("dd/MM/yyyy HH:mm:ss")</p>
+            <p class="text-darkblue m-0">@Model.CreationDate.ToString("dd/MM/yyyy HH:mm:ss")</p>
         </div>
     </div>
     <div class="comments-container px-4 py-3 outline-border" id="comments-section">
-        <p class="fs-3">Comments</p>
+        <p class="text-darkblue fs-3">Comments</p>
         <ol class="comments-list">
             @foreach (var comment in Model.Comments)
             {
@@ -67,7 +67,7 @@
                                         asp-controller="Profile"
                                         asp-route-id="@comment.Author.Id">@comment.Author.UserName</a>
                                 </p>
-                                <p class="m-0">@comment.CreationDate.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                                <p class="text-darkblue m-0">@comment.CreationDate.ToString("dd/MM/yyyy HH:mm:ss")</p>
                             </div>
                         </div>
                         @if (comment.IsSameUser)
@@ -75,22 +75,22 @@
                             <div class="d-flex justify-content-end align-items-start">
                                 @Html.EditBlogButtons(
                                     editClass: "edit-comment-btn bg-transparent btn-outline-light me-2",
-                                    editFill: "#e6edf3", 
+                                    editFill: "darkblue", 
                                     deleteClass: "delete-comment-btn bg-transparent btn-outline-light",
-                                    deleteFill: "#e6edf3"
+                                    deleteFill: "darkblue"
                                 )
                             </div>
                         }
                     </div>
-                    <p id="@comment.Id" class="m-0 mt-2 comment-content text-break ws-pl">@comment.Content</p>
+                    <p id="@comment.Id" class="text-darkblue m-0 mt-2 comment-content text-break ws-pl">@comment.Content</p>
                     @if (comment.IsSameUser) 
                     {
                         <div class="cancel-submit-comment-container text-end" hidden>
                             <div class="d-flex justify-content-end">
                                 <button type="button"
-                                        class="cancel-comment-button outline-box-shadow btn btn-dark mt-2 ms-auto">Cancel</button>
+                                        class="cancel-comment-button outline-box-shadow btn outline-border mt-2 ms-auto">Cancel</button>
                                 <button type="button"
-                                        class="submit-comment-button outline-box-shadow btn btn-dark ms-2 mt-2">Submit</button>
+                                        class="submit-comment-button outline-box-shadow btn outline-border ms-2 mt-2">Submit</button>
                             </div>
                         </div>
                     }
@@ -111,20 +111,18 @@
                 <input type="hidden" name="AuthorId" value="@Model.Author.Id" />
                 
                 <div class="d-flex justify-content-between">
+
                     <a asp-action="Detail" asp-controller="Profile" asp-route-id="@Model.Reader.Id">
                         <img class="user-img rounded-image outline-box-shadow" src="@Model.Reader.Avatar" />
                     </a>
                     
                     <textarea name="Content" type="text" required 
-                        class="addcomment ms-3 w-100 px-3 py-2 form-control" placeholder="Add a comment..." aria-label="Add a comment..."></textarea>
+                        class="addcomment ms-3 w-100 px-3 py-2 form-control outline-box-shadow" placeholder="Add a comment..." aria-label="Add a comment..."></textarea>
 
-                    @* <textarea minlength="1" required name="Content"
-                              class="addcomment outline-box-shadow ms-2 w-100 px-3 py-2" 
-                              type="text" placeholder="Add a comment..."></textarea> *@
                 </div>
 
                 <div class="d-flex justify-content-end">
-                    <button type="button" class="add-comment-btn outline-box-shadow btn btn-dark mt-2 ms-auto">Leave a comment</button>
+                    <button type="button" class="add-comment-btn outline-box-shadow btn outline-border mt-2 ms-auto">Leave a comment</button>
                 </div>
             }
         </div>
@@ -133,4 +131,4 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.0/signalr.min.js"></script>
 <script src="~/js/blog/signalr.init.js"></script>
-<script src="~/js/blog/blog.js"></script>
+<script src="~/js/blog/read.js"></script>

@@ -59,7 +59,8 @@ public class ProfileController : Controller
                 Id = b.Id,
                 Title = b.Title,
                 Content = b.Content,
-                CreationDate = b.CreationDate,
+                CreationDate = b.CreationDate, 
+                Views = b.Views,
             }).ToList(),
             IsSameUser = currentUser is not null && profileUser.Id == currentUser.Id
         };
@@ -112,24 +113,7 @@ public class ProfileController : Controller
             using var memoryStream = new MemoryStream();
             await avatar.CopyToAsync(memoryStream);
 
-            memoryStream.Seek(0, SeekOrigin.Begin);
-
-// Uploading an image using ImageSharp
-            using var image = Image.Load(memoryStream);
-// Reduce the image proportionally to a size that allows cropping up to 400x400.
-            var resizeOptions = new ResizeOptions
-            {
-                Size = new Size(400, 400),
-                Mode = ResizeMode.Crop
-            };
-            image.Mutate(x => x.Resize(resizeOptions));
-
-// Crop the image to 400x400 pixels
-            image.Mutate(x => x.Crop(new Rectangle(0, 0, 400, 400)));
-
-            memoryStream.SetLength(0);
-            await image.SaveAsync(memoryStream, new JpegEncoder());
-
+            await CropImageAsync(memoryStream, 400, 400);
             model.Avatar = memoryStream.ToArray();
         }
 
@@ -146,5 +130,26 @@ public class ProfileController : Controller
 
         ModelState.AddModelError(string.Empty, "An error occurred while updating the profile.");
         return View(model);
+    }
+
+    private static async Task CropImageAsync(MemoryStream memoryStream, int width, int height)
+    {
+        memoryStream.Seek(0, SeekOrigin.Begin);
+
+// Uploading an image using ImageSharp
+        using var image = Image.Load(memoryStream);
+// Reduce the image proportionally to a size that allows cropping up to 400x400.
+        var resizeOptions = new ResizeOptions
+        {
+            Size = new Size(width, height),
+            Mode = ResizeMode.Crop
+        };
+        image.Mutate(x => x.Resize(resizeOptions));
+
+// Crop the image to 400x400 pixels
+        image.Mutate(x => x.Crop(new Rectangle(0, 0, width, height)));
+
+        memoryStream.SetLength(0);
+        await image.SaveAsync(memoryStream, new JpegEncoder());
     }
 }

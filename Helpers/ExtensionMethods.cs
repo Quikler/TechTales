@@ -1,10 +1,11 @@
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Identity;
 
 namespace TechTales.Helpers;
 
 public static class ExtensionMethods
 {
-    public static string BlobToImageSrc(byte[]? bytes, 
+    public static string BlobToImageSrc(this byte[]? bytes, 
         string defaultImage = "/images/default_user_icon.svg")
     {
         string base64String = bytes != null && bytes.Length > 0 
@@ -57,6 +58,22 @@ public static class ExtensionMethods
         foreach (var item in itemsToAdd)
         {
             existingItems.Add(item);
+        }
+    }
+
+    public static async Task InitializeRolesAsync(this IServiceProvider serviceProvider)
+    {
+        var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+        string[] roleNames = { "Admin", "Moderator", "User" };
+        IdentityResult roleResult;
+
+        foreach (var roleName in roleNames)
+        {
+            var roleExist = await roleManager.RoleExistsAsync(roleName);
+            if (!roleExist)
+            {
+                roleResult = await roleManager.CreateAsync(new IdentityRole<Guid>(roleName));
+            }
         }
     }
 }

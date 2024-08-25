@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TechTales.Data;
 using TechTales.Data.Models;
+using TechTales.Helpers;
 using TechTales.Models;
 
 namespace TechTales.Controllers;
@@ -22,6 +23,7 @@ public class HomeController : Controller
         _context = context;
     }
 
+    [HttpGet]
     public async Task<IActionResult> Index(int page = 1)
     {
         int pageSize = 3; // Number of blogs on one page
@@ -30,10 +32,29 @@ public class HomeController : Controller
         
         var blogs = await _context.Blogs
             .AsNoTracking()
-            .OrderByDescending(b => b.Content.Length)
+            .OrderByDescending(b => b.Views)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Include(b => b.Author)
+            .Select(b => new BlogViewModel
+            {
+                Id = b.Id,
+                Title = b.Title,
+                Content = b.Content,
+                CreationDate = b.CreationDate,
+                Visibility = b.Visibility,
+                Views = b.Views,
+                Tags = string.Join(' ', b.Tags.Select(t => t.Name)),
+                Categories = string.Join(' ', b.Categories.Select(c => c.Name)),
+                Author = new UserViewModel
+                {
+                    Id = b.AuthorId,
+                    UserName = b.Author.UserName!,
+                    AboutMe = b.Author.AboutMe,
+                    Country = b.Author.Country,
+                    Avatar = b.Author.Avatar.BlobToImageSrc("/images/default_user_icon.svg"),
+                }
+            })
             .ToListAsync();
 
         var model = new HomeViewModel

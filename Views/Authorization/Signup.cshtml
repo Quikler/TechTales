@@ -10,53 +10,26 @@
     <div class="w-50 py-4 px-5 outline-border">
         <form asp-controller="Authorization" asp-action="Signup" method="post" autocomplete="off">
             <div class="text-center pb-5">
-                <h1>Welcome</h1>
+                <h1 class="text-darkblue">Welcome</h1>
                 <img src="~/images/logo.svg" alt="logo" width="200" />
             </div>
             <div class="fw-bold">
 
                 <div class="mb-3">
-                    <input asp-for="UserName" type="text" class="form-control" placeholder="Username" aria-label="Username" autocomplete="one-time-code" required>
+                    <input asp-for="UserName" type="text" class="outline-box-shadow form-control" placeholder="Username" aria-label="Username" autocomplete="one-time-code" required>
                 </div>
 
                 <div class="mb-3">
-                    <input asp-for="Email" type="email" class="form-control" placeholder="Email" aria-label="Email" autocomplete="one-time-code" required>
+                    <input asp-for="Email" type="email" class="outline-box-shadow form-control" placeholder="Email" aria-label="Email" autocomplete="one-time-code" required>
                 </div>
 
                 <div class="mb-3">
-                    <input asp-for="Password" type="password" class="form-control" placeholder="Password" aria-label="Password" autocomplete="one-time-code" required>
+                    <input asp-for="Password" type="password" class="outline-box-shadow form-control" placeholder="Password" aria-label="Password" autocomplete="one-time-code" required>
                 </div>
 
                 <div class="mb-3">
-                    <input asp-for="RepeatPassword" type="password" class="form-control" placeholder="Repeat password" aria-label="Repeat password" autocomplete="one-time-code" required>
+                    <input asp-for="RepeatPassword" type="password" class="outline-box-shadow form-control" placeholder="Repeat password" aria-label="Repeat password" autocomplete="one-time-code" required>
                 </div>
-
-
-                @* @Html.UnderlineInput(
-                    type: "text", 
-                    placeholder: "Username", 
-                    required: true, 
-                    aspFor: "UserName")
-
-                @Html.UnderlineInput(
-                    type: "email", 
-                    placeholder: "Email", 
-                    required: true, 
-                    aspFor: "Email")
-
-                @Html.UnderlinePasswordInput(
-                    placeholder: "Password", 
-                    id: "input-password", 
-                    required: true, 
-                    eyeId: "eye-password", 
-                    aspFor: "Password")
-
-                @Html.UnderlinePasswordInput(
-                    placeholder: "Repeat password", 
-                    id: "input-repeat-password", 
-                    required: true, 
-                    eyeId: "eye-repeat-password", 
-                    aspFor: "RepeatPassword") *@
 
                 @Html.ValidationSummary()
                 
@@ -65,7 +38,7 @@
             <button type="submit"
                     class="outline-box-shadow w-100 btn btn-dark my-3 ms-auto">Sign up</button>
 
-            <p>
+            <p class="text-darkblue">
                 Already have an account? <span><a href="Login" class="text-blueviolet">Log in</a></span>
             </p>
         </form>

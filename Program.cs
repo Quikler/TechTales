@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TechTales.Data;
 using TechTales.Data.Models;
+using TechTales.Helpers;
 using TechTales.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +35,7 @@ builder.Services
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
         options.Lockout.AllowedForNewUsers = true;
     })
+    //.AddRoleManager<RoleManager<IdentityRole<Guid>>>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
@@ -51,6 +53,14 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddSignalR(options => options.MaximumReceiveMessageSize = 102400000);
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+
+    // Call InitializeRolesAsync within the scope
+    await serviceProvider.InitializeRolesAsync();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
