@@ -6,17 +6,19 @@ document.querySelector(".submit-button").addEventListener("click", function () {
     var isContentValid = contentTextarea.value.trim() !== "";
 
     if (!isTitleValid) {
-        document.querySelector('#errorModalCenter .modal-body').textContent = "'Title' field cannot be empty.";
+        document.querySelector('#modalCenter .modal-body').textContent = "'Title' field cannot be empty.";
+        console.error("'Title' field is empty.");
 
-        $('#errorModalCenter').modal('show');
+        $('#modalCenter').modal('show');
         titleInput.focus();
         return;
     }
 
     if (!isContentValid) {
-        document.querySelector('#errorModalCenter .modal-body').textContent = "'Content' field cannot be empty.";
+        document.querySelector('#modalCenter .modal-body').textContent = "'Content' field cannot be empty.";
+        console.error("'Content' field is empty.");
 
-        $('#errorModalCenter').modal('show');
+        $('#modalCenter').modal('show');
         contentTextarea.focus();
         return;
     }

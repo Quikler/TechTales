@@ -8,7 +8,7 @@ a {
     text-decoration: none;
 }
 
-.form-control:focus {
+.form-control:focus, .form-select:focus {
     border-color: blueviolet;
     box-shadow: 0 1px 15px rgb(167, 86, 243), 0 0 8px rgb(167, 86, 243);
 }

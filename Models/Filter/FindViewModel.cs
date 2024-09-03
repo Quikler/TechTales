@@ -6,4 +6,5 @@ public class FindViewModel
     public int CurrentPage { get; set; }
     public int TotalPages { get; set; }
     public string? Request { get; set; }
+    public string? OrderBy { get; set; }
 }

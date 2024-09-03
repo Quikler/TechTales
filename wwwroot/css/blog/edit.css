@@ -3,9 +3,3 @@
     height: 24px;
     accent-color: blueviolet;
 }
-
-.content-text-area {
-    min-height: 100px;
-    height: 400px;
-    resize: none;
-}

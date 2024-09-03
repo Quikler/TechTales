@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -5,7 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using TechTales.Data;
 using TechTales.Data.Models;
 using TechTales.Helpers;
+using TechTales.Helpers.Extensions;
 using TechTales.Models;
+
+namespace TechTales.Controllers;
 
 public class BlogController : Controller
 {
@@ -34,7 +38,7 @@ public class BlogController : Controller
         
         if (blog is null)
         {
-            return NotFound();
+            return RedirectToAction("NotFound", "Error");
         }
 
         var user = await _userManager.GetUserAsync(User);
@@ -42,20 +46,25 @@ public class BlogController : Controller
         {
             Id = user.Id,
             UserName = user.UserName!,
-            Avatar = ExtensionMethods.BlobToImageSrc(user.Avatar),
+            Avatar = user.Avatar.BlobToImageSrc(),
         };
 
         string? userId = user is null
-            ? Request.Cookies["VisitorId"] ?? GetVisitorId()
+            ? Request.Cookies["VisitorId"] ?? this.GetVisitorId()
             : user.Id.ToString();
 
-        if (userId is not null && !HasUserViewedBlog(userId, blog.Id))
+        if (userId is not null && !_context.ViewBlogs.Any(v => v.UserId == userId && v.BlogId == blog.Id))
         {
             blog.Views += 1;
-            //_context.Blogs.Update(blog);
 
-            // Добавляем запись о просмотре блога в базу данных
-            await AddViewRecordAsync(userId, blog.Id);
+            // Adding a blog view entry to the database
+            var view = new ViewBlogEntity
+            {
+                UserId = userId,
+                BlogId = blog.Id,
+            };
+
+            _context.ViewBlogs.Add(view);
             await _context.SaveChangesAsync();
         }
 
@@ -104,11 +113,11 @@ public class BlogController : Controller
 
         if (blog is null)
         {
-            return NotFound();
+            return RedirectToAction("NotFound", "Error");
         }
 
-        var currentUser = await _userManager.GetUserAsync(User);
-        if (currentUser is null || blog.AuthorId != currentUser.Id)
+        var currentUserId = _userManager.GetUserId(User);
+        if (blog.AuthorId.ToString() != currentUserId)
         {
             return Forbid();
         }
@@ -131,57 +140,51 @@ public class BlogController : Controller
     {
         if (!ModelState.IsValid)
         {
+            this.ParseModalErrorsAndSet("Validation error");
             return View(model);
         }
 
 // Get blog by id
         var blog = await _context.Blogs
             .Include(b => b.Tags)
+            .ThenInclude(t => t.Blogs)
             .Include(b => b.Categories)
+            .ThenInclude(c => c.Blogs)
             .FirstOrDefaultAsync(b => b.Id == model.Id);
 
         if (blog is null)
         {
-            return NotFound();
+            return RedirectToAction("NotFound", "Error");
         }
 
-        var user = await _userManager.GetUserAsync(User);
-        if (user is null || user.Id != blog.AuthorId)
+        var userId = _userManager.GetUserId(User);
+        if (blog.AuthorId.ToString() != userId)
         {
             return Forbid();
         }
 
-// Create tags to add to db
-        var tags = await EntityParser.ParseAsync(
-            model.Tags,
-            new char[] { ' ', '#', ',' },
-            async s => await _context.Tags.FirstOrDefaultAsync(t => t.Name == s),
-            s => new TagEntity { Name = s }
-        );
-        
-// Create categories to add to db
-        var categories = await EntityParser.ParseAsync(
-            model.Categories,
-            new char[] { ' ', ',' },
-            async s => await _context.Categories.FirstOrDefaultAsync(c => c.Name == s),
-            s => new CategoryEntity { Name = s }
-        );
+        var tags = await _context.Tags.ParseAsync(model.Tags ?? string.Empty);
+        var categories = await _context.Categories.ParseAsync(model.Categories ?? string.Empty);
 
 // Update blog's properties
         blog.Title = model.Title;
         blog.Content = model.Content;
         blog.Visibility = model.Visibility;
-        
+
 // Update blog's Tags collection
-        blog.Tags.Update(tags ?? []);
+        blog.Tags = tags;
 
 // Update blog's Catogories collection
-        blog.Categories.Update(categories ?? []);
+        blog.Categories = categories;
+
+// Delete unused tags and categories
+        await _context.Tags.RemoveUnusedAsync();
+        await _context.Categories.RemoveUnusedAsync();
 
 // Save changes
         await _context.SaveChangesAsync();
 
-        return RedirectToAction("Detail", "Profile", new { Id = user.Id });
+        return RedirectToAction("Detail", "Profile", new { Id = userId });
     }
 
     [HttpGet]
@@ -190,31 +193,31 @@ public class BlogController : Controller
         var blog = await _context.Blogs
             .AsNoTracking()
             .FirstOrDefaultAsync(b => b.Id == id);
-        
+
         if (blog is null)
         {
-            return NotFound();
+            return RedirectToAction("NotFound", "Error");
         }
 
-        var currentUser = await _userManager.GetUserAsync(User);
-        if (currentUser is null || blog.AuthorId != currentUser.Id)
+        var currentUserId = _userManager.GetUserId(User);
+        if (blog.AuthorId.ToString() != currentUserId)
         {
             return Forbid();
         }
 
+        _context.Blogs.Attach(blog);
         _context.Blogs.Remove(blog);
         await _context.SaveChangesAsync();
 
-        return RedirectToAction("Detail", "Profile", new { id = blog.AuthorId });
+        return RedirectToAction("Detail", "Profile", new { Id = blog.AuthorId });
     }
 
     [HttpGet]
-    public async Task<IActionResult> Create()
+    public IActionResult Create()
     {
-        var user = await _userManager.GetUserAsync(User);
-        if (user is null)
+        if (_userManager.GetUserId(User) is null)
         {
-            return NotFound();
+            return RedirectToAction("NotFound", "Error");
         }
 
         return View();
@@ -223,90 +226,34 @@ public class BlogController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(CreateBlogViewModel model)
     {
-        var user = await _userManager.GetUserAsync(User);
-        if (user is null)
+        var id = _userManager.GetUserId(User);
+        if (id is null)
         {
-            return NotFound();
+            return RedirectToAction("NotFound", "Error");
         }
         
         if (!ModelState.IsValid)
         {
+            this.ParseModalErrorsAndSet("Validation error");
             return View(model);
         }
 
-// Create tags to add to db
-        var tags = await EntityParser.ParseAsync(
-            model.Tags,
-            new char[] { '#', ' ', ',' },
-            async tagName => await _context.Tags.FirstOrDefaultAsync(t => t.Name == tagName),
-            tagName => new TagEntity { Name = tagName }
-        );
-        
-// Create categories to add to db
-        var categories = await EntityParser.ParseAsync(
-            model.Categories, 
-            new char[] { ',', ' ' }, 
-            async categoryName => await _context.Categories.FirstOrDefaultAsync(c => c.Name == categoryName), 
-            categoryName => new CategoryEntity { Name = categoryName }
-        );
+        var tags = await _context.Tags.ParseAsync(model.Tags);
+        var categories = await _context.Categories.ParseAsync(model.Categories);
 
         var blogEntity = new BlogEntity
         {
             Title = model.Title,
             Content = model.Content,
             Visibility = model.Visibility,
-            Tags = tags ?? [],
-            Categories = categories ?? [],
-            Author = user,
+            Tags = tags,
+            Categories = categories,
+            AuthorId = new Guid(id)
         };
         
         await _context.Blogs.AddAsync(blogEntity);
         await _context.SaveChangesAsync();
 
-        return User.IsInRole("Admin") ? View() : RedirectToAction("Detail", "Profile", new { user.Id });
-    }
-
-    private string? GetVisitorId()
-    {
-        // Проверяем, если кука существует
-        if (Request.Cookies.ContainsKey("VisitorId"))
-        {
-            // Возвращаем существующий идентификатор
-            return Request.Cookies["VisitorId"];
-        }
-
-        // Если куки нет, создаем новый идентификатор
-        var visitorId = Guid.NewGuid().ToString();
-
-        CookieOptions options = new CookieOptions
-        {
-            Expires = DateTime.Now.AddYears(1),
-            HttpOnly = true,
-            IsEssential = true,
-        };
-
-        // Устанавливаем новую куку
-        Response.Cookies.Append("VisitorId", visitorId, options);
-
-        // Возвращаем идентификатор, который только что был создан
-        return visitorId;
-    }
-
-    private bool HasUserViewedBlog(string userId, Guid blogId)
-    {
-        return _context.ViewBlogs.Any(v => v.UserId == userId && v.BlogId == blogId);
-    }
-
-    // Метод для добавления записи о просмотре блога
-    private async Task AddViewRecordAsync(string userId, Guid blogId)
-    {
-        var view = new ViewBlogEntity
-        {
-            UserId = userId,
-            BlogId = blogId,
-        };
-
-        _context.ViewBlogs.Add(view);
-        await _context.SaveChangesAsync();
+        return RedirectToAction("Detail", "Profile", new { id });
     }
 }

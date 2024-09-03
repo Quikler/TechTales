@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using SixLabors.ImageSharp.Processing;
 using TechTales.Data;
 using TechTales.Data.Models;
 using TechTales.Helpers;
+using TechTales.Helpers.Extensions;
 using TechTales.Models;
 
 namespace TechTales.Controllers;
@@ -38,21 +40,24 @@ public class ProfileController : Controller
             .AsNoTracking()
             .Include(u => u.Blogs)
             .FirstOrDefaultAsync(u => u.Id == id);
-        
-        var currentUser = await _userManager.GetUserAsync(User);
+
         if (profileUser is null)
         {
-            return NotFound();
+            return RedirectToAction("NotFound", "Error");
         }
 
+        var currentUser = await _userManager.GetUserAsync(User);
+
+        var role = await _userManager.GetMainRoleAsync(profileUser);
         var model = new ProfileViewModel
         {
             User = new UserViewModel
             {
+                MainRole = role,
                 UserName = profileUser.UserName!,
                 Country = profileUser.Country,
                 AboutMe = profileUser.AboutMe,
-                Avatar = ExtensionMethods.BlobToImageSrc(profileUser.Avatar)
+                Avatar = profileUser.Avatar.BlobToImageSrc()
             },
             Blogs = profileUser.Blogs.Select(b => new BlogViewModel
             {
@@ -62,17 +67,23 @@ public class ProfileController : Controller
                 CreationDate = b.CreationDate, 
                 Views = b.Views,
             }).ToList(),
-            IsSameUser = currentUser is not null && profileUser.Id == currentUser.Id
+            IsSameUser = profileUser.Id == currentUser?.Id,
+            CurrentUser = new UserViewModel
+            {
+                MainRole = await _userManager.GetMainRoleAsync(currentUser),
+            },
         };
+
         return View(model);
     }
 
+    [HttpGet]
     public async Task<IActionResult> Edit() 
     {
         var user = await _userManager.GetUserAsync(User);
         if (user is null)
         {
-            return NotFound();
+            return RedirectToAction("NotFound", "Error");
         }
 
         var model = new EditProfileViewModel
@@ -91,20 +102,21 @@ public class ProfileController : Controller
         var user = await _userManager.GetUserAsync(User);
         if (user is null)
         {
-            return NotFound();
+            return RedirectToAction("NotFound", "Error");
         }
 
 // Assign user actual avatar to model if some errors will occur
         model.Avatar = user.Avatar;
         if (!ModelState.IsValid)
         {
+            this.ParseModalErrorsAndSet("Validation error");
             return View(model);
         }
 
         var userByName = await _userManager.FindByNameAsync(model.UserName);
         if (userByName is not null && userByName.Id != user.Id)
         {
-            ModelState.AddModelError(string.Empty, $"User with '{model.UserName}' username already exists");
+            this.SetModalMessage("Coincidence error", $"Username '{model.UserName}' already taken");
             return View(model);
         }
 
@@ -125,11 +137,26 @@ public class ProfileController : Controller
         var result = await _userManager.UpdateAsync(user);
         if (result.Succeeded)
         {
-            return RedirectToAction("Detail", "Profile", new { Id = user.Id });
+            this.SetModalMessage("Success", "Your profile has been updated successfully.");
+            return View(model);
         }
 
-        ModelState.AddModelError(string.Empty, "An error occurred while updating the profile.");
+        this.SetModalMessage("Error", "The server encountered an internal error or misconfiguration and was unable to complete your request.");
         return View(model);
+    }
+
+    [HttpDelete, Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteUser(Guid id)
+    {
+        await _context.Users.Where(u => u.Id == id).ExecuteDeleteAsync();
+        this.SetModalMessage("Success", $"User with id='{id}' has been deleted.");
+        return View();
+    }
+
+    [HttpPost, Authorize(Roles = "Admin,Moderator")]
+    public async Task<IActionResult> BanUser(Guid id)
+    {
+        return View();
     }
 
     private static async Task CropImageAsync(MemoryStream memoryStream, int width, int height)

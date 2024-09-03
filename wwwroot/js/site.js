@@ -4,8 +4,7 @@
 // Write your JavaScript code.
 document.querySelector(".search-input").addEventListener("keydown", function (e) {
     if(e.keyCode == 13 && this.value) {
-        var inputContent = this.value;
-        var url = `/Filter/Find?request=${encodeURIComponent(inputContent)}`;
+        var url = `/Filter/Find?request=${encodeURIComponent(this.value)}`;
         window.location.href = url;
     }
     else {

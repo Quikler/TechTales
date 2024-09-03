@@ -1,5 +1,5 @@
 @model FindViewModel;
-@using TechTales.Helpers
+@using TechTales.Helpers.Extensions
 @{
     ViewData["Title"] = "Find";
 }
@@ -7,93 +7,57 @@
 <link rel="stylesheet" href="~/css/filter/find.css">
 
 <div class="text-center">
-    <div class="input-block outline-border">
-        <input asp-for=Request class="text-black" placeholder="Title, Category, Tag, Content..." type="text" required />
-        <button class="px-4 py-2 outline-box-shadow btn outline-border">Search</button>
+    <div class="rounded input-block border input-group mb-4 w-50 mx-auto">
+        <input required type="text" placeholder="Title, Category, Tag, Content..." aria-label="Search" aria-describedby="search-button" value="@Model.Request">
+        <button class="rounded-end btn text-white bg-blueviolet px-4 outline-box-shadow" id="search-button">Search</button>
     </div>
-    <div class="d-flex justify-content-between my-4 blogs-sidepanel-container">
-        <div class="flex-grow-1">
+    <div class="container">
+        <div class="col-md-8 mx-auto">
             @if (Model.Blogs.Count == 0) 
             {
-                <p class="mb-0 me-3 ws-pl px-4 py-2 fst-italic text-muted outline-border text-center">[No data presented]</p>
+                <p class="no-data">[No data presented]</p>
             }
             else 
             {
-                <ol id="blogs-list">
+                <ol id="blogs-list" class="list-unstyled">
                     @foreach (var blog in Model.Blogs)
                     {
-                        <li class="mb-3 px-4 py-3 blog-container outline-border">
+                        <li class="mb-4 p-4 border rounded">
                             <div class="d-flex justify-content-between">
                                 <div class="blog-title-content pe-4">
-                                    <h3 class="text-darkblue fw-bold text-break ws-pl">@blog.Title</h3>
-                                    <p class="text-darkblue text-break ws-pl"><!--
-                                        -->@blog.Content.EllipsisString(230) <!--
-                                        --><a class="text-blueviolet" asp-action="Read" asp-controller="Blog" asp-route-id="@blog.Id">[Read more]</a>
+                                    <h3 class="fw-bold text-break">@blog.Title</h3>
+                                    <p class="text-break">
+                                        @blog.Content.EllipsisString(230)
+                                        <a class="text-blueviolet" asp-action="Read" asp-controller="Blog" asp-route-id="@blog.Id">[Read more]</a>
                                     </p>
                                 </div>
-                                <div class="blog-time-user">
-                                    <p class="text-darkblue">@blog.CreationDate.ToString("dd/MM/yyyy")</p>
-                                    <a asp-action="Detail" asp-controller="Profile"
-                                        asp-route-id="@blog.Author.Id"
-                                        class="d-flex flex-column align-items-center">
-                                        <img class="rounded-image size-64-fit-cover outline-box-shadow" src="@blog.Author.Avatar" />
-                                        <p class="text-blueviolet">@blog.Author.UserName</p>
+                                <div class="blog-time-user text-center">
+                                    <p>@blog.CreationDate.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                                    <a asp-action="Detail" asp-controller="Profile" asp-route-id="@blog.Author.Id">
+                                        <img class="rounded-circle size-50-fit-cover" src="@blog.Author.Avatar" />
+                                        <p class="mt-2 text-break">@blog.Author.UserName</p>
                                     </a>
                                 </div>
                             </div>
-                            <div class="text-darkblue d-flex">Views: @blog.Views</div>
+                            <div class="text-muted">Views: @blog.Views</div>
                         </li>
                     }
                 </ol>
             }
-            <ul class="blog-pagination d-inline-block p-0 mt-3">
-                
-                <li><a asp-action="Find" asp-controller="Filter"
-                        asp-route-request="@Model.Request"
-                        style="@(Model.CurrentPage <= 1 ? "pointer-events: none;color: #6c757d;" : "color: blueviolet;")"
-                        asp-route-page="@(Model.CurrentPage - 1)"
-                        asp-fragment="blogs-list">«</a></li>
-                
-                @for (int i = 0; i < Model.TotalPages; i++)
-                {
-                    int inc = i + 1;
-                    if (Model.CurrentPage == inc)
-                    {
-                        <li><a class="active-pagination"
-                            asp-route-request="@Model.Request"
-                            asp-action="Find" asp-controller="Filter"
-                            asp-fragment="blogs-list"
-                            asp-route-page="@inc">@inc</a></li>
-                    }
-                    else
-                    {
-                        <li><a asp-action="Find" 
-                            asp-controller="Filter"
-                            asp-route-request="@Model.Request"
-                            asp-route-page="@inc"
-                            asp-fragment="blogs-list">@inc</a></li>
-                    }
-                }
+            <ul class="blog-pagination d-flex justify-content-center gap-1 mt-4">
+                <li>
+                    <a class="text-blueviolet @(Model.CurrentPage <= 1 ? "disabled-pagination" : "")" href="/Filter/Find?page=@(Model.CurrentPage - 1)&orderBy=dateLate">«</a>
+                </li>
 
-                <li><a asp-action="Find" 
-                        asp-controller="Filter"
-                        asp-route-request="@Model.Request"
-                        style="@(Model.CurrentPage >= Model.TotalPages ? "pointer-events: none;color: #6c757d;" : "color: blueviolet;")"
-                        asp-route-page="@(Model.CurrentPage + 1)"
-                        asp-fragment="blogs-list">»</a></li>
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li>
+                        <a class="text-blueviolet @(Model.CurrentPage == i ? "active-pagination" : "")" href="/Filter/Find?page=@i&orderBy=dateLate">@i</a>
+                    </li>
+                }
                 
-            </ul>
-        </div>
-        <div class="sidepanel ms-4 outline-border">
-            <ul class="py-3 px-4 text-start">
-                <li class="mb-3">
-                    <a class="text-blueviolet" href="">Popular blogs</a>
-                </li>
-                <li class="mb-3">
-                    <a class="text-blueviolet" href="">Categories</a>
-                </li>
-                <li class="mb-3">
-                    <a class="text-blueviolet" href="">Tags</a>
+                <li>
+                    <a class="text-blueviolet @(Model.CurrentPage >= Model.TotalPages ? "disabled-pagination" : "")" href="/Filter/Find?page=@(Model.CurrentPage + 1)&orderBy=dateLate">»</a>
                 </li>
             </ul>
         </div>

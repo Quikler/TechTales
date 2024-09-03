@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TechTales.Data;
 using TechTales.Data.Models;
+using TechTales.Helpers.Extensions;
 using TechTales.Models;
 
 namespace TechTales.Controllers;
@@ -29,7 +30,7 @@ public class AuthorizationController : Controller
     {
         if (_signInManager.IsSignedIn(User))
         {
-            return Forbid();
+            return RedirectToAction("Index", "Home");
         }
         return View();
     }
@@ -39,6 +40,7 @@ public class AuthorizationController : Controller
     {
         if (!ModelState.IsValid)
         {
+            this.ParseModalErrorsAndSet("Validation error");
             return View(model);
         }
 
@@ -48,19 +50,19 @@ public class AuthorizationController : Controller
             UserName = model.UserName,
         };
 
-        var result = await _userManager.CreateAsync(user, model.Password);
-
-        if (result.Succeeded)
+        var createResult = await _userManager.CreateAsync(user, model.Password);
+        if (createResult.Succeeded)
         {
             await _signInManager.SignInAsync(user, false);
             return RedirectToAction("Index", "Home");
         }
 
-        foreach (var error in result.Errors)
-        {
-            ModelState.AddModelError(string.Empty, error.Description);
-        }
+        // foreach (var error in createResult.Errors)
+        // {
+        //     ModelState.AddModelError(error.Code, error.Description);
+        // }
 
+        this.SetModalMessage("Authorization", createResult.Errors.First().Description);
         return View(model);
     }
     
@@ -69,7 +71,7 @@ public class AuthorizationController : Controller
     {
         if (_signInManager.IsSignedIn(User))
         {
-            return Forbid();
+            return RedirectToAction("Index", "Home");
         }
         return View();
     }
@@ -79,21 +81,23 @@ public class AuthorizationController : Controller
     {
         if (!ModelState.IsValid)
         {
+            this.ParseModalErrorsAndSet("Validation error");
             return View(model);
         }
 
-        var user = await _userManager.FindByEmailAsync(model.UserNameOrEmail) 
-            ?? await _userManager.FindByNameAsync(model.UserNameOrEmail);
+        var user = 
+            await _userManager.FindByEmailAsync(model.UserNameOrEmail) ??
+            await _userManager.FindByNameAsync(model.UserNameOrEmail);
         
         if (user is null)
         {
-            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            this.SetModalMessage("Authorization", "No username or email found in database.");
             return View(model);
         }
 
         // todo remember me
         var signInResult = await _signInManager.PasswordSignInAsync(
-            user, model.Password, true, true); // 3-d arg is remember me?
+            user, model.Password, true, true);
         
         if (signInResult.Succeeded)
         {
@@ -102,25 +106,18 @@ public class AuthorizationController : Controller
         
         if (signInResult.IsLockedOut)
         {
-            ModelState.AddModelError(string.Empty, "You have been locked.");
-            return View();
+            this.SetModalMessage("Authorization", "You have been locked.");
+            return View(model);
         }
         
-        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+        this.SetModalMessage("Authorization", "Invalid login attempt.");
         return View(model);
     }
 
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
-        //HttpContext.Session.Clear(); // Clear session
-        Response.Cookies.Delete(".AspNetCore.Identity.Application"); // Clear cookies
         return RedirectToAction("Index", "Home");
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

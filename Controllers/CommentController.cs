@@ -6,15 +6,17 @@ using TechTales.Data;
 using TechTales.Data.Models;
 using TechTales.DTOs;
 using TechTales.Helpers;
+using TechTales.Helpers.Extensions;
 using TechTales.Hubs;
 using TechTales.Models;
+
+namespace TechTales.Controllers;
 
 public class CommentController : Controller
 {
     private readonly ILogger<BlogController> _logger;
     private readonly AppDbContext _context;
     private readonly UserManager<UserEntity> _userManager;
-    // maybe CommentHub _commentHub; ????
     private readonly IHubContext<CommentHub> _commentHub;
 
     public CommentController(ILogger<BlogController> logger, AppDbContext context,
@@ -27,17 +29,17 @@ public class CommentController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Add(Guid blogId, string content, Guid authorId)
+    public async Task<IActionResult> Add(Guid blogId, string content, Guid readerId)
     {
-        if (string.IsNullOrWhiteSpace(content))
-        {
-            return BadRequest("Comment content cannot be empty.");
-        }
-
         var user = await _userManager.GetUserAsync(User);
-        if (user is null || user.Id != authorId)
+        if (user is null || user.Id != readerId)
         {
             return Forbid("Invalid user.");
+        }
+
+        if (string.IsNullOrWhiteSpace(content))
+        {
+            return BadRequest(new { Title = "Validation error", Text = "Comment content cannot be empty." });
         }
 
         var comment = new CommentEntity
@@ -45,7 +47,7 @@ public class CommentController : Controller
             Id = Guid.NewGuid(),
             BlogId = blogId,
             Content = content,
-            AuthorId = authorId, 
+            AuthorId = readerId, 
         };
 
         await _context.Comments.AddAsync(comment);
@@ -58,9 +60,9 @@ public class CommentController : Controller
             CreationDate = comment.CreationDate.ToString("dd/MM/yyyy HH:mm:ss"),
             Author = new UserDTO 
             {
-                Id = comment.AuthorId,
+                Id = comment.AuthorId, 
                 UserName = user.UserName!, 
-                Avatar = ExtensionMethods.BlobToImageSrc(user.Avatar), 
+                Avatar = user.Avatar.BlobToImageSrc(), 
             }
         };
 

@@ -9,4 +9,5 @@ public class UserViewModel
     public string? Country { get; set; }
     public string? AboutMe { get; set; }
     public string? Avatar { get; set; }
+    public string MainRole { get; set; } = "User";
 }

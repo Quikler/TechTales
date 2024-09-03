@@ -1,7 +1,8 @@
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Identity;
+using TechTales.Data.Models;
 
-namespace TechTales.Helpers;
+namespace TechTales.Helpers.Extensions;
 
 public static class ExtensionMethods
 {
@@ -45,22 +46,6 @@ public static class ExtensionMethods
         return input;
     }
 
-    public static void Update<TEntity>(this ICollection<TEntity> existingItems, List<TEntity> newItems) where TEntity : class
-    {
-        var itemsToRemove = existingItems.Except(newItems).ToList();
-        var itemsToAdd = newItems.Except(existingItems).ToList();
-
-        foreach (var item in itemsToRemove)
-        {
-            existingItems.Remove(item);
-        }
-
-        foreach (var item in itemsToAdd)
-        {
-            existingItems.Add(item);
-        }
-    }
-
     public static async Task InitializeRolesAsync(this IServiceProvider serviceProvider)
     {
         var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
@@ -75,5 +60,21 @@ public static class ExtensionMethods
                 roleResult = await roleManager.CreateAsync(new IdentityRole<Guid>(roleName));
             }
         }
+    }
+
+    public static async Task<string> GetMainRoleAsync(this UserManager<UserEntity> userManager, UserEntity? user)
+    {
+        var role = "User";
+        if (user is null) return role;
+
+        if (await userManager.IsInRoleAsync(user, "Admin"))
+        {
+            role = "Admin";
+        }
+        else if (await userManager.IsInRoleAsync(user, "Moderator"))
+        {
+            role = "Moderator";
+        }
+        return role;
     }
 }

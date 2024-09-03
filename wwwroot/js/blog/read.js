@@ -1,5 +1,5 @@
 // intial value comments
-const initialComments = Array.from(document.querySelectorAll(".comment-content.text-break")).reduce((acc, comment) => {
+const initialComments = Array.from(document.querySelectorAll(".comment-content")).reduce((acc, comment) => {
     acc[comment.id] = comment.innerHTML;
     return acc;
 }, {});
@@ -13,14 +13,14 @@ document.querySelector(".comments-list").addEventListener("click", function (eve
     try {
         // Find the parent element (<li>) that contains comment
         var commentContainer = target.closest("li");
-        var commentContent = commentContainer.querySelector(".comment-content.text-break");
+        var commentContent = commentContainer.querySelector(".comment-content");
     } catch (error) {
         return;
     }
 
 //#region Handle edit comment button
     if (target.classList.contains("edit-comment-btn")) {
-        setContentEditable(commentContent);
+        setContentEditable(commentContent, commentContainer);
     }
 //#endregion
 
@@ -29,7 +29,7 @@ document.querySelector(".comments-list").addEventListener("click", function (eve
         const newCommentContent = commentContent.innerHTML;
 
         if (initialComments[commentContent.id] == newCommentContent) {
-            removeContentEditable(commentContent);
+            removeContentEditable(commentContent, commentContainer);
             target.blur();
             return;
         }
@@ -56,7 +56,7 @@ document.querySelector(".comments-list").addEventListener("click", function (eve
         })
         .catch(error => console.error("[EditComment]:error There was a problem with the fetch operation:", error));
 
-        removeContentEditable(commentContent);
+        removeContentEditable(commentContent, commentContainer);
     }
 //#endregion
 
@@ -93,7 +93,7 @@ document.querySelector(".comments-list").addEventListener("click", function (eve
     else if (target.classList.contains("cancel-comment-button")) {
         // if comment edit was canceled, assign previous value to comment
         commentContent.textContent = initialComments[commentContent.id];
-        removeContentEditable(commentContent);
+        removeContentEditable(commentContent, commentContainer);
     }
 //#endregion
 
@@ -103,37 +103,63 @@ document.querySelector(".comments-list").addEventListener("click", function (eve
 document.querySelectorAll(".add-comment-btn").forEach(addButton => {
     addButton.addEventListener("click", function () {
         const blogId = document.querySelector('input[name="BlogId"]');
-        const authorId = document.querySelector('input[name="AuthorId"]');
+        const readerId = document.querySelector('input[name="ReaderId"]');
 
         console.log("[AddComment]:before blogId value:", blogId.value);
-        console.log("[AddComment]:before authorId value:", authorId.value);
+        console.log("[AddComment]:before readerId value:", readerId.value);
 
         const textAreaComment = document.querySelector(".addcomment");
         const commentValue = textAreaComment.value;
 
         textAreaComment.value = '';
 
-        fetch(`/Comment/Add?content=${encodeURIComponent(commentValue)}&blogId=${encodeURIComponent(blogId.value)}&authorId=${encodeURIComponent(authorId.value)}`, {
+        fetch(`/Comment/Add?content=${encodeURIComponent(commentValue)}&blogId=${encodeURIComponent(blogId.value)}&readerId=${encodeURIComponent(readerId.value)}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
         })
-        .then(response => {
+        .then(async response => {
             if (!response.ok) {
-                throw new Error(response);
+                const error = await response.json();
+                throw error;
             }
             return response.json();
         })
         .then(data => {
+            // if (data == "err") {
+            //     let modalById = document.getElementById('modalCenter');
+            //     let modal = new bootstrap.Modal(modalById, {});
+
+            //     console.log(data);
+
+            //     modalById.querySelector('.modal-title').textContent = data.title;
+            //     modalById.querySelector('.modal-text').textContent = data.text;
+            //     modal.show();
+            //     return;
+            // }
+
             console.log("[AddComment]:now Response received:", data);
+
+            initialComments[data.id] = data.content;
 
             // Notify the server to broadcast the addition event to clients
             connection.invoke("AddComment", data).catch(function (err) {
                 return console.error(err.toString());
             });
         })
-        .catch(error => console.error("[AddComment]:error There was a problem with the fetch operation:", error));
+        .catch(error => {
+            let modalById = document.getElementById('modalCenter');
+            let modal = new bootstrap.Modal(modalById, {});
+
+            console.log(error);
+
+            modalById.querySelector('.modal-title').textContent = error.title;
+            modalById.querySelector('.modal-text').textContent = error.text;
+            modal.show();
+
+            console.error("[AddComment]:error There was a problem with the fetch operation:", error)
+        });
     });
 });
 // #endregion
@@ -152,28 +178,28 @@ function createLi(comment, editable = false) {
     </div>` : '';
 
     const liStr = `
-    <li class="mb-4 p-4 outline-border">
+    <li class="mb-4 p-4 bg-light border rounded shadow-sm">
         <div class="d-flex justify-content-between">
             <div class="mb-3 d-flex flex-grow-1">
                 <a href="/Profile/Detail/${comment.author.id}">
-                    <img class="user-img rounded-image outline-box-shadow" src="${comment.author.avatar}">
+                    <img class="user-img rounded-circle" src="${comment.author.avatar}">
                 </a>
                 <div class="ms-3 d-flex justify-content-center flex-column">
                     <p id="${comment.author.id}" class="comment-author-id m-0">
                         <a class="text-blueviolet" href="/Profile/Detail/${comment.author.id}">${comment.author.userName}</a>
                     </p>
-                    <p class="text-darkblue m-0">${comment.creationDate}</p>
+                    <p class="m-0 text-muted">${comment.creationDate}</p>
                 </div>
             </div>
             ${editSection}
         </div>
-        <p id="${comment.id}" class="text-darkblue m-0 mt-2 comment-content text-break ws-pl">${comment.content}</p>
+        <p id="${comment.id}" class=" m-0 mt-2 comment-content text-break ws-pl">${comment.content}</p>
         <div class="cancel-submit-comment-container text-end" hidden>
             <div class="d-flex justify-content-end">
                 <button type="button"
-                        class="cancel-comment-button outline-box-shadow btn outline-border mt-2 ms-auto">Cancel</button>
+                        class="cancel-comment-button outline-box-shadow btn px-4 mt-2 ms-auto bg-blueviolet text-white">Cancel</button>
                 <button type="button"
-                        class="submit-comment-button outline-box-shadow btn outline-border ms-2 mt-2">Submit</button>
+                        class="submit-comment-button outline-box-shadow btn px-4 ms-2 mt-2 bg-blueviolet text-white">Submit</button>
             </div>
         </div>
     </li>
@@ -182,20 +208,20 @@ function createLi(comment, editable = false) {
     return liStr;
 }
 
-function removeContentEditable(tag) {
+function removeContentEditable(tag, li) {
     tag.removeAttribute("contentEditable");
     tag.style.borderBottom = "0";
     tag.style.padding = "0";
 
-    const buttonsContainer = document.querySelector(".cancel-submit-comment-container.text-end");
+    const buttonsContainer = li.querySelector(".cancel-submit-comment-container.text-end");
     buttonsContainer.setAttribute("hidden", "");
 }
 
-function setContentEditable(tag) {
+function setContentEditable(tag, li) {
     tag.setAttribute("contentEditable", "");
     tag.style.borderBottom = "1px solid blueviolet";
     tag.style.padding = "8px 16px";
 
-    const buttonsContainer = document.querySelector(".cancel-submit-comment-container.text-end");
+    const buttonsContainer = li.querySelector(".cancel-submit-comment-container.text-end");
     buttonsContainer.removeAttribute("hidden");
 }

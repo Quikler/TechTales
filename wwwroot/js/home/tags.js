@@ -2,7 +2,7 @@ const input = document.querySelector(".input-block > input");
 const button = document.querySelector(".input-block > button");
 
 function redirectToUrl() {
-    const url = `/Filter/Find?request=${encodeURIComponent(input.value)}`;
+    const url = `/Filter/FindByTags?name=${encodeURIComponent(input.value)}`;
     window.location.href = url;
 }
 

@@ -16,5 +16,5 @@ input.addEventListener("keydown", function (e) {
 });
 
 button.addEventListener("click", function () {
-    redirectToUrl();
+    input.value ? redirectToUrl() : input.reportValidity();
 });

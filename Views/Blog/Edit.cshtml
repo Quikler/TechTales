@@ -6,60 +6,65 @@
 
 <link rel="stylesheet" href="~/css/blog/edit.css">
 
-<div>
-    <h1 class="text-break text-darkblue mb-3">Edit blog '@Model.Title'</h1>
-    @* <form asp-controller="Blog" asp-action="Edit" asp-route-id="@Model.Id" method="post" autocomplete="off"> *@
-        <div class="mb-3">
-            <input asp-for="@Model.Title" class="form-control" type="text" placeholder="Title" aria-label="Title" required>
-        </div>
-        <div class="mb-3">
-            <textarea asp-for="@Model.Content" class="content-text-area form-control" placeholder="Content" aria-label="Content" required></textarea>
-        </div>
-        
-        <div asp-validation-summary="All" class="mb-3 fw-bold"></div>
+<form class="container p-4 rounded shadow-lg bg-light" asp-controller="Blog" asp-action="Edit" asp-route-id="@Model.Id" method="post" autocomplete="off">
+    <div class="row g-4">
+        <div>
+            <h1 class="mb-4 text-blueviolet text-break">Edit blog '@Model.Title'</h1>
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input asp-for="@Model.Title" class="outline-box-shadow form-control" type="text" placeholder="Title" aria-label="Title" required>
+            </div>
 
-        <div class="d-flex justify-content-between">
+            <div class="mb-3">
+                <label for="content" class="form-label">Content</label>
+                <textarea rows="6" asp-for="@Model.Content" class="outline-box-shadow content-text-area form-control" placeholder="Content" aria-label="Content" required></textarea>
+            </div>
+    
+            <div class="mb-3">
+                <div class="mb-3">
+                    <label for="tags" class="form-label">Tags</label>
+                    <input class="outline-box-shadow form-control" type="text" placeholder="#tag1 #tag2 etc..." aria-label="Tags" id="Tags" name="Tags" value="@Model.Tags">
+                </div>
+                <div class="mb-3">
+                    <label for="categories" class="form-label">Categories</label>
+                    <input class="outline-box-shadow form-control" type="text" placeholder="Category1, Category2 etc..." aria-label="Categories" id="Categories" name="Categories" value="@Model.Categories">
+                </div>
+            </div>
             <div class="visibility-radio-container">
                 @if (Model.Visibility)
                 {
-                    <div class="d-flex align-items-center">
-                        <div class="py-1 d-inline-flex align-items-center">
-                            <input class="checkbox" asp-for="@Model.Visibility" type="radio" name="visibility" value="true" checked />
-                            <label class="text-darkblue ps-2 fw-bold" for="Public">Public</label>
+                    <div class="mb-3 d-flex align-items-center">
+                        <div class="d-inline-flex align-items-center">
+                            <input class="outline-box-shadow checkbox" asp-for="@Model.Visibility" type="radio" name="visibility" value="true" checked />
+                            <label class=" ps-2 fw-bold" for="Public">Public</label>
                         </div>
                         <span class="text-muted ps-1"> - Current blog state</span>
                     </div>
-                    <div class="py-1 d-flex align-items-center">
-                        <input class="checkbox" asp-for="@Model.Visibility" type="radio" name="visibility" value="false" />
-                        <label class="text-darkblue ps-2 fw-bold" for="Private">Private</label>
+                    <div class="d-flex align-items-center">
+                        <input class="outline-box-shadow checkbox" asp-for="@Model.Visibility" type="radio" name="visibility" value="false" />
+                        <label class=" ps-2 fw-bold" for="Private">Private</label>
                     </div>
                 }
                 else
                 {
-                    <div class="py-1 d-flex align-items-center">
-                        <input class="checkbox" asp-for="@Model.Visibility" type="radio" name="visibility" value="true" />
-                        <label class="text-darkblue ps-2 fw-bold" for="Public">Public</label>
+                    <div class="mb-3 d-flex align-items-center">
+                        <input class="outline-box-shadow checkbox" asp-for="@Model.Visibility" type="radio" name="visibility" value="true" />
+                        <label class=" ps-2 fw-bold" for="Public">Public</label>
                     </div>
-                    <div class="py-1 d-flex align-items-center">
+                    <div class="d-flex align-items-center">
                         <div class="d-inline-flex align-items-center">
-                            <input class="checkbox" asp-for="@Model.Visibility" type="radio" name="visibility" value="false" checked />
-                            <label class="text-darkblue ps-2 fw-bold" for="Private">Private</label>
+                            <input class="outline-box-shadow checkbox" asp-for="@Model.Visibility" type="radio" name="visibility" value="false" checked />
+                            <label class=" ps-2 fw-bold" for="Private">Private</label>
                         </div>
                         <span class="text-muted ps-1"> - Current blog state</span>
                     </div>
                 }
             </div>
-            <div>
-                <div class="mb-3">
-                    <input asp-for="@Model.Tags" class="outline-box-shadow form-control" type="text" placeholder="#tag1 #tag2 etc..." aria-label="Tags">
-                </div>
-                <div class="mb-3">
-                    <input asp-for="@Model.Categories" class="outline-box-shadow form-control" type="text" placeholder="Category1, Category2 etc..." aria-label="Categories">
-                </div>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn bg-blueviolet text-white outline-box-shadow px-4">Submit</button>
             </div>
         </div>
-        <button type="submit" class="submit-button outline-box-shadow btn outline-border ms-auto d-flex">Submit</button>
-    @* </form> *@
-</div>
+    </div>
+</form>
 
 <script src="~/js/blog/edit.js"></script>

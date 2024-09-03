@@ -1,0 +1,15 @@
+.main-container {
+    flex: 1 1 auto;
+}
+
+.search-input {
+  background: url("/images/magnifier_glass.svg") no-repeat left;
+  background-color: white;
+  background-size: 20px;
+  background-position: 12px center;
+  padding-left: 42px;
+}
+
+.dropdown-toggle::after {
+  color: white;
+}

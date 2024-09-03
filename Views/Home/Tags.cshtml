@@ -1,0 +1,57 @@
+@using TechTales.Models.Home;
+@model TagsViewModel;
+@{
+    ViewData["Title"] = "Tags";
+}
+
+<link rel="stylesheet" href="~/css/home/categories.css">
+
+<div class="text-center">
+    <div class="rounded input-block border input-group mb-4 w-50 mx-auto">
+        <input required type="text" placeholder="Tag name" aria-label="Search" aria-describedby="search-button">
+        <button class="rounded-end px-4 btn text-white bg-blueviolet outline-box-shadow" id="search-button">Search</button>
+    </div>
+    <div class="container">
+        <div class="col-md-8 mx-auto">
+            @if (Model.Tags.Count == 0) 
+            {
+                <p class="no-data">[No data presented]</p>
+            }
+            else 
+            {
+                <ol id="blogs-list" class="list-unstyled">
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <li class="mb-4 p-4 d-flex justify-content-between border shadow-sm rounded">
+                            <div class="flex-grow-1">
+                                <div class="pe-4">
+                                    <h3 class="fw-bold text-break">#@tag.Name</h3>
+                                </div>
+                                <div class="text-muted">Count of blogs: @tag.CountOfBlogs</div>
+                            </div>
+                            <a asp-action="FindByTags" asp-controller="Filter" asp-route-name="@tag.Name" class="link ps-2 text-blueviolet ws-nw">View more</a>
+                        </li>
+                    }
+                </ol>
+            }
+            <ul class="blog-pagination d-flex justify-content-center gap-1 mt-4">
+                <li>
+                    <a class="text-blueviolet @(Model.CurrentPage <= 1 ? "disabled-pagination" : "")" asp-action="Categories" asp-route-page="@(Model.CurrentPage - 1)">«</a>
+                </li>
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li>
+                        <a class="text-blueviolet @(Model.CurrentPage == i ? "active-pagination" : "")" asp-action="Categories" asp-route-page="@i">@i</a>
+                    </li>
+                }
+                
+                <li>
+                    <a class="text-blueviolet @(Model.CurrentPage >= Model.TotalPages ? "disabled-pagination" : "")" asp-action="Categories" asp-route-page="@(Model.CurrentPage + 1)">»</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/home/tags.js"></script>
