@@ -156,7 +156,7 @@ public class ProfileController : Controller
         return View(model);
     }
 
-    [HttpGet]
+    [HttpGet, Authorize(Roles = "Admin,Moderator")]
     public async Task<IActionResult> List(string? request, string? orderBy, int pageSize = 5, int page = 1)
     {
         IQueryable<UserEntity> query = _context.Users
@@ -212,10 +212,31 @@ public class ProfileController : Controller
         return Ok($"User with id='{id}' has been deleted.");
     }
 
-    [HttpPost, Authorize(Roles = "Admin,Moderator")]
+    [HttpPost, Authorize(Roles = "Admin,Moderator"), ValidateAntiForgeryToken]
     public async Task<IActionResult> BanUser(Guid id)
     {
-        return View();
+        // var user = await _userManager.FindByIdAsync(id.ToString());
+        // if (user is not null)
+        // {
+        //     // user.BanEndDate = DateTime.Now + TimeSpan.FromDays(5);
+        //     // user.BanReason = "Test";
+        //     await _userManager.UpdateAsync(user);
+        // }
+        // return RedirectToAction("List", "Profile");
+
+        var ban = new BanEntity
+        {
+            Id = Guid.NewGuid(),
+            UserId = id,
+            JudgeId = new Guid(_userManager.GetUserId(User)!),
+            BanEndDate = DateTime.Now + TimeSpan.FromDays(5),
+            BanReason = "Test",
+        };
+
+        await _context.Bans.AddAsync(ban);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("List", "Profile");
     }
 
     private static async Task CropImageAsync(MemoryStream memoryStream, int width, int height)

@@ -42,20 +42,40 @@
                         }
                     </div>
                     <p>@Model.User.Country</p>
-                    @if (!Model.IsSameUser && Model.CurrentUser?.MainRole == "Admin")
+                    @* @if (!Model.IsSameUser && Model.CurrentUser?.MainRole == "Admin")
                     {
                         <div class="d-flex gap-2 justify-content-end">
 
                             <form class="d-none" id="ban-user-form" asp-action="BanUser" asp-controller="Profile" asp-route-id="@Model.User.Id" method="post">
                                 @Html.AntiForgeryToken()
+                                <a class="text-danger" href="#" onclick="document.getElementById('ban-user-form').submit();">Ban</a>
                             </form>
-                            <a class="text-danger" href="#" onclick="document.getElementById('ban-user-form').submit();">Ban</a>
 
                             <form id="delete-user-form">
                                 @Html.AntiForgeryToken()
                                 <a class="text-danger" id="delete-user-link" href="#" data-id="@Model.User.Id" onclick="return deleteUser(this);">Delete</a>
                             </form>
 
+                        </div>
+                    } *@
+                    @if (!Model.IsSameUser)
+                    {
+                        <div class="d-flex gap-2 justify-content-end">
+                            @if (Model.CurrentUser?.MainRole == "Admin" || Model.CurrentUser?.MainRole == "Moderator")
+                            {
+                                <form id="ban-user-form" asp-action="BanUser" asp-controller="Profile" asp-route-id="@Model.User.Id" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <a class="text-danger" href="javascript:void(0);" onclick="document.getElementById('ban-user-form').submit();">Ban</a>
+                                </form>
+                            }
+
+                            @if (Model.CurrentUser?.MainRole == "Admin")
+                            {
+                                <form id="delete-user-form">
+                                    @Html.AntiForgeryToken()
+                                    <a class="text-danger" id="delete-user-link" href="javascript:void(0);" data-id="@Model.User.Id" onclick="return deleteUser(this);">Delete</a>
+                                </form>
+                            }
                         </div>
                     }
                 </div>
@@ -135,7 +155,7 @@
 <script src="~/js/profile/detail.js" asp-append-version="true"></script>
 @if (!Model.IsSameUser && Model.CurrentUser?.MainRole == "Admin")
 {
-    // deleteUser function accessible if current user is in role "Admin"
+    // This script is only available for user in 'Admin' role
     <script>
         function deleteUser(anchor) {
             const idToDelete = anchor.dataset.id;
@@ -143,22 +163,23 @@
             fetch(`/Profile/DeleteUser?id=${encodeURIComponent(idToDelete)}`, {
                 method: 'DELETE',
                 headers: {
-                    'RequestVerificationToken': document.getElementById('delete-user-form').querySelector('input[name="__RequestVerificationToken"]').value
+                    'RequestVerificationToken': document.getElementById('delete-user-form')
+                        .querySelector('input[name="__RequestVerificationToken"]').value
                 }
             })
-            .then(response => {
+            .then(async response => {
                 if (response.ok) {
-                    alert(response.text());
-                    window.location.href = '/Home/Index';
+                    const result = await response.json(); // Parse the JSON response
+                    alert(result.message); // Assuming your backend sends a JSON object with a message property
+                    window.location.href = '/Profile/List';
                 } else {
-                    return response.json().then(data => {
-                        alert('Error: ' + data.message);
-                    });
+                    const errorData = await response.json(); // Parse the JSON response for error
+                    alert('Error: ' + errorData.message); // Assuming your backend sends a JSON object with a message property
                 }
             })
             .catch(error => console.error('Error:', error));
             
-            return false;
+            return false; // Prevent default action of the anchor tag
         }
     </script>
 }

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace TechTales.Data.Models;
-// maybe add comments to userentity?
+
 public class UserEntity : IdentityUser<Guid>
 {
     public string? Name { get; set; }

@@ -4,6 +4,7 @@ using TechTales.Data;
 using TechTales.Data.Models;
 using TechTales.Helpers.Extensions;
 using TechTales.Hubs;
+using TechTales.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +38,6 @@ builder.Services
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
         options.Lockout.AllowedForNewUsers = true;
     })
-    //.AddRoleManager<RoleManager<IdentityRole<Guid>>>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
@@ -45,7 +45,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Authorization/Login";
     options.LogoutPath = "/Authorization/Logout";
-    //options.AccessDeniedPath = "/Account/AccessDenied";
+    options.AccessDeniedPath = "/Error/Forbidden";
     options.ExpireTimeSpan = TimeSpan.FromDays(14);
     options.SlidingExpiration = true;
     options.Cookie.HttpOnly = true;
@@ -80,12 +80,13 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+// Middleware to determine if a user is banned
+app.UseMiddleware<BanCheckMiddleware>();
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapHub<CommentHub>("/commentHub");
 });
-
-//app.MapHub<CommentHub>("/commentHub");
 
 app.MapControllerRoute(
     name: "default",

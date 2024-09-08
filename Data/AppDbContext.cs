@@ -14,6 +14,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<CommentEntity> Comments { get; set; }
     public DbSet<CategoryEntity> Categories { get; set; }
     public DbSet<ViewBlogEntity> ViewBlogs { get; set; }
+    public DbSet<BanEntity> Bans { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

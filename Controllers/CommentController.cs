@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -120,7 +121,7 @@ public class CommentController : Controller
         return Ok(comment.Content);
     }
 
-    [HttpGet]
+    [HttpGet, Authorize(Roles = "Admin,Moderator")]
     public async Task<IActionResult> List(string? request, string? orderBy, int pageSize = 5, int page = 1)
     {
         var total = await _context.Comments.CountAsync();

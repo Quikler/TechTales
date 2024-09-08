@@ -1,0 +1,15 @@
+@model ErrorViewModel;
+@{
+    ViewData["Title"] = "Banned";
+    Layout = "_ErrorLayout";
+}
+
+<link rel="stylesheet" href="~/css/error/error.css">
+
+<div class="error-container">
+    <h1>403</h1>
+    <h3>Sorry, You have been banned :(</h3>
+    <p class="m-0">Reason: <span>@Model.Reason</span></p>
+    <p>Ban end date: <span>@Model.BanEndDate</span></p>
+    <a href="/" class="btn outline-box-shadow bg-blueviolet text-white">Go to Home</a>
+</div>
