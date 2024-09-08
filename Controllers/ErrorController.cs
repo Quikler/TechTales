@@ -14,4 +14,9 @@ public class ErrorController : Controller
     {
         return View();
     }
+
+    public IActionResult Forbidden()
+    {
+        return View();
+    }
 }

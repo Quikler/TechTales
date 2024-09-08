@@ -7,6 +7,7 @@ using TechTales.Data.Models;
 using TechTales.Helpers;
 using TechTales.Helpers.Extensions;
 using TechTales.Models;
+using TechTales.Models.Blog;
 using TechTales.Models.Home;
 using Telegram.Bot;
 
@@ -29,13 +30,12 @@ public class HomeController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(int page = 1)
+    public async Task<IActionResult> Index(int page = 1, int pageSize = 3)
     {
-        int pageSize = 3; // Number of blogs on one page
         var totalBlogs = await _context.Blogs.CountAsync();
         var totalPages = (int)Math.Ceiling((double)totalBlogs / pageSize);
 
-        var model = new HomeViewModel
+        var model = new PaginationViewModel<BlogViewModel>
         {
             CurrentPage = page,
             TotalPages = totalPages
@@ -43,12 +43,13 @@ public class HomeController : Controller
 
         if (page <= 0 || page > totalPages)
         {
-            this.SetModalMessage("Invalid page", "No blogs was found on this page. Page might not exist or was removed.");
+            this.SetModalMessage("Invalid page", "No blogs were found on this page. Page might not exist or was removed.");
             return View(model);
         }
 
         var blogs = await _context.Blogs
             .AsNoTracking()
+            .Where(b => b.Visibility)
             .OrderByDescending(b => b.Views)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
@@ -65,11 +66,12 @@ public class HomeController : Controller
                     Id = b.AuthorId,
                     UserName = b.Author.UserName!,
                     Avatar = b.Author.Avatar.BlobToImageSrc("/images/default_user_icon.svg"),
-                }
+                },
+                Visibility = b.Visibility,
             })
             .ToListAsync();
 
-        model.Blogs = blogs;
+        model.Collection = blogs;
 
         return View(model);
     }
@@ -78,80 +80,6 @@ public class HomeController : Controller
     public IActionResult About()
     {
         return View();
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> Tags(int page = 1)
-    {
-        int pageSize = 10; // Number of tags on one page
-        var totalCategories = await _context.Tags.CountAsync(t => t.Blogs.Count > 0);
-        var totalPages = (int)Math.Ceiling((double)totalCategories / pageSize);
-
-        var model = new TagsViewModel
-        {
-            CurrentPage = page,
-            TotalPages = totalPages
-        };
-
-        if (page <= 0 || page > totalPages)
-        {
-            this.SetModalMessage("Invalid page", "No tags was found on this page. Page might not exist or was removed.");
-            return View(model);
-        }
-
-        var tags = await _context.Tags
-            .Where(t => t.Blogs.Count > 0)
-            .OrderByDescending(c => c.Blogs.Count)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .Include(c => c.Blogs)
-            .Select(c => new TagViewModel
-            {
-                Name = c.Name,
-                CountOfBlogs = c.Blogs.Count,
-            })
-            .ToListAsync();
-
-        model.Tags = tags;
-
-        return View(model);
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> Categories(int page = 1)
-    {
-        int pageSize = 10; // Number of categories on one page
-        var totalCategories = await _context.Categories.CountAsync(c => c.Blogs.Count > 0);
-        var totalPages = (int)Math.Ceiling((double)totalCategories / pageSize);
-
-        var model = new CategoriesViewModel
-        {
-            CurrentPage = page,
-            TotalPages = totalPages
-        };
-
-        if (page <= 0 || page > totalPages)
-        {
-            this.SetModalMessage("Invalid page", "No categories was found on this page. Page might not exist or was removed.");
-            return View(model);
-        }
-
-        var categories = await _context.Categories
-            .Where(c => c.Blogs.Count > 0)
-            .OrderByDescending(c => c.Blogs.Count)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .Include(c => c.Blogs)
-            .Select(c => new CategoryViewModel
-            {
-                Name = c.Name,
-                CountOfBlogs = c.Blogs.Count,
-            })
-            .ToListAsync();
-
-        model.Categories = categories;
-
-        return View(model);
     }
 
     [HttpGet]

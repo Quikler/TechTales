@@ -8,7 +8,30 @@ a {
     text-decoration: none;
 }
 
-.form-control:focus, .form-select:focus {
+.form-select, .form-control {
+    transition: none;
+}
+
+.form-select:focus, .form-control:focus {
+    border-color: #ced4da;
+    box-shadow: none;
+}
+
+/* Change background color to blueviolet */
+.btn-primary {
+    background-color: blueviolet;
     border-color: blueviolet;
-    box-shadow: 0 1px 15px rgb(167, 86, 243), 0 0 8px rgb(167, 86, 243);
+}
+
+/* Change hover color to red */
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: rgb(136, 74, 194);
+    border-color: rgb(136, 74, 194);
+}
+
+/* Change outline color when button is clicked */
+.btn-primary:focus {
+    box-shadow: 0 0 0 0.25rem rgb(209, 160, 255);
 }

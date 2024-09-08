@@ -1,5 +1,7 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using TechTales.Data.Models;
+using TechTales.Models;
 
 namespace TechTales.Helpers.Extensions;
 
@@ -29,57 +31,62 @@ public static class DbSetExtensions
         }
     }
 
-    public static async Task<List<CategoryEntity>> ParseAsync(this DbSet<CategoryEntity> categories, string? input)
+    public static async Task<List<CategoryEntity>> ParseAndAddNewAsync(this DbSet<CategoryEntity> categories, string? input)
     {
-        if (input is null) return [];
+        if (input is null) return new List<CategoryEntity>();
 
-        var entityNames = input.Split(new char[] { ' ', '#', ',', '.', '|' },
+        var inputCategories = input.Split(new char[] { ' ', '#', ',', '.', '|' },
             StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
-        var existingEntities = await categories
-            .Where(c => entityNames.Contains(c.Name))
+        var existingCategories = await categories
+            .Where(t => inputCategories.Contains(t.Name))
             .ToListAsync();
 
-        var entities = new List<CategoryEntity>();
+        var newTags = inputCategories
+            .Except(existingCategories.Select(t => t.Name))  // Only take categories that are not in the database
+            .Select(name => new CategoryEntity { Name = name })  // Create new CategoryEntity objects
+            .ToList();
 
-        entities.AddRange(existingEntities);
+        // Combine existing and new categories
+        var allTags = existingCategories.Concat(newTags).ToList();
 
-        // Add new categories if they are not in the database
-        foreach (var name in entityNames)
-        {
-            if (!existingEntities.Any(e => e.Name == name))
-            {
-                entities.Add(new CategoryEntity { Name = name });
-            }
-        }
-
-        return entities;
+        return allTags;
     }
 
-    public static async Task<List<TagEntity>> ParseAsync(this DbSet<TagEntity> tags, string? input)
+    public static async Task<List<TagEntity>> ParseAndAddNewAsync(this DbSet<TagEntity> tags, string? input)
     {
-        if (input is null) return [];
+        if (input is null) return new List<TagEntity>();
 
-        var entityNames = input.Split(new char[] { ' ', '#', ',', '.', '|' },
+        var inputTags = input.Split(new char[] { ' ', '#', ',', '.', '|' },
             StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
-        var existingEntities = await tags
-            .Where(t => entityNames.Contains(t.Name))
+        var existingTags = await tags
+            .Where(t => inputTags.Contains(t.Name))
             .ToListAsync();
 
-        var entities = new List<TagEntity>();
+        var newTags = inputTags
+            .Except(existingTags.Select(t => t.Name))  // Only take tags that are not in the database
+            .Select(name => new TagEntity { Name = name })  // Create new TagEntity objects
+            .ToList();
 
-        entities.AddRange(existingEntities);
+        // Combine existing and new tags
+        var allTags = existingTags.Concat(newTags).ToList();
 
-        // Add new tags if they are not in the database
-        foreach (var name in entityNames)
-        {
-            if (!existingEntities.Any(e => e.Name == name))
-            {
-                entities.Add(new TagEntity { Name = name });
-            }
-        }
+        return allTags;
+    }
 
-        return entities;
+    public static async Task<PaginationViewModel<TOut>> GetPaginationAsync<TIn, TOut>(this DbSet<TIn> dbSet, Expression<Func<TIn, bool>> predicate, int pageSize)
+        where TIn : class
+        where TOut : class
+    {
+        var total = await dbSet.CountAsync(predicate);
+        var totalPages = (int)Math.Ceiling((double)total / pageSize);
+
+        // var total = await _context.Categories.CountAsync(t => t.Blogs.Count > 0);
+        // var totalPages = (int)Math.Ceiling((double)total / pageSize);
+
+        // var model = new PaginationViewModel<CategoryViewModel>(page, totalPages);
+
+        return new PaginationViewModel<TOut>(totalPages);
     }
 }

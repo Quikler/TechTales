@@ -338,7 +338,7 @@ $.extend( $.validator, {
 		},
 		onclick: function( element ) {
 
-			// Click on selects, radiobuttons and checkboxes
+			// Click on selects, radiobuttons and checkbox-bluevioletes
 			if ( element.name in this.submitted ) {
 				this.element( element );
 
@@ -446,11 +446,11 @@ $.extend( $.validator, {
 					":text, [type='password'], [type='file'], select, textarea, [type='number'], [type='search'], " +
 					"[type='tel'], [type='url'], [type='email'], [type='datetime'], [type='date'], [type='month'], " +
 					"[type='week'], [type='time'], [type='datetime-local'], [type='range'], [type='color'], " +
-					"[type='radio'], [type='checkbox'], [contenteditable], [type='button']", delegate )
+					"[type='radio'], [type='checkbox-blueviolet'], [contenteditable], [type='button']", delegate )
 
 				// Support: Chrome, oldIE
 				// "select" is provided as event.target when clicking a option
-				.on( "click.validate", "select, option, [type='radio'], [type='checkbox']", delegate );
+				.on( "click.validate", "select, option, [type='radio'], [type='checkbox-blueviolet']", delegate );
 
 			if ( this.settings.invalidHandler ) {
 				$( this.currentForm ).on( "invalid-form.validate", this.settings.invalidHandler );
@@ -721,7 +721,7 @@ $.extend( $.validator, {
 				isContentEditable = typeof $element.attr( "contenteditable" ) !== "undefined" && $element.attr( "contenteditable" ) !== "false",
 				val, idx;
 
-			if ( type === "radio" || type === "checkbox" ) {
+			if ( type === "radio" || type === "checkbox-blueviolet" ) {
 				return this.findByName( element.name ).filter( ":checked" ).val();
 			} else if ( type === "number" && typeof element.validity !== "undefined" ) {
 				return element.validity.badInput ? "NaN" : $element.val();
@@ -1063,7 +1063,7 @@ $.extend( $.validator, {
 
 		validationTargetFor: function( element ) {
 
-			// If radio/checkbox, validate first element in group instead
+			// If radio/checkbox-blueviolet, validate first element in group instead
 			if ( this.checkable( element ) ) {
 				element = this.findByName( element.name );
 			}
@@ -1073,7 +1073,7 @@ $.extend( $.validator, {
 		},
 
 		checkable: function( element ) {
-			return ( /radio|checkbox/i ).test( element.type );
+			return ( /radio|checkbox-blueviolet/i ).test( element.type );
 		},
 
 		findByName: function( name ) {

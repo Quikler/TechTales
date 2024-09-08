@@ -1,47 +1,52 @@
-﻿@using TechTales.Helpers.Extensions
-@model HomeViewModel;
+﻿@using TechTales.Helpers.Extensions;
+@using TechTales.Models.Home;
+@using TechTales.Models.Blog;
+@model PaginationViewModel<BlogViewModel>;
 @{
     ViewData["Title"] = "Home";
 }
 
-<link rel="stylesheet" href="~/css/home/index.css" />
-
 <div class="text-center bg-white">
     <img src="~/images/logo.jpg" alt="logo" class="mb-4" />
-    <h1 class="py-2 text-blueviolet">TechTales - Find Your Favourite Blog!</h1>
+    <h1 class="py-2">TechTales - Find Your Favourite Blog!</h1>
     <div class="rounded input-block border input-group mb-4 w-50 mx-auto">
-        <input required type="text" placeholder="Title, Category, Tag, Content..." aria-label="Search" aria-describedby="search-button">
-        <button class="rounded-end px-4 btn text-white bg-blueviolet outline-box-shadow" id="search-button">Search</button>
+        <input data-url="/Blog/List" required type="text" placeholder="Title, Category, Tag, Content..." aria-label="Search" aria-describedby="search-button">
+        <button class="rounded-end px-4 btn text-white btn-primary" id="search-button">Search</button>
     </div>
     <div class="container">
         <div class="col-md-8 mx-auto">
-            @if (Model.Blogs.Count == 0) 
+            @if (Model.Collection.Count == 0) 
             {
                 <p class="no-data">[No data presented]</p>
             }
             else 
             {
                 <ol id="blogs-list" class="list-unstyled">
-                    @foreach (var blog in Model.Blogs)
+                    @foreach (var blog in Model.Collection)
                     {
-                        <li class="mb-4 p-4 border rounded">
+                        <li class="mb-4 p-4 border rounded bg-light shadow-sm">
                             <div class="d-flex justify-content-between">
-                                <div class="blog-title-content pe-4">
+                                <div class="text-start pe-4">
                                     <h3 class="fw-bold text-break">@blog.Title</h3>
                                     <p class="text-break">
                                         @blog.Content.EllipsisString(230)
                                         <a class="text-blueviolet" asp-action="Read" asp-controller="Blog" asp-route-id="@blog.Id">[Read more]</a>
                                     </p>
                                 </div>
-                                <div class="blog-time-user text-center">
-                                    <p>@blog.CreationDate.ToString("dd/MM/yyyy HH:mm:ss")</p>
-                                    <a asp-action="Detail" asp-controller="Profile" asp-route-id="@blog.Author.Id">
-                                        <img class="rounded-circle size-50-fit-cover" src="@blog.Author.Avatar" />
-                                        <p class="mt-2 text-break">@blog.Author.UserName</p>
+                                <div class="d-flex flex-column col-lg-3 align-items-center justify-content-center text-center">
+                                    <p class="ws-nw">@blog.CreationDate.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                                    <a class="d-inline-block" asp-action="Detail" asp-controller="Profile" asp-route-id="@blog.Author?.Id">
+                                        <img class="rounded-circle size-50-fit-cover" src="@blog.Author?.Avatar" />
+                                    </a>
+                                    <a class="d-inline-block" asp-action="Detail" asp-controller="Profile" asp-route-id="@blog.Author?.Id">
+                                        <p class="mt-2 text-break text-blueviolet">@blog.Author?.UserName</p>
                                     </a>
                                 </div>
                             </div>
-                            <div class="text-muted">Views: @blog.Views</div>
+                            <div class="mt-4 d-flex justify-content-around">
+                                <p class="mb-0 @(blog.Visibility ? "text-primary" : "text-danger")">Visibility: @(blog.Visibility ? "Public" : "Private")</p>
+                                <p class="mb-0">Views: @blog.Views</p>
+                            </div>
                         </li>
                     }
                 </ol>
@@ -66,4 +71,4 @@
     </div>
 </div>
 
-<script src="~/js/home/index.js"></script>
+<script src="~/js/redirectInputHandler.js"></script>

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TechTales.Models;
+namespace TechTales.Models.Profile;
 
 public class EditProfileViewModel
 {
@@ -9,5 +9,5 @@ public class EditProfileViewModel
     public string UserName { get; set; } = null!;
     public string? Country { get; set; }
     public string? AboutMe { get; set; }
-    public byte[]? Avatar { get; set; }
+    public string? Avatar { get; set; }
 }

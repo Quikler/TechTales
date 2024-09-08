@@ -1,6 +1,7 @@
 using TechTales.Data.Models;
+using TechTales.Models.Blog;
 
-namespace TechTales.Models;
+namespace TechTales.Models.Profile;
 
 public class ProfileViewModel
 {

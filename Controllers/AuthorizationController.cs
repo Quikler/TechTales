@@ -30,6 +30,7 @@ public class AuthorizationController : Controller
     {
         if (_signInManager.IsSignedIn(User))
         {
+            this.SetModalMessage("Authenticated", "You are already logged into your account.");
             return RedirectToAction("Index", "Home");
         }
         return View();
@@ -57,11 +58,6 @@ public class AuthorizationController : Controller
             return RedirectToAction("Index", "Home");
         }
 
-        // foreach (var error in createResult.Errors)
-        // {
-        //     ModelState.AddModelError(error.Code, error.Description);
-        // }
-
         this.SetModalMessage("Authorization", createResult.Errors.First().Description);
         return View(model);
     }
@@ -71,6 +67,7 @@ public class AuthorizationController : Controller
     {
         if (_signInManager.IsSignedIn(User))
         {
+            this.SetModalMessage("Authenticated", "You are already logged into your account.");
             return RedirectToAction("Index", "Home");
         }
         return View();
@@ -98,18 +95,18 @@ public class AuthorizationController : Controller
         // todo remember me
         var signInResult = await _signInManager.PasswordSignInAsync(
             user, model.Password, true, true);
-        
+
         if (signInResult.Succeeded)
         {
             return RedirectToAction("Index", "Home");
         }
-        
+
         if (signInResult.IsLockedOut)
         {
             this.SetModalMessage("Authorization", "You have been locked.");
             return View(model);
         }
-        
+
         this.SetModalMessage("Authorization", "Invalid login attempt.");
         return View(model);
     }

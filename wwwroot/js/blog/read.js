@@ -35,9 +35,12 @@ document.querySelector(".comments-list").addEventListener("click", function (eve
         }
         
         fetch(`/Comment/Edit?id=${encodeURIComponent(commentContent.id)}&content=${encodeURIComponent(newCommentContent)}`, {
-            method: 'PUT',
+            method: 'PATCH',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document
+                    .getElementById('submit-edit-comment-form')
+                    .querySelector('input[name="__RequestVerificationToken"]').value,
             }
         })
         .then(response => {
@@ -68,7 +71,10 @@ document.querySelector(".comments-list").addEventListener("click", function (eve
         fetch(`/Comment/Delete?id=${encodeURIComponent(commentContent.id)}`, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document
+                    .getElementById('delete-comment-form')
+                    .querySelector('input[name="__RequestVerificationToken"]').value,
             }
         })
         .then(response => {
@@ -104,41 +110,36 @@ document.querySelectorAll(".add-comment-btn").forEach(addButton => {
     addButton.addEventListener("click", function () {
         const blogId = document.querySelector('input[name="BlogId"]');
         const readerId = document.querySelector('input[name="ReaderId"]');
-
-        console.log("[AddComment]:before blogId value:", blogId.value);
-        console.log("[AddComment]:before readerId value:", readerId.value);
-
         const textAreaComment = document.querySelector(".addcomment");
         const commentValue = textAreaComment.value;
 
+        // Reset textarea value
         textAreaComment.value = '';
 
         fetch(`/Comment/Add?content=${encodeURIComponent(commentValue)}&blogId=${encodeURIComponent(blogId.value)}&readerId=${encodeURIComponent(readerId.value)}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document
+                    .getElementById('add-comment-form')
+                    .querySelector('input[name="__RequestVerificationToken"]').value,
             },
         })
         .then(async response => {
+            if (response.status == 403) {
+                // Redirect to the Forbidden page
+                window.location.href = '/Error/Forbidden';
+                return; // Stop further processing
+            }
+        
             if (!response.ok) {
                 const error = await response.json();
                 throw error;
             }
+        
             return response.json();
         })
         .then(data => {
-            // if (data == "err") {
-            //     let modalById = document.getElementById('modalCenter');
-            //     let modal = new bootstrap.Modal(modalById, {});
-
-            //     console.log(data);
-
-            //     modalById.querySelector('.modal-title').textContent = data.title;
-            //     modalById.querySelector('.modal-text').textContent = data.text;
-            //     modal.show();
-            //     return;
-            // }
-
             console.log("[AddComment]:now Response received:", data);
 
             initialComments[data.id] = data.content;
@@ -149,19 +150,12 @@ document.querySelectorAll(".add-comment-btn").forEach(addButton => {
             });
         })
         .catch(error => {
-            let modalById = document.getElementById('modalCenter');
-            let modal = new bootstrap.Modal(modalById, {});
-
-            console.log(error);
-
-            modalById.querySelector('.modal-title').textContent = error.title;
-            modalById.querySelector('.modal-text').textContent = error.text;
-            modal.show();
-
+            showModal(error.title, error.text);
             console.error("[AddComment]:error There was a problem with the fetch operation:", error)
         });
     });
 });
+
 // #endregion
 
 function createLi(comment, editable = false) {
@@ -182,7 +176,7 @@ function createLi(comment, editable = false) {
         <div class="d-flex justify-content-between">
             <div class="mb-3 d-flex flex-grow-1">
                 <a href="/Profile/Detail/${comment.author.id}">
-                    <img class="user-img rounded-circle" src="${comment.author.avatar}">
+                    <img class="size-50-fit-cover user-img rounded-circle" src="${comment.author.avatar}">
                 </a>
                 <div class="ms-3 d-flex justify-content-center flex-column">
                     <p id="${comment.author.id}" class="comment-author-id m-0">
@@ -197,9 +191,9 @@ function createLi(comment, editable = false) {
         <div class="cancel-submit-comment-container text-end" hidden>
             <div class="d-flex justify-content-end">
                 <button type="button"
-                        class="cancel-comment-button outline-box-shadow btn px-4 mt-2 ms-auto bg-blueviolet text-white">Cancel</button>
+                        class="cancel-comment-button btn-secondary btn px-4 mt-2 ms-auto text-white">Cancel</button>
                 <button type="button"
-                        class="submit-comment-button outline-box-shadow btn px-4 ms-2 mt-2 bg-blueviolet text-white">Submit</button>
+                        class="submit-comment-button btn-primary btn px-4 ms-2 mt-2 text-white">Submit</button>
             </div>
         </div>
     </li>

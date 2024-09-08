@@ -13,11 +13,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TechTales - @ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/css/variables.css">
     <link rel="stylesheet" href="~/css/reset.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/resetbootstrap.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/htmlhelper.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/layout/layout.css">
     <link rel="stylesheet" href="~/TechTales.styles.css" asp-append-version="true" />
@@ -28,7 +26,7 @@
             <div class="container d-flex flex-md-row justify-content-between align-items-center py-2" style="column-gap: 12px;">
                 
                 <a asp-controller="Home" asp-action="Index" class="mx-2 text-white d-none d-md-inline-block">Home</a>
-                <a asp-controller="Filter" asp-action="Find" asp-route-orderBy="date" class="mx-2 text-white d-none d-md-inline-block">All Blogs</a>
+                <a asp-controller="Blog" asp-action="List" asp-route-orderBy="date" class="mx-2 text-white d-none d-md-inline-block">All Blogs</a>
                 <a asp-controller="Home" asp-action="About" class="mx-2 text-white d-none d-md-inline-block">About us</a>
                 <a asp-controller="Home" asp-action="Contacts" class="mx-2 text-white d-none d-md-inline-block">Contacts</a>
 
@@ -71,7 +69,8 @@
 
     @if (user is not null && await UserManager.IsInRoleAsync(user, "Admin"))
     {
-        <div b-xp2pzp1ll4="" style="column-gap: 12px;background-color: red;" class="container fs-5 d-flex justify-content-between">
+        <div b-xp2pzp1ll4="" class="container bg-danger fs-5 d-flex justify-content-between">
+
             <div class="d-flex align-items-center justify-content-between">
                 <p class="m-0 mx-2 text-white">Admin panel</p>
                 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" width="32" height="32">
@@ -83,11 +82,13 @@
                 </svg>
             </div>
             <div class="d-flex flex-md-row justify-content-center align-items-center py-2">
-                <a href="/" class="mx-2 text-white d-none d-md-inline-block">Users</a>
-                <a href="/Filter/Find?orderBy=date" class="mx-2 text-white d-none d-md-inline-block">Blogs</a>
-                <a href="/Home/About" class="mx-2 text-white d-none d-md-inline-block">Comments</a>
+                <a href="/Profile/List" class="mx-2 text-white d-none d-md-inline-block">Users</a>
+                <a href="/Blog/List?orderBy=date" class="mx-2 text-white d-none d-md-inline-block">Blogs</a>
+                <a href="/Comment/List" class="mx-2 text-white d-none d-md-inline-block">Comments</a>
+                <a href="/Category/List" class="mx-2 text-white d-none d-md-inline-block">Categories</a>
+                <a href="/Tag/List" class="mx-2 text-white d-none d-md-inline-block">Tags</a>
             </div>
-                    
+
         </div>
     }
 
@@ -108,9 +109,9 @@
                     <h5 class="text-uppercase">Quick Links</h5>
                     <ul class="list-unstyled">
                         <li><a href="/" class="text-white">Home</a></li>
-                        <li><a asp-action="Find" asp-controller="Filter" class="text-white">Most Viewed</a></li>
-                        <li><a asp-controller="Home" asp-action="Categories" class="text-white">Categories</a></li>
-                        <li><a asp-controller="Home" asp-action="Tags" class="text-white">Tags</a></li>
+                        <li><a asp-action="List" asp-controller="Blog" class="text-white">Most Viewed</a></li>
+                        <li><a asp-controller="Category" asp-action="List" class="text-white">Categories</a></li>
+                        <li><a asp-controller="Tag" asp-action="List" class="text-white">Tags</a></li>
                     </ul>
                 </div>
                 <div b-xp2pzp1ll4="" class="col-md-4 mb-3">
@@ -176,8 +177,8 @@
                             <h3 class="mb-4 display-6 ws-pl text-break modal-title">@ViewBag.ModalTitle</h3>
                             <p class="mb-4 lead text-break ws-pl modal-text">@ViewBag.ModalContent</p>
                             <div class="d-flex justify-content-end">
-                                <a data-bs-dismiss="modal" class="me-2 btn outline-box-shadow px-4 text-white bg-blueviolet">OK</a>
-                                <a asp-action="Contacts" asp-controller="Home" class="btn outline-box-shadow px-4 text-white bg-pink">Contact us</a>
+                                <a data-bs-dismiss="modal" class="me-2 btn btn-primary px-4 text-white">OK</a>
+                                <a asp-action="Contacts" asp-controller="Home" class="btn btn-secondary px-4 text-white">Contact us</a>
                             </div>
                         </div>
                     </div>
@@ -187,17 +188,18 @@
     </div>
 
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     <!-- Script to show modal window of Modal Content has been set in controller -->
     <script>
-        $(document).ready(function() {
+        document.addEventListener("DOMContentLoaded", function() {
             var message = "@ViewBag.ModalContent";
             if (message) {
                 console.log("[Server]: " + message);
-                $('#modalCenter').modal('show');
+                var modal = new bootstrap.Modal(document.getElementById('modalCenter'));
+                modal.show();
             }
         });
     </script>

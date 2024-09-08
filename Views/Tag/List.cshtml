@@ -1,35 +1,34 @@
-@using TechTales.Models.Home;
-@model CategoriesViewModel;
+@using TechTales.Models.Tag;
+@model PaginationViewModel<TagViewModel>;
 @{
-    ViewData["Title"] = "Categories";
+    ViewData["Title"] = "Tags";
 }
-
-<link rel="stylesheet" href="~/css/home/categories.css">
 
 <div class="text-center">
     <div class="rounded input-block border input-group mb-4 w-50 mx-auto">
-        <input required type="text" placeholder="Category name" aria-label="Search" aria-describedby="search-button">
+        <input data-url="/Tag/List" required type="text" placeholder="Tag (#Tag1, #Tag2... etc)" aria-label="Search" aria-describedby="search-button">
         <button class="rounded-end px-4 btn text-white bg-blueviolet outline-box-shadow" id="search-button">Search</button>
     </div>
     <div class="container">
         <div class="col-md-8 mx-auto">
-            @if (Model.Categories.Count == 0) 
+            @if (Model.Collection.Count == 0) 
             {
                 <p class="no-data">[No data presented]</p>
             }
             else 
             {
                 <ol id="blogs-list" class="list-unstyled">
-                    @foreach (var category in Model.Categories)
+                    @foreach (var tag in Model.Collection)
                     {
-                        <li class="mb-4 p-4 d-flex justify-content-between border shadow-sm rounded">
-                            <div class="flex-grow-1">
-                                <div class="pe-4">
-                                    <h3 class="fw-bold text-break">@category.Name</h3>
+                        <li class="bg-light mb-4 p-4 d-flex align-items-center justify-content-between border shadow-sm rounded">
+                            <div class="text-start w-100">
+                                <p class="mb-1 fw-bold">Name:</p>
+                                <p class="text-break">#@tag.Name</p>
+                                <div class="text-center">
+                                    <p class="text-muted">Count of blogs: @tag.CountOfBlogs</p> 
+                                        <a asp-action="ListByTags" asp-controller="Blog" asp-route-request="@tag.Name" class="link text-blueviolet ws-nw">View more</a>
                                 </div>
-                                <div class="text-muted">Count of blogs: @category.CountOfBlogs</div>
                             </div>
-                            <a asp-action="FindByTags" asp-controller="Filter" asp-route-name="@category.Name" class="link ps-2 text-blueviolet ws-nw">View more</a>
                         </li>
                     }
                 </ol>
@@ -54,4 +53,4 @@
     </div>
 </div>
 
-<script src="~/js/home/categories.js"></script>
+<script src="~/js/redirectInputHandler.js"></script>

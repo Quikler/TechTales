@@ -1,6 +1,6 @@
-namespace TechTales.Models.Home;
+namespace TechTales.Models.Tag;
 
-public class CategoryViewModel
+public class TagViewModel
 {
     public string Name { get; set; } = null!;
     public int CountOfBlogs { get; set; }

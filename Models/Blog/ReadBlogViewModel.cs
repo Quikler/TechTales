@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using TechTales.Models.Comment;
 
-namespace TechTales.Models;
+namespace TechTales.Models.Blog;
 
 public class ReadBlogViewModel
 {
@@ -9,7 +10,7 @@ public class ReadBlogViewModel
     [Required] public string Content { get; set; } = null!;
     [Required] public DateTime CreationDate { get; set; }
     [Required] public UserViewModel Author { get; set; } = null!;
-    [Required] public UserViewModel? Reader { get; set; }
+    public UserViewModel? Reader { get; set; }
     public int Views { get; set; }
     public string? Tags { get; set; }
     public string? Categories { get; set; }

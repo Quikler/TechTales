@@ -4,10 +4,19 @@
 // Write your JavaScript code.
 document.querySelector(".search-input").addEventListener("keydown", function (e) {
     if(e.keyCode == 13 && this.value) {
-        var url = `/Filter/Find?request=${encodeURIComponent(this.value)}`;
+        var url = `/Blog/List?request=${encodeURIComponent(this.value)}`;
         window.location.href = url;
     }
     else {
         this.reportValidity();
     }
 });
+
+function showModal(title, content) {
+    var modal = new bootstrap.Modal(document.getElementById('modalCenter'));
+
+    document.querySelector('.modal-title').textContent = title;
+    document.querySelector('.modal-text').textContent = content;
+
+    modal.show();
+}

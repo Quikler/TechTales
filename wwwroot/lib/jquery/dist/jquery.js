@@ -2302,7 +2302,7 @@ Expr = Sizzle.selectors = {
 Expr.pseudos[ "nth" ] = Expr.pseudos[ "eq" ];
 
 // Add button/input type pseudos
-for ( i in { radio: true, checkbox: true, file: true, password: true, image: true } ) {
+for ( i in { radio: true, checkbox-blueviolet: true, file: true, password: true, image: true } ) {
 	Expr.pseudos[ i ] = createInputPseudo( i );
 }
 for ( i in { submit: true, reset: true } ) {
@@ -4899,7 +4899,7 @@ jQuery.fn.extend( {
 		} );
 	}
 } );
-var rcheckableType = ( /^(?:checkbox|radio)$/i );
+var rcheckableType = ( /^(?:checkbox-blueviolet|radio)$/i );
 
 var rtagName = ( /<([a-z][^\/\0>\x20\t\r\n\f]*)/i );
 
@@ -4927,7 +4927,7 @@ var rscriptType = ( /^$|^module$|\/(?:java|ecma)script/i );
 	support.checkClone = div.cloneNode( true ).cloneNode( true ).lastChild.checked;
 
 	// Support: IE <=11 only
-	// Make sure textarea (and checkbox) defaultValue is properly cloned
+	// Make sure textarea (and checkbox-blueviolet) defaultValue is properly cloned
 	div.innerHTML = "<textarea>x</textarea>";
 	support.noCloneChecked = !!div.cloneNode( true ).lastChild.defaultValue;
 
@@ -6020,7 +6020,7 @@ function cloneCopyEvent( src, dest ) {
 function fixInput( src, dest ) {
 	var nodeName = dest.nodeName.toLowerCase();
 
-	// Fails to persist the checked state of a cloned checkbox or radio button.
+	// Fails to persist the checked state of a cloned checkbox-blueviolet or radio button.
 	if ( nodeName === "input" && rcheckableType.test( src.type ) ) {
 		dest.checked = src.checked;
 
@@ -7962,10 +7962,10 @@ jQuery.fn.delay = function( time, type ) {
 		select = document.createElement( "select" ),
 		opt = select.appendChild( document.createElement( "option" ) );
 
-	input.type = "checkbox";
+	input.type = "checkbox-blueviolet";
 
 	// Support: Android <=4.3 only
-	// Default value for a checkbox should be "on"
+	// Default value for a checkbox-blueviolet should be "on"
 	support.checkOn = input.value !== "";
 
 	// Support: IE <=11 only
@@ -8596,8 +8596,8 @@ jQuery.extend( {
 	}
 } );
 
-// Radios and checkboxes getter/setter
-jQuery.each( [ "radio", "checkbox" ], function() {
+// Radios and checkbox-bluevioletes getter/setter
+jQuery.each( [ "radio", "checkbox-blueviolet" ], function() {
 	jQuery.valHooks[ this ] = {
 		set: function( elem, value ) {
 			if ( Array.isArray( value ) ) {

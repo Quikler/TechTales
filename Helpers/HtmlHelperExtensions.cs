@@ -5,7 +5,7 @@ namespace TechTales.Helpers;
 
 public static class HtmlHelperExtensions
 {
-    public static HtmlString EditBlogButtons(this IHtmlHelper htmlHelper, string editHref = "#",
+    public static HtmlString EditDeleteButtons(this IHtmlHelper htmlHelper, string editHref = "#",
         string deleteHref = "#", string editFill = "black", string deleteFill = "black",
         int width = 72, int height = 72, string editType = "button", string deleteType = "button",
         string editClass = "", string deleteClass = "")

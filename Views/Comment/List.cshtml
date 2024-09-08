@@ -1,0 +1,67 @@
+@using TechTales.Models.Comment;
+@model PaginationViewModel<CommentViewModel>;
+@using TechTales.Helpers.Extensions
+@using TechTales.Helpers;
+@{
+    ViewData["Title"] = "Blogs list";
+}
+
+<div class="text-center">
+    <div class="rounded input-block border input-group mb-4 w-50 mx-auto">
+        <input data-url="/Blog/List" required type="text" placeholder="Title, Category, Tag, Content..." aria-label="Search" aria-describedby="search-button">
+        <button class="rounded-end btn text-white bg-blueviolet px-4 outline-box-shadow" id="search-button">Search</button>
+    </div>
+    <div class="container">
+        <div class="col-md-8 mx-auto">
+            @if (Model.Collection.Count == 0) 
+            {
+                <p class="no-data">[No data presented]</p>
+            }
+            else 
+            {
+                <ol id="blogs-list" class="list-unstyled">
+                    @foreach (CommentViewModel comment in Model.Collection)
+                    {
+                        <li class="mb-4 p-4 border rounded shadow-sm bg-light">
+                            <div class="d-flex justify-content-between">
+                                <div class="text-start pe-4">
+                                    <p class="text-break">
+                                        @comment.Content.EllipsisString(230)
+                                        <a class="text-blueviolet" asp-action="Read" asp-controller="Blog" asp-route-id="@comment.Blog!.Id" asp-fragment="@comment.Id">[Read more]</a>
+                                    </p>
+                                </div>
+                                <div class="d-flex flex-column col-lg-3 align-items-center justify-content-center text-center">
+                                    <p class="ws-nw">@comment.CreationDate.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                                    <a class="d-inline-block" asp-action="Detail" asp-controller="Profile" asp-route-id="@comment.Author.Id">
+                                        <img class="rounded-circle size-50-fit-cover" src="@comment.Author.Avatar" />
+                                    </a>
+                                    <a class="d-inline-block" asp-action="Detail" asp-controller="Profile" asp-route-id="@comment.Author.Id">
+                                        <p class="mt-2 text-blueviolet text-break">@comment.Author.UserName</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ol>
+            }
+            <ul class="blog-pagination d-flex justify-content-center gap-1 mt-4">
+                <li>
+                    <a class="text-blueviolet @(Model.CurrentPage <= 1 ? "disabled-pagination" : "")" href="/Comment/List?page=@(Model.CurrentPage - 1)">«</a>
+                </li>
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li>
+                        <a class="text-blueviolet @(Model.CurrentPage == i ? "active-pagination" : "")" href="/Comment/List?page=@i">@i</a>
+                    </li>
+                }
+                
+                <li>
+                    <a class="text-blueviolet @(Model.CurrentPage >= Model.TotalPages ? "disabled-pagination" : "")" href="/Comment/List?page=@(Model.CurrentPage + 1)">»</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/redirectInputHandler.js"></script>

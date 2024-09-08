@@ -382,8 +382,8 @@
         setValidationValues(options, "equalTo", element);
     });
     adapters.add("required", function (options) {
-        // jQuery Validate equates "required" with "mandatory" for checkbox elements
-        if (options.element.tagName.toUpperCase() !== "INPUT" || options.element.type.toUpperCase() !== "CHECKBOX") {
+        // jQuery Validate equates "required" with "mandatory" for checkbox-blueviolet elements
+        if (options.element.tagName.toUpperCase() !== "INPUT" || options.element.type.toUpperCase() !== "checkbox-blueviolet") {
             setValidationValues(options, "required", true);
         }
     });
@@ -399,8 +399,8 @@
             var paramName = appendModelPrefix(fieldName, prefix);
             value.data[paramName] = function () {
                 var field = $(options.form).find(":input").filter("[name='" + escapeAttributeValue(paramName) + "']");
-                // For checkboxes and radio buttons, only pick up values from checked fields.
-                if (field.is(":checkbox")) {
+                // For checkbox-bluevioletes and radio buttons, only pick up values from checked fields.
+                if (field.is(":checkbox-blueviolet")) {
                     return field.filter(":checked").val() || field.filter(":hidden").val() || '';
                 }
                 else if (field.is(":radio")) {

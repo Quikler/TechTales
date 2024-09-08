@@ -1,0 +1,59 @@
+@using TechTales.Models;
+@using TechTales.Models.Category;
+@model PaginationViewModel<CategoryViewModel>;
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<div class="text-center">
+    <div class="rounded input-block border input-group mb-4 w-50 mx-auto">
+        <input data-url="/Category/List" required type="text" placeholder="Categories (Category1, Category2... etc)" aria-label="Search" aria-describedby="search-button">
+        <button class="rounded-end px-4 btn text-white bg-blueviolet outline-box-shadow">Search</button>
+    </div>
+    <div class="container">
+        <div class="col-md-8 mx-auto">
+            @if (Model.Collection.Count == 0) 
+            {
+                <p class="no-data">[No data presented]</p>
+            }
+            else 
+            {
+                <ol id="blogs-list" class="list-unstyled">
+                    @foreach (var category in Model.Collection)
+                    {
+                        <li class="bg-light mb-4 p-4 d-flex align-items-center justify-content-between border shadow-sm rounded">
+                            <div class="text-start w-100">
+                                <p class="mb-1 fw-bold">Name:</p>
+                                <p class="text-break">@category.Name</p>
+                                <div class="text-center">
+                                    <p class="text-muted">Count of blogs: @category.CountOfBlogs</p> 
+                                    <a asp-action="ListByCategories" asp-controller="Blog" asp-route-request="@category.Name" class="link text-blueviolet ws-nw">View more</a>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ol>
+            }
+            <ul class="blog-pagination d-flex justify-content-center gap-1 mt-4">
+
+                <li>
+                    <a class="text-blueviolet @(Model.CurrentPage <= 1 ? "disabled-pagination" : "")" asp-action="List" asp-route-page="@(Model.CurrentPage - 1)">«</a>
+                </li>
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li>
+                        <a class="text-blueviolet @(Model.CurrentPage == i ? "active-pagination" : "")" asp-action="List" asp-route-page="@i">@i</a>
+                    </li>
+                }
+
+                <li>
+                    <a class="text-blueviolet @(Model.CurrentPage >= Model.TotalPages ? "disabled-pagination" : "")" asp-action="List" asp-route-page="@(Model.CurrentPage + 1)">»</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/redirectInputHandler.js"></script>

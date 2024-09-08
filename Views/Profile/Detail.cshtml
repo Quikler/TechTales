@@ -1,11 +1,10 @@
 @model ProfileViewModel;
 @using TechTales.Helpers;
-@using TechTales.Helpers.Extensions
+@using TechTales.Helpers.Extensions;
+@using TechTales.Models.Profile;
 @{
     ViewData["Title"] = Model.User.UserName;
 }
-
-<link rel="stylesheet" href="~/css/profile/detail.css">
 
 <div class="container my-5">
     <div class="row">
@@ -46,13 +45,22 @@
                     @if (!Model.IsSameUser && Model.CurrentUser?.MainRole == "Admin")
                     {
                         <div class="d-flex gap-2 justify-content-end">
-                            <a asp-action="DeleteUser" asp-controller="Profile" asp-route-id="@Model.User.Id" class="text-danger">Ban</a>
-                            <a asp-action="BanUser" asp-controller="Profile" asp-route-id="@Model.User.Id" class="text-danger">Delete</a>   
+
+                            <form class="d-none" id="ban-user-form" asp-action="BanUser" asp-controller="Profile" asp-route-id="@Model.User.Id" method="post">
+                                @Html.AntiForgeryToken()
+                            </form>
+                            <a class="text-danger" href="#" onclick="document.getElementById('ban-user-form').submit();">Ban</a>
+
+                            <form id="delete-user-form">
+                                @Html.AntiForgeryToken()
+                                <a class="text-danger" id="delete-user-link" href="#" data-id="@Model.User.Id" onclick="return deleteUser(this);">Delete</a>
+                            </form>
+
                         </div>
                     }
                 </div>
                 <div class="card-footer bg-light about-me-container text-justify">
-                    <h2 class="text-center text-blueviolet">About me</h2>
+                    <h2 class="text-center">About me</h2>
                     @if (Model.User.AboutMe is not null)
                     {
                         <p class="mb-0 ws-pl px-2 py-2">@Model.User.AboutMe</p>
@@ -69,11 +77,11 @@
             <div class="card shadow-sm border-0">
                 <div class="card-body blogs-container overflow-auto">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h2 class="text-blueviolet m-0">Available blogs:</h2>
+                        <h2 class="m-0">Available blogs:</h2>
                         @if (Model.IsSameUser)
                         {
                             <a role="button" asp-action="Create" asp-controller="Blog">
-                                <svg class="svg-icon bg-transparent" style="width: 48px; height: 48px;vertical-align: middle;fill: darkblue;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 96C282.256 96 96 282.256 96 512s186.256 416 416 416 416-186.256 416-416S741.744 96 512 96zM512 896C299.92 896 128 724.08 128 512S299.92 128 512 128s384 171.92 384 384S724.08 896 512 896z"  /><path d="M776 496 528 496 528 248c0-4.416-3.584-8-8-8l-16 0c-4.416 0-8 3.584-8 8L496 496 248 496c-4.416 0-8 3.584-8 8l0 16c0 4.416 3.584 8 8 8L496 528l0 248c0 4.4 3.584 8 8 8l16 0c4.416 0 8-3.6 8-8L528 528l248 0c4.4 0 8-3.584 8-8l0-16C784 499.584 780.4 496 776 496z"  /></svg>
+                                <svg class="svg-icon bg-transparent" style="width: 48px; height: 48px;vertical-align: middle;fill: blueviolet;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 96C282.256 96 96 282.256 96 512s186.256 416 416 416 416-186.256 416-416S741.744 96 512 96zM512 896C299.92 896 128 724.08 128 512S299.92 128 512 128s384 171.92 384 384S724.08 896 512 896z"  /><path d="M776 496 528 496 528 248c0-4.416-3.584-8-8-8l-16 0c-4.416 0-8 3.584-8 8L496 496 248 496c-4.416 0-8 3.584-8 8l0 16c0 4.416 3.584 8 8 8L496 528l0 248c0 4.4 3.584 8 8 8l16 0c4.416 0 8-3.6 8-8L528 528l248 0c4.4 0 8-3.584 8-8l0-16C784 499.584 780.4 496 776 496z"  /></svg>
                             </a>
                         }
                     </div>
@@ -92,14 +100,14 @@
                                         <h3 class=" pe-4 text-break ws-pl">@blog.Title</h3>
                                         <p class="">@blog.CreationDate.ToString("dd/MM/yyyy HH:mm:ss")</p>
                                     </div>
-                                    <p class=" text-break ws-pl"><!--
+                                    <p class="text-break ws-pl"><!--
                                         -->@blog.Content.EllipsisString(190) <!--
                                         --><span><a class="text-blueviolet" asp-controller="Blog" asp-action="Read" asp-route-id="@blog.Id">[Read more]</a></span>
                                     </p>
-                                    @if (Model.IsSameUser)
+                                    @if (Model.IsSameUser || Model.CurrentUser?.MainRole == "Admin")
                                     {
                                         <div class="d-flex justify-content-end align-items-center">
-                                            @Html.EditBlogButtons(
+                                            @Html.EditDeleteButtons(
                                                 editClass: "edit-comment-btn bg-transparent btn-outline-light me-2",
                                                 editFill: "darkblue", 
                                                 editHref: $"/Blog/Edit/{blog.Id}", 
@@ -109,7 +117,10 @@
                                             )
                                         </div>
                                     }
-                                    <div class="text-center">Views: @blog.Views</div>
+                                    <div class="mt-4 d-flex justify-content-around">
+                                        <p class="mb-0 @(blog.Visibility ? "text-primary" : "text-danger")">Visibility: @(blog.Visibility ? "Public" : "Private")</p>
+                                        <p class="mb-0">Views: @blog.Views</p>
+                                    </div>
                                 </li>
                             }
                         </ul>
@@ -122,3 +133,32 @@
 
 
 <script src="~/js/profile/detail.js" asp-append-version="true"></script>
+@if (!Model.IsSameUser && Model.CurrentUser?.MainRole == "Admin")
+{
+    // deleteUser function accessible if current user is in role "Admin"
+    <script>
+        function deleteUser(anchor) {
+            const idToDelete = anchor.dataset.id;
+
+            fetch(`/Profile/DeleteUser?id=${encodeURIComponent(idToDelete)}`, {
+                method: 'DELETE',
+                headers: {
+                    'RequestVerificationToken': document.getElementById('delete-user-form').querySelector('input[name="__RequestVerificationToken"]').value
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert(response.text());
+                    window.location.href = '/Home/Index';
+                } else {
+                    return response.json().then(data => {
+                        alert('Error: ' + data.message);
+                    });
+                }
+            })
+            .catch(error => console.error('Error:', error));
+            
+            return false;
+        }
+    </script>
+}

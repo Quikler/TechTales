@@ -9,6 +9,8 @@ using TechTales.Helpers;
 using TechTales.Helpers.Extensions;
 using TechTales.Hubs;
 using TechTales.Models;
+using TechTales.Models.Blog;
+using TechTales.Models.Comment;
 
 namespace TechTales.Controllers;
 
@@ -28,13 +30,15 @@ public class CommentController : Controller
         _commentHub = commentHub;
     }
 
-    [HttpPost]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Add(Guid blogId, string content, Guid readerId)
     {
         var user = await _userManager.GetUserAsync(User);
-        if (user is null || user.Id != readerId)
+        var authorized = await _userManager.IsUserAuthorizedAsync(readerId, user);
+
+        if (user is null || user.Id != readerId || !authorized)
         {
-            return Forbid("Invalid user.");
+            return Forbid();
         }
 
         if (string.IsNullOrWhiteSpace(content))
@@ -69,7 +73,7 @@ public class CommentController : Controller
         return Ok(commentDTO);
     }
 
-    [HttpDelete]
+    [HttpDelete, ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(Guid id)
     {
         var comment = await _context.Comments
@@ -93,7 +97,7 @@ public class CommentController : Controller
         return Ok($"Comment '{id}' has been deleted.");
     }
 
-    [HttpPut]
+    [HttpPatch, ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(Guid id, string content)
     {
         var comment = await _context.Comments
@@ -104,15 +108,63 @@ public class CommentController : Controller
             return BadRequest("No such comment in database.");
         }
 
-        var currentUser = await _userManager.GetUserAsync(User);
-        if (currentUser is null || currentUser.Id != comment.AuthorId)
+        var authorized = await _userManager.IsUserAuthorizedAsync(comment.AuthorId, User);
+        if (!authorized)
         {
-            return Forbid("Invalid user.");
+            return Forbid();
         }
 
         comment.Content = content.Replace("<br>", "\n");
         await _context.SaveChangesAsync();
-        
+
         return Ok(comment.Content);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> List(string? request, string? orderBy, int pageSize = 5, int page = 1)
+    {
+        var total = await _context.Comments.CountAsync();
+        var totalPages = (int)Math.Ceiling((double)total / pageSize);
+
+        var model = new PaginationViewModel<CommentViewModel>
+        {
+            CurrentPage = page,
+            TotalPages = totalPages
+        };
+
+        if (page <= 0 || page > totalPages)
+        {
+            this.SetModalMessage("Invalid page", "No comments were found on this page. Page might not exist or was removed.");
+            return View(model);
+        }
+
+        var comments = await _context.Comments
+            .AsNoTracking()
+            .Where(c => c.Content.Contains(string.Empty))
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Include(c => c.Author)
+            .Include(c => c.Blog)
+            .Select(c => new CommentViewModel
+            {
+                Id = c.Id,
+                Content = c.Content,
+                CreationDate = c.CreationDate,
+                Author = new UserViewModel
+                {
+                    Id = c.AuthorId,
+                    UserName = c.Author.UserName!,
+                    Avatar = c.Author.Avatar.BlobToImageSrc("/images/default_user_icon.svg"),
+                },
+                Blog = new BlogViewModel
+                {
+                    Id = c.BlogId,
+                },
+            })
+            .ToListAsync();
+
+        model.Collection = comments;
+
+        return View(model);
     }
 }

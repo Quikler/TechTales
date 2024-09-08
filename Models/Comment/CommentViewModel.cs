@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using TechTales.Models.Blog;
 
-namespace TechTales.Models;
+namespace TechTales.Models.Comment;
 
 public class CommentViewModel
 {
@@ -9,4 +10,5 @@ public class CommentViewModel
     public UserViewModel Author { get; set; } = null!;
     public bool IsSameUser { get; set; }
     public DateTime CreationDate { get; set; }
+    public BlogViewModel? Blog { get; set; }
 }

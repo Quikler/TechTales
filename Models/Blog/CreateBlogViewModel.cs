@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TechTales.Models;
+namespace TechTales.Models.Blog;
 
 public class CreateBlogViewModel
 {

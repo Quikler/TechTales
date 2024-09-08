@@ -1,12 +1,11 @@
 @model CreateBlogViewModel;
 @using TechTales.Helpers;
+@using TechTales.Models.Blog;
 @{
     ViewData["Title"] = "Create";
 }
 
-<link rel="stylesheet" href="~/css/blog/create.css">
-
-<div>
+@* <div>
     <h1 class=" mb-3">Create a new blog</h1>
     <form class="create-form" asp-controller="Blog" asp-action="Create" method="post" autocomplete="off">
         <div class="mb-3">
@@ -19,11 +18,11 @@
         <div class="d-flex justify-content-between">
             <div class="visibility-radio-container">
                 <div class="py-1 d-flex align-items-center">
-                    <input class="outline-box-shadow checkbox" asp-for="@Model.Visibility" type="radio" name="visibility" value="true" checked />
+                    <input class="outline-box-shadow checkbox-blueviolet" asp-for="@Model.Visibility" type="radio" name="visibility" value="true" checked />
                     <label class=" ps-2 fw-bold">Public</label>
                 </div>
                 <div class="py-1 d-flex align-items-center">
-                    <input class="outline-box-shadow checkbox" asp-for="@Model.Visibility" type="radio" name="visibility" value="false" />
+                    <input class="outline-box-shadow checkbox-blueviolet" asp-for="@Model.Visibility" type="radio" name="visibility" value="false" />
                     <label class=" ps-2 fw-bold">Private</label>
                 </div>
             </div>
@@ -38,6 +37,45 @@
         </div>
         <button type="button" class="bg-blueviolet text-white submit-button outline-box-shadow btn outline-border ms-auto d-flex">Submit</button>
     </form>
-</div>
+</div> *@
 
-<script src="~/js/blog/create.js"></script>
+<form class="container p-4 rounded shadow-lg bg-light" asp-controller="Blog" asp-action="Create" asp-route-id="@Model.Id" method="post" autocomplete="off">
+    <div class="row g-4">
+        <div>
+            <h1 class="mb-4 text-break">Create blog</h1>
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input asp-for="@Model.Title" class="outline-box-shadow form-control" type="text" placeholder="Title" aria-label="Title" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="content" class="form-label">Content</label>
+                <textarea rows="6" asp-for="@Model.Content" class="outline-box-shadow content-text-area form-control" placeholder="Content" aria-label="Content" required></textarea>
+            </div>
+    
+            <div class="mb-3">
+                <div class="mb-3">
+                    <label for="tags" class="form-label">Tags</label>
+                    <input class="outline-box-shadow form-control" type="text" placeholder="#tag1 #tag2 etc..." aria-label="Tags" id="Tags" name="Tags" value="@Model.Tags">
+                </div>
+                <div class="mb-3">
+                    <label for="categories" class="form-label">Categories</label>
+                    <input class="outline-box-shadow form-control" type="text" placeholder="Category1, Category2 etc..." aria-label="Categories" id="Categories" name="Categories" value="@Model.Categories">
+                </div>
+            </div>
+            <div class="visibility-radio-container">
+                <div class="mb-3 d-flex align-items-center">
+                    <input class="checkbox-blueviolet" type="radio" name="visibility" value="true" checked="" data-val="true" data-val-required="The Visibility field is required." id="Visibility">
+                    <label class=" ps-2 fw-bold">Public</label>
+                </div>
+                <div class="mb-3 d-flex align-items-center">
+                    <input class="checkbox-blueviolet" type="radio" name="visibility" value="false" id="Visibility">
+                    <label class=" ps-2 fw-bold">Private</label>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary text-white px-4">Submit</button>
+            </div>
+        </div>
+    </div>
+</form>

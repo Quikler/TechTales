@@ -7,12 +7,7 @@ connection.on("CommentDeleted", function (commentId) {
     const commentElement = document.getElementById(commentId);
     if (commentElement) {
         const commentContainerLi = commentElement.closest("li");
-
-        commentContainerLi.addEventListener('transitionend', function () {
-            commentContainerLi.remove();
-        });
-
-        commentContainerLi.style.opacity = "0";
+        commentContainerLi.remove();
     }
 });
 
@@ -23,9 +18,9 @@ connection.on("CommentAddedExceptCaller", function (comment) {
     
     commentsList.insertAdjacentHTML("afterbegin", liStr);
     
-    const li = commentsList.querySelector("li");
-    li.clientHeight;
-    li.style.opacity = "1";
+    // const li = commentsList.querySelector("li");
+    // li.clientHeight;
+    // li.style.opacity = "1";
 });
 
 connection.on("CommentAddedCaller", function (comment) {
@@ -35,9 +30,9 @@ connection.on("CommentAddedCaller", function (comment) {
     
     commentsList.insertAdjacentHTML("afterbegin", liStr);
     
-    const li = commentsList.querySelector("li");
-    li.clientHeight;
-    li.style.opacity = "1";
+    // const li = commentsList.querySelector("li");
+    // li.clientHeight;
+    // li.style.opacity = "1";
 });
 
 connection.on("CommentEdit", function (commentId, commentContent) {
