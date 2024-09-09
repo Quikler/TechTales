@@ -27,11 +27,20 @@ public class BanCheckMiddleware
         var userId = userManager.GetUserId(context.User);
         var ban = await dbContext.Bans.FirstOrDefaultAsync(b => b.UserId.ToString() == userId);
         
-        if (ban is not null && ban.BanEndDate > DateTime.UtcNow)
+        if (ban is not null)
         {
-            // Redirect to the Banned page
-            context.Response.Redirect("/Error/Banned");
-            return;
+            if (ban.BanEndDate <= DateTime.UtcNow)
+            {
+                // Ban has expired, remove the ban record
+                dbContext.Bans.Remove(ban);
+                await dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                // Ban is still active, redirect to the Banned page
+                context.Response.Redirect("/Error/Banned");
+                return;
+            }
         }
 
         await _next(context);

@@ -9,8 +9,8 @@ public static class ControllerExtensions
 {
     public static void SetModalMessage(this Controller controller, string title, string content)
     {
-        controller.ViewBag.ModalTitle = title;
-        controller.ViewBag.ModalContent = content;
+        controller.TempData["ModalTitle"] = title;
+        controller.TempData["ModalContent"] = content;
     }
 
     public static IEnumerable<string> ParseModalErrors(this Controller controller)

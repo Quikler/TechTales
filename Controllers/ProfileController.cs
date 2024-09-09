@@ -1,8 +1,10 @@
 using System.Diagnostics;
+using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
@@ -215,22 +217,30 @@ public class ProfileController : Controller
     [HttpPost, Authorize(Roles = "Admin,Moderator"), ValidateAntiForgeryToken]
     public async Task<IActionResult> BanUser(Guid id)
     {
-        // var user = await _userManager.FindByIdAsync(id.ToString());
-        // if (user is not null)
-        // {
-        //     // user.BanEndDate = DateTime.Now + TimeSpan.FromDays(5);
-        //     // user.BanReason = "Test";
-        //     await _userManager.UpdateAsync(user);
-        // }
-        // return RedirectToAction("List", "Profile");
+        var banEndDate = Request.Form["banEndDate"].ToString();
+        var banReason = Request.Form["banReason"].ToString();
+
+        if (string.IsNullOrWhiteSpace(banReason))
+        {
+            ModelState.AddModelError("Reason", "field is required");
+            this.ParseModalErrorsAndSet("Validation error");
+            return RedirectToAction("Detail", new { Id = id });
+        }
+
+        if (string.IsNullOrWhiteSpace(banEndDate))
+        {
+            ModelState.AddModelError("End date", "field is required");
+            this.ParseModalErrorsAndSet("Validation error");
+            return RedirectToAction("Detail", new { Id = id });
+        }
 
         var ban = new BanEntity
         {
             Id = Guid.NewGuid(),
             UserId = id,
             JudgeId = new Guid(_userManager.GetUserId(User)!),
-            BanEndDate = DateTime.Now + TimeSpan.FromDays(5),
-            BanReason = "Test",
+            BanEndDate = DateTime.ParseExact(banEndDate, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture),
+            BanReason = banReason,
         };
 
         await _context.Bans.AddAsync(ban);
@@ -238,6 +248,11 @@ public class ProfileController : Controller
 
         return RedirectToAction("List", "Profile");
     }
+
+    // private static DateTime ParseTime()
+    // {
+
+    // }
 
     private static async Task CropImageAsync(MemoryStream memoryStream, int width, int height)
     {
