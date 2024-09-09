@@ -88,7 +88,7 @@ public class HomeController : Controller
         return View();
     }
 
-    [HttpPost]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Contacts(ContactsViewModel model)
     {
         // ViewBag.ModalTitle = "Test";

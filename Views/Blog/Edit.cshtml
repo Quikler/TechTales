@@ -6,6 +6,7 @@
 }
 
 <form class="container p-4 rounded shadow-lg bg-light" asp-controller="Blog" asp-action="Edit" asp-route-id="@Model.Id" method="post" autocomplete="off">
+    @Html.AntiForgeryToken()
     <div class="row g-4">
         <div>
             <h1 class="mb-4 text-break">Edit blog '@Model.Title'</h1>

@@ -163,7 +163,7 @@ public class BlogController : Controller
         return View(model);
     }
 
-    [HttpPost]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(BlogViewModel model)
     {
         var currentUser = await _userManager.GetUserAsync(User);
@@ -240,7 +240,7 @@ public class BlogController : Controller
         return RedirectToAction("Detail", "Profile", new { Id = currentUser?.Id });
     }
 
-    [HttpGet]
+    [HttpDelete, ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(Guid id)
     {
         var blog = await _context.Blogs
@@ -280,7 +280,7 @@ public class BlogController : Controller
         return View(new CreateBlogViewModel());
     }
 
-    [HttpPost]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateBlogViewModel model)
     {
         var id = _userManager.GetUserId(User);
@@ -314,6 +314,7 @@ public class BlogController : Controller
         return RedirectToAction("Detail", "Profile", new { id });
     }
 
+    [HttpGet]
     public async Task<IActionResult> List(string? request, string? orderBy, int pageSize = 4, int page = 1)
     {
         ViewBag.Request = request;

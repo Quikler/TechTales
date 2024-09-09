@@ -30,13 +30,13 @@ public class AuthorizationController : Controller
     {
         if (_signInManager.IsSignedIn(User))
         {
-            this.SetModalMessage("Authenticated", "You are already logged into your account.");
+            this.SetModalMessage("Authentication", "You are already logged into your account.");
             return RedirectToAction("Index", "Home");
         }
         return View();
     }
 
-    [HttpPost]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Signup(SignupViewModel model)
     {
         if (!ModelState.IsValid)
@@ -73,7 +73,7 @@ public class AuthorizationController : Controller
         return View();
     }
 
-    [HttpPost]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
         if (!ModelState.IsValid)

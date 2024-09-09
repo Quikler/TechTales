@@ -88,7 +88,7 @@ public class ProfileController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Edit() 
+    public async Task<IActionResult> Edit()
     {
         var user = await _userManager.GetUserAsync(User);
         if (user is null)
