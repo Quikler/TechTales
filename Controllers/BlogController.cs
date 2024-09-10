@@ -1,5 +1,6 @@
 using System.ComponentModel.Design;
 using System.Diagnostics;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -54,7 +55,8 @@ public class BlogController : Controller
             })
             .FirstOrDefaultAsync();
 
-        if (blogData?.Blog is null)
+// If blog is null or author is banned return Not Found
+        if (blogData?.Blog is null || await _context.Bans.AnyAsync(b => b.UserId == blogData.Author.Id))
         {
             return RedirectToAction("NotFound", "Error");
         }
@@ -330,12 +332,8 @@ public class BlogController : Controller
             _ => query.OrderByDescending(b => b.Views),
         };
 
-        var currentUser = await _userManager.GetUserAsync(User);
-        var currentUserMainRole = await _userManager.GetMainRoleAsync(currentUser);
+        query = await query.FilterVisibleAndNonBannedBlogsAsync(_userManager, User, _context.Bans);
 
-        query = query.Where(b => currentUserMainRole == "Admin" 
-            || currentUserMainRole == "Moderator" ? true : b.Visibility);
-        
         if (!string.IsNullOrEmpty(request))
         {
             string trimmedRequest = request.Replace('#', ' ');
@@ -407,6 +405,8 @@ public class BlogController : Controller
             .SelectMany(c => c.Blogs)
             .AsQueryable();
 
+        query = await query.FilterVisibleAndNonBannedBlogsAsync(_userManager, User, _context.Bans);
+
         // Calculate total items and total pages
         var total = await query.CountAsync();
         var totalPages = (int)Math.Ceiling((double)total / pageSize);
@@ -419,7 +419,7 @@ public class BlogController : Controller
 
         if (!this.IsPageValid(page, totalPages))
         {
-            this.SetModalMessage("", "");
+            this.SetModalMessage("Invalid page", "No blogs were found on this page. Page might not exist or was removed.");
             return View("List", model);
         }
 
@@ -440,6 +440,7 @@ public class BlogController : Controller
                     UserName = b.Author.UserName!,
                     Avatar = b.Author.Avatar.BlobToImageSrc("/images/default_user_icon.svg"),
                 },
+                Visibility = b.Visibility,
             })
             .ToListAsync();
 
@@ -466,6 +467,8 @@ public class BlogController : Controller
             .SelectMany(t => t.Blogs)
             .AsQueryable();
 
+        query = await query.FilterVisibleAndNonBannedBlogsAsync(_userManager, User, _context.Bans);
+
         // Calculate total items and total pages
         var total = await query.CountAsync();
         var totalPages = (int)Math.Ceiling((double)total / pageSize);
@@ -478,7 +481,7 @@ public class BlogController : Controller
 
         if (!this.IsPageValid(page, totalPages))
         {
-            this.SetModalMessage("", "");
+            this.SetModalMessage("Invalid page", "No blogs were found on this page. Page might not exist or was removed.");
             return View("List", model);
         }
 
@@ -499,6 +502,7 @@ public class BlogController : Controller
                     UserName = b.Author.UserName!,
                     Avatar = b.Author.Avatar.BlobToImageSrc("/images/default_user_icon.svg"),
                 },
+                Visibility = b.Visibility,
             })
             .ToListAsync();
 

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Identity;
 using TechTales.Data.Models;
@@ -76,5 +77,11 @@ public static class ExtensionMethods
             role = "Moderator";
         }
         return role;
+    }
+
+    public static async Task<string> GetMainRoleAsync(this UserManager<UserEntity> userManager, ClaimsPrincipal principal)
+    {
+        var user = await userManager.GetUserAsync(principal);
+        return await userManager.GetMainRoleAsync(user);
     }
 }

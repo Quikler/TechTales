@@ -4,6 +4,8 @@
 @using TechTales.Models.Profile;
 @{
     ViewData["Title"] = Model.User.UserName;
+    bool isCurrentUserAdmin = Model.CurrentUser?.MainRole == "Admin";
+    bool isCurrentUserModerator = Model.CurrentUser?.MainRole == "Moderator";
 }
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -48,15 +50,36 @@
                         }
                     </div>
                     <p>@Model.User.Country</p>
-                    @if (!Model.IsSameUser)
+                    @if (!Model.IsSameUser && (isCurrentUserAdmin || isCurrentUserModerator))
                     {
-                        <div class="d-flex gap-2 justify-content-end">
-                            @if (Model.CurrentUser?.MainRole == "Admin" || Model.CurrentUser?.MainRole == "Moderator")
-                            {
-                                <a class="text-danger" href="javascript:void(0);" onclick="return showModal('modalCenterAdmin');">Ban</a>
-                            }
+                        <div class="d-flex mb-2 justify-content-between align-items-center ">
+                            <div title="@Model.User.Ban?.Reason" class="d-flex justify-content-between align-items-center gap-2">
+                                <svg fill="blue" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 416.979 416.979" xml:space="preserve" width="32" height="32">
+                                    <g>
+                                        <path d="M356.004,61.156c-81.37-81.47-213.377-81.551-294.848-0.182c-81.47,81.371-81.552,213.379-0.181,294.85   c81.369,81.47,213.378,81.551,294.849,0.181C437.293,274.636,437.375,142.626,356.004,61.156z M237.6,340.786   c0,3.217-2.607,5.822-5.822,5.822h-46.576c-3.215,0-5.822-2.605-5.822-5.822V167.885c0-3.217,2.607-5.822,5.822-5.822h46.576   c3.215,0,5.822,2.604,5.822,5.822V340.786z M208.49,137.901c-18.618,0-33.766-15.146-33.766-33.765   c0-18.617,15.147-33.766,33.766-33.766c18.619,0,33.766,15.148,33.766,33.766C242.256,122.755,227.107,137.901,208.49,137.901z"></path>
+                                    </g>
+                                </svg>
+                                <p class="m-0" title="This is a tooltip">State: @Model.User.Ban?.State</p>
+                            </div>
+                            <p class="m-0 align-items-center">Ban End Date: @Model.User.Ban?.EndDate</p>
+                        </div>
 
-                            @if (Model.CurrentUser?.MainRole == "Admin")
+                        <div class="d-flex gap-2 justify-content-end">
+                            @if (isCurrentUserAdmin || isCurrentUserModerator)
+                            {
+                                @if (Model.User.Ban?.State == "Banned")
+                                {
+                                    <form id="unban-user-form" action="/Profile/UnbanUser/@Model.User.Id" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <a class="text-danger" href="javascript:void(0);" onclick="return document.getElementById('unban-user-form').submit();">Unban</a>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <a class="text-danger" href="javascript:void(0);" onclick="return showModal('modalCenterAdmin');">Ban</a>
+                                }
+                            }
+                            @if (isCurrentUserAdmin)
                             {
                                 <a class="text-danger" id="delete-user-link" href="javascript:void(0);" data-id="@Model.User.Id" onclick="return deleteUser(this);">Delete</a>
                             }
@@ -107,7 +130,7 @@
                                         -->@blog.Content.EllipsisString(190) <!--
                                         --><span><a class="text-blueviolet" asp-controller="Blog" asp-action="Read" asp-route-id="@blog.Id">[Read more]</a></span>
                                     </p>
-                                    @if (Model.IsSameUser || Model.CurrentUser?.MainRole == "Admin")
+                                    @if (Model.IsSameUser || isCurrentUserAdmin)
                                     {
                                         <div class="d-flex justify-content-end align-items-start">
                                             <div class="d-flex gap-2">
@@ -134,7 +157,7 @@
     </div>
 </div>
 
-@if (!Model.IsSameUser && Model.CurrentUser?.MainRole == "Admin")
+@if (!Model.IsSameUser && isCurrentUserAdmin)
 {
 <!-- Ban user popup -->
 <div class="modal fade show" id="modalCenterAdmin" tabindex="-1" role="dialog" aria-modal="true">
@@ -176,7 +199,7 @@
 
 <script src="~/js/profile/detail.js" asp-append-version="true"></script>
 
-@if (!Model.IsSameUser && Model.CurrentUser?.MainRole == "Admin")
+@if (!Model.IsSameUser && isCurrentUserAdmin)
 {
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>

@@ -1,4 +1,6 @@
 using System.Linq.Expressions;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TechTales.Data.Models;
 using TechTales.Models;
@@ -88,5 +90,31 @@ public static class DbSetExtensions
         // var model = new PaginationViewModel<CategoryViewModel>(page, totalPages);
 
         return new PaginationViewModel<TOut>(totalPages);
+    }
+
+    public static IQueryable<BlogEntity> FilterVisibleAndNonBannedBlogs(
+        this IQueryable<BlogEntity> query,
+        DbSet<BanEntity> bans
+    )
+    {
+        query = query.Where(b => b.Visibility && !bans.Any(bn => bn.UserId == b.AuthorId));
+        return query;
+    }
+
+    public static async Task<IQueryable<BlogEntity>> FilterVisibleAndNonBannedBlogsAsync(
+        this IQueryable<BlogEntity> query,
+        UserManager<UserEntity> userManager,
+        ClaimsPrincipal principal,
+        DbSet<BanEntity> bans
+    )
+    {
+        var currentUser = await userManager.GetUserAsync(principal);
+        var currentUserMainRole = await userManager.GetMainRoleAsync(currentUser);
+
+        if (currentUserMainRole != "Admin" && currentUserMainRole != "Moderator")
+        {
+            query = query.FilterVisibleAndNonBannedBlogs(bans);
+        }
+        return query;
     }
 }

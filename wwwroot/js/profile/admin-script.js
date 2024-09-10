@@ -10,15 +10,13 @@ function deleteUser(anchor) {
     })
     .then(async response => {
         if (response.ok) {
-            const result = await response.json(); // Parse the JSON response
-            alert(result.message); // Assuming your backend sends a JSON object with a message property
             window.location.href = '/Profile/List';
         } else {
-            const errorData = await response.json(); // Parse the JSON response for error
-            alert('Error: ' + errorData.message); // Assuming your backend sends a JSON object with a message property
+            const errorData = await response.json();
+            alert('Error: ' + errorData.message);
         }
     })
     .catch(error => console.error('Error:', error));
     
-    return false; // Prevent default action of the anchor tag
+    return false;
 }

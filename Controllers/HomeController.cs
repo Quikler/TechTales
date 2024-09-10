@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Linq.Expressions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +33,9 @@ public class HomeController : Controller
     [HttpGet]
     public async Task<IActionResult> Index(int page = 1, int pageSize = 3)
     {
-        var totalBlogs = await _context.Blogs.CountAsync();
+        Expression<Func<BlogEntity, bool>> predicate = b => b.Visibility && !_context.Bans.Any(bn => bn.UserId == b.AuthorId);
+        
+        var totalBlogs = await _context.Blogs.CountAsync(predicate);
         var totalPages = (int)Math.Ceiling((double)totalBlogs / pageSize);
 
         var model = new PaginationViewModel<BlogViewModel>
@@ -49,7 +52,7 @@ public class HomeController : Controller
 
         var blogs = await _context.Blogs
             .AsNoTracking()
-            .Where(b => b.Visibility)
+            .Where(predicate)
             .OrderByDescending(b => b.Views)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)

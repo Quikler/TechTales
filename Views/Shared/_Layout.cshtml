@@ -164,7 +164,9 @@
         </div>
     </footer>
         
-    <!-- Modal popup -->
+    @if (@TempData["ModalContent"] is not null)
+    {
+        <!-- Modal popup -->
     <div class="modal fade show" id="modalCenter" tabindex="-1" role="dialog" aria-modal="true">
         <div class="modal-dialog modal-md modal-dialog-centered" role="document">
             <div class="modal-content rounded-0">
@@ -186,6 +188,7 @@
             </div>
         </div>
     </div>
+    }
 
     @* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

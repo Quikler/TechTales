@@ -35,7 +35,12 @@ public class ProfileController : Controller
     [HttpGet]
     public async Task<IActionResult> Detail(Guid? id)
     {
-        if (id is null)
+        var currentUser = await _userManager.GetUserAsync(User);
+        var currentUserMainRole = await _userManager.GetMainRoleAsync(currentUser);
+
+// If id is null or user is banned return Not Found
+        if (id is null || await _context.Bans.AnyAsync(b => b.UserId == id)
+            && currentUserMainRole == "User")
         {
             return RedirectToAction("NotFound", "Error");
         }
@@ -50,9 +55,7 @@ public class ProfileController : Controller
             return RedirectToAction("NotFound", "Error");
         }
 
-        var currentUser = await _userManager.GetUserAsync(User);
-        var currentUserMainRole = await _userManager.GetMainRoleAsync(currentUser);
-
+        var profileUserMainRole = await _userManager.GetMainRoleAsync(profileUser);
         var authorized = await _userManager.IsUserAuthorizedAsync(id.Value, currentUser, "Admin,Moderator");
 
         var blogs = profileUser.Blogs
@@ -68,6 +71,8 @@ public class ProfileController : Controller
             })
             .ToList();
 
+        var ban = await _context.Bans.FirstOrDefaultAsync(b => b.UserId == id);
+
         var model = new ProfileViewModel
         {
             User = new UserViewModel
@@ -76,7 +81,14 @@ public class ProfileController : Controller
                 UserName = profileUser.UserName!,
                 Country = profileUser.Country,
                 AboutMe = profileUser.AboutMe,
+                MainRole = profileUserMainRole,
                 Avatar = profileUser.Avatar.BlobToImageSrc(),
+                Ban = new BanViewModel
+                {
+                    EndDate = ban?.BanEndDate.ToString() ?? "none",
+                    Reason = ban?.BanReason,
+                    State = ban is null ? "Authorized" : "Banned",
+                },
             },
             Blogs = blogs,
             IsSameUser = profileUser.Id == currentUser?.Id,
@@ -109,7 +121,7 @@ public class ProfileController : Controller
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(EditProfileViewModel model, IFormFile? avatar)
+    public async Task<IActionResult> Edit(EditProfileViewModel model)
     {
         var user = await _userManager.GetUserAsync(User);
         if (user is null)
@@ -132,7 +144,9 @@ public class ProfileController : Controller
             return View(model);
         }
 
+        IFormFile? avatar = Request.Form.Files["Avatar"];
         byte[]? newAvatar = null;
+        
         if (avatar != null && avatar.Length > 0)
         {
             using var memoryStream = new MemoryStream();
@@ -211,6 +225,7 @@ public class ProfileController : Controller
     public async Task<IActionResult> DeleteUser(Guid id)
     {
         await _context.Users.Where(u => u.Id == id).ExecuteDeleteAsync();
+        this.SetModalMessage("Delete", $"User with id - '{id}' has been deleted.");
         return Ok($"User with id='{id}' has been deleted.");
     }
 
@@ -246,13 +261,17 @@ public class ProfileController : Controller
         await _context.Bans.AddAsync(ban);
         await _context.SaveChangesAsync();
 
+        this.SetModalMessage("Ban", $"User with id - '{id}' has been banned.");
         return RedirectToAction("List", "Profile");
     }
 
-    // private static DateTime ParseTime()
-    // {
-
-    // }
+    [HttpPost, Authorize(Roles = "Admin,Moderator"), ValidateAntiForgeryToken]
+    public async Task<IActionResult> UnbanUser(Guid id)
+    {
+        await _context.Bans.Where(b => b.UserId == id).ExecuteDeleteAsync();
+        this.SetModalMessage("Unban", $"User with id - '{id}' has been unbanned.");
+        return RedirectToAction("List", "Profile");
+    }
 
     private static async Task CropImageAsync(MemoryStream memoryStream, int width, int height)
     {

@@ -12,4 +12,5 @@ public class UserViewModel
     public string? Avatar { get; set; }
     public string MainRole { get; set; } = "User";
     public int CountOfBlogs { get; set; }
+    public BanViewModel? Ban { get; set; }
 }
