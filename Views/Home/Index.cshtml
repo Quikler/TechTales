@@ -7,12 +7,14 @@
 }
 
 <div class="text-center bg-white">
-    <img src="~/images/logo.jpg" alt="logo" class="mb-4" />
+    <img id="logo" src="~/images/logo.svg" alt="logo" class="mb-4" />
     <h1 class="py-2">TechTales - Find Your Favourite Blog!</h1>
-    <div class="rounded input-block border input-group mb-4 w-50 mx-auto">
-        <input data-url="/Blog/List" required type="text" placeholder="Title, Category, Tag, Content..." aria-label="Search" aria-describedby="search-button">
+
+    <div class="rounded mx-auto search-input-block border input-group mb-4">
+        <input data-url="/Blog/List" type="text" placeholder="Title, Category, Tag, Content..." aria-label="Search" aria-describedby="search-button" required>
         <button class="rounded-end px-4 btn text-white btn-primary" id="search-button">Search</button>
     </div>
+
     <div class="container">
         <div class="col-md-8 mx-auto">
             @if (Model.Collection.Count == 0) 
@@ -36,7 +38,7 @@
                                 <div class="d-flex flex-column col-lg-3 align-items-center justify-content-center text-center">
                                     <p class="ws-nw">@blog.CreationDate.ToString("dd/MM/yyyy HH:mm:ss")</p>
                                     <a class="d-inline-block" asp-action="Detail" asp-controller="Profile" asp-route-id="@blog.Author?.Id">
-                                        <img class="rounded-circle size-50-fit-cover" src="@blog.Author?.Avatar" />
+                                        <img class="rounded-circle size-40-fit-cover" src="@blog.Author?.Avatar" />
                                     </a>
                                     <a class="d-inline-block" asp-action="Detail" asp-controller="Profile" asp-route-id="@blog.Author?.Id">
                                         <p class="mt-2 text-break text-blueviolet">@blog.Author?.UserName</p>

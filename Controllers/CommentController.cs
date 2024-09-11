@@ -141,7 +141,7 @@ public class CommentController : Controller
 
         var comments = await _context.Comments
             .AsNoTracking()
-            .Where(c => c.Content.Contains(string.Empty))
+            .Where(c => c.Content.Contains(request ?? string.Empty))
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Include(c => c.Author)

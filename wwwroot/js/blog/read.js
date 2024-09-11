@@ -172,7 +172,7 @@ function createLi(comment, editable = false) {
         <div class="d-flex justify-content-between">
             <div class="mb-3 d-flex flex-grow-1">
                 <a href="/Profile/Detail/${comment.author.id}">
-                    <img class="size-50-fit-cover user-img rounded-circle" src="${comment.author.avatar}">
+                    <img class="size-40-fit-cover user-img rounded-circle" src="${comment.author.avatar}">
                 </a>
                 <div class="ms-3 d-flex justify-content-center flex-column">
                     <p id="${comment.author.id}" class="comment-author-id m-0">

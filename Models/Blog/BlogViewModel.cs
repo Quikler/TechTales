@@ -5,7 +5,12 @@ namespace TechTales.Models.Blog;
 public class BlogViewModel
 {
     public Guid Id { get; set; }
-    [Required] public string Title { get; set; } = null!;
+
+    [Required]
+    [DataType(DataType.Text)]
+    [Display(Name = "Title")]
+    [MaxLength(50, ErrorMessage = "Title must be less than 50 symbols")]
+    public string Title { get; set; } = null!;
     [Required] public string Content { get; set; } = null!;
     public UserViewModel? Author { get; set; }
     public Guid AuthorId { get; set; }

@@ -22,20 +22,91 @@ input:-webkit-autofill:active{
     -webkit-box-shadow: 0 0 0 30px var(--pc) inset !important;
 }
 
-.validation-summary-errors > ul > li {
-  color: darkblue;
+/* Small screens (up to 576px) */
+@media (max-width: 576px) {
+  *, .btn, .form-control, .form-select {
+    font-size: 10px;
+  }
+  h1 { font-size: 24px; }
+  h2 { font-size: 22px; }
+  h3 { font-size: 20px; }
+  h4 { font-size: 18px; }
+  h5 { font-size: 16px; }
+  h6 { font-size: 14px; }
+  .size-200-fit-cover {
+    width: 100%;
+    max-height: 40px; /* Keeps aspect ratio */
+    max-width: 40px;
+  }
+  .resizable-svg {
+    width: 24px;
+    height: 24px;
+  }
+  #logo {
+    width: 150px;
+  }
 }
 
-.blueviolet-hover:hover {
-  color: #c586ff;
+/* Medium screens (up to 768px) */
+@media (min-width: 576px) and (max-width: 768px) {
+  *, .btn, .form-control, .form-select {
+    font-size: 12px;
+  }
+  h1 { font-size: 28px; }
+  h2 { font-size: 26px; }
+  h3 { font-size: 24px; }
+  h4 { font-size: 22px; }
+  h5 { font-size: 20px; }
+  h6 { font-size: 18px; }
+  .size-200-fit-cover {
+    width: 100%;
+    max-height: 100px;
+    max-width: 100px;
+  }
+  .resizable-svg {
+    width: 32px;
+    height: 32px;
+  }
+  #logo {
+    width: 200px;
+  }
+}
+
+/* Large screens (up to 992px) */
+@media (min-width: 768px) and (max-width: 992px) {
+  *, .btn, .form-control, .form-select {
+    font-size: 14px;
+  }
+  h1 { font-size: 32px; }
+  h2 { font-size: 30px; }
+  h3 { font-size: 28px; }
+  h4 { font-size: 26px; }
+  h5 { font-size: 24px; }
+  h6 { font-size: 22px; }
+  .size-200-fit-cover {
+    width: 200px;
+    height: 200px;
+  }
+  .resizable-svg {
+    width: 42px;
+    height: 42px;
+  }
+  #logo {
+    width: 250px;
+  }
+}
+
+@media (min-width: 992px) {
+  h1 { font-size: 36px; }
+  h2 { font-size: 34px; }
+  h3 { font-size: 32px; }
+  h4 { font-size: 30px; }
+  h5 { font-size: 28px; }
+  h6 { font-size: 26px; }
 }
 
 .bg-blueviolet {
   background-color: blueviolet;
-}
-
-.bg-blue {
-  background-color: blue;
 }
 
 .outline-border {
@@ -81,38 +152,37 @@ input:-webkit-autofill:active{
   object-fit: cover;
 }
 
-.size-50-fit-cover {
-  width: 50px;
-  height: 50px;
+.size-40-fit-cover {
+  width: 40px;
+  height: 40px;
   object-fit: cover;
 }
 
 /* Base input block with button */
 
-.input-block {
+.search-input-block {
   background: url("/images/magnifier_glass.svg") no-repeat left;
   padding-left: 42px;
   background-size: 24px;
   background-position: 16px center;
   
-  /* This bit sets up the horizontal layout */
-  display:flex;
-  flex-direction:row;
+  max-width: 950px;
 }
 
-.input-block input {
+.search-input-block input {
   /* Tell the input to use all the available space */
-  flex-grow:2;
+  flex-grow: 1;
+
   /* And hide the input's outline, so the form looks like the outline */
-  border:none;
+  border: none;
   padding: 8px 16px;
 }
 
-.input-block input:focus {
+.search-input-block input:focus {
   outline: none;
 }
 
-.input-block:focus-within {
+.search-input-block:focus-within {
 	box-shadow: 0 0 0 2px white,0 0 0 4px blueviolet;
 	outline: 2px solid transparent !important;
 }

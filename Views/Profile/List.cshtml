@@ -5,10 +5,12 @@
 }
 
 <div class="text-center">
-    <div class="rounded input-block border input-group mb-4 w-50 mx-auto">
-        <input data-url="/Profile/List" required type="text" placeholder="Username" aria-label="Search" aria-describedby="search-button">
-        <button class="rounded-end px-4 btn text-white bg-blueviolet outline-box-shadow">Search</button>
+
+    <div class="rounded mx-auto search-input-block border input-group mb-4">
+        <input data-url="/Profile/List" type="text" placeholder="Search by username..." aria-label="Search" aria-describedby="search-button" required>
+        <button class="rounded-end px-4 btn text-white btn-primary" id="search-button">Search</button>
     </div>
+
     <div class="container">
         <div class="col-md-8 mx-auto">
             @if (Model.Users.Count == 0) 
@@ -35,11 +37,12 @@
                             </div>
                             <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center text-center">
                                 <a href="/Profile/Detail/@user.Id" class="d-inline-block">
-                                    <img class="rounded-circle size-50-fit-cover shadow-sm mb-2" src="@user.Avatar">
+                                    <img class="rounded-circle size-40-fit-cover shadow-sm mb-2" src="@user.Avatar">
                                 </a>
                                 <a href="/Profile/Detail/@user.Id" class="d-inline-block">
                                     <p class="mb-0 mt-2 text-break text-blueviolet">@user.UserName</p>
                                 </a>
+                                <p class="m-0">State: @user.Ban?.State</p>
                             </div>
                         </li>
                     }

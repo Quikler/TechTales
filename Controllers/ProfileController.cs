@@ -213,6 +213,15 @@ public class ProfileController : Controller
                 Country = u.Country,
                 Email = u.Email,
                 Avatar = u.Avatar.BlobToImageSrc("/images/default_user_icon.svg"),
+                Ban = _context.Bans
+                    .Where(b => b.UserId == u.Id)
+                    .Select(b => new BanViewModel
+                    {
+                        EndDate = b.BanEndDate.ToString(),
+                        Reason = b.BanReason,
+                        State = "Banned",
+                    })
+                    .FirstOrDefault() ?? new BanViewModel(),
             })
             .ToListAsync();
 
@@ -225,6 +234,8 @@ public class ProfileController : Controller
     public async Task<IActionResult> DeleteUser(Guid id)
     {
         await _context.Users.Where(u => u.Id == id).ExecuteDeleteAsync();
+        await _context.Bans.Where(b => b.UserId == id).ExecuteDeleteAsync();
+
         this.SetModalMessage("Delete", $"User with id - '{id}' has been deleted.");
         return Ok($"User with id='{id}' has been deleted.");
     }

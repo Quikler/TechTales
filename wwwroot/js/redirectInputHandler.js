@@ -1,5 +1,5 @@
-const input = document.querySelector(".input-block > input");
-const button = document.querySelector(".input-block > button");
+const input = document.querySelector(".search-input-block > input");
+const button = document.querySelector(".search-input-block > button");
 
 function redirectToUrl() {
     const url = `${input.dataset.url}?request=${encodeURIComponent(input.value)}`;

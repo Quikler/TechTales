@@ -6,10 +6,12 @@
 }
 
 <div class="text-center">
-    <div class="rounded input-block border input-group mb-4 w-50 mx-auto">
-        <input data-url="/Category/List" required type="text" placeholder="Categories (Category1, Category2... etc)" aria-label="Search" aria-describedby="search-button">
-        <button class="rounded-end px-4 btn text-white bg-blueviolet outline-box-shadow">Search</button>
+
+    <div class="rounded mx-auto search-input-block border input-group mb-4">
+        <input data-url="/Category/List" type="text" placeholder="Categories (Category1, Category2... etc)" aria-label="Search" aria-describedby="search-button" required>
+        <button class="rounded-end px-4 btn text-white btn-primary" id="search-button">Search</button>
     </div>
+
     <div class="container">
         <div class="col-md-8 mx-auto">
             @if (Model.Collection.Count == 0) 

@@ -7,10 +7,12 @@
 }
 
 <div class="text-center">
-    <div class="rounded input-block border input-group mb-4 w-50 mx-auto">
-        <input data-url="/Blog/List" required type="text" placeholder="Title, Category, Tag, Content..." aria-label="Search" aria-describedby="search-button">
-        <button class="rounded-end btn text-white bg-blueviolet px-4 outline-box-shadow" id="search-button">Search</button>
+
+    <div class="rounded mx-auto search-input-block border input-group mb-4">
+        <input data-url="/Comment/List" type="text" placeholder="Search by comment..." aria-label="Search" aria-describedby="search-button" required>
+        <button class="rounded-end px-4 btn text-white btn-primary" id="search-button">Search</button>
     </div>
+
     <div class="container">
         <div class="col-md-8 mx-auto">
             @if (Model.Collection.Count == 0) 
@@ -33,7 +35,7 @@
                                 <div class="d-flex flex-column col-lg-3 align-items-center justify-content-center text-center">
                                     <p class="ws-nw">@comment.CreationDate.ToString("dd/MM/yyyy HH:mm:ss")</p>
                                     <a class="d-inline-block" asp-action="Detail" asp-controller="Profile" asp-route-id="@comment.Author.Id">
-                                        <img class="rounded-circle size-50-fit-cover" src="@comment.Author.Avatar" />
+                                        <img class="rounded-circle size-40-fit-cover" src="@comment.Author.Avatar" />
                                     </a>
                                     <a class="d-inline-block" asp-action="Detail" asp-controller="Profile" asp-route-id="@comment.Author.Id">
                                         <p class="mt-2 text-blueviolet text-break">@comment.Author.UserName</p>
