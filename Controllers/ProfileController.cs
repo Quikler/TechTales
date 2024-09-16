@@ -146,7 +146,7 @@ public class ProfileController : Controller
 
         IFormFile? avatar = Request.Form.Files["Avatar"];
         byte[]? newAvatar = null;
-        
+
         if (avatar != null && avatar.Length > 0)
         {
             using var memoryStream = new MemoryStream();
@@ -164,6 +164,7 @@ public class ProfileController : Controller
         var result = await _userManager.UpdateAsync(user);
         if (result.Succeeded)
         {
+            model.Avatar = newAvatar.BlobToImageSrc();
             this.SetModalMessage("Success", "Your profile has been updated successfully.");
             return View(model);
         }
