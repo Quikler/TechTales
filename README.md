@@ -6,7 +6,7 @@
 ## Features
 
 - **Create and manage blogs**: Users can create, edit, and delete their own blogs.
-- **Blog interactions**: Read other users blogs, and leave comments to engage with the content.
+- **Blog interactions**: Read other users' blogs, and leave comments to engage with the content.
 - **User profiles**: Customize your profile with personalized information.
 - **Public/Private visibility**: Blogs can be set to public or private visibility.
 - **Tags and categories**: Blogs can be organized using tags and categories for better searchability.
@@ -35,6 +35,10 @@
 
 <img src="./.assets/2.png" />
 
+### Blog page
+
+<img src="./.assets/6.png" />
+
 ### Blog list
 
 <img src="./.assets/3.png" />
@@ -47,7 +51,7 @@
 
 <img src="./.assets/5.png" />
 
-```Note: There are more pages; I have just shown the main ones.```
+**Note**: There are more pages, but these are the main ones.
 
 ## Getting Started
 ### Prerequisites
@@ -81,8 +85,8 @@ dotnet restore
 ### 3. Configure the database:
 Update the ```appsettings.json``` file with your MySQL connection string.
 
-### 4. Create database:
-In mysql run the following script
+### 4. Create the database:
+In MySQL, run the following command to create the database:
 ```
 CREATE DATABASE techtales;
 ```
